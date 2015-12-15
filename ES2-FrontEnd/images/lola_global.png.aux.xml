@@ -1,0 +1,7 @@
+<PAMDataset>
+  <SRS>PROJCS["Moon_Equidistant_Cylindrical",GEOGCS["GCS_Moon 2000",DATUM["D_Moon_2000",SPHEROID["Moon_2000_IAU_IAG",1737400.0,0.0]],PRIMEM["Greenwich",0],UNIT["Degree",0.017453292519943295]],PROJECTION["Equidistant_Cylindrical"],PARAMETER["False_Easting",0],PARAMETER["False_Northing",0],PARAMETER["Central_Meridian",0],PARAMETER["Standard_Parallel_1",0],UNIT["Meter",1]]</SRS>
+  <GeoTransform> -5.4582030763469003e+06,  1.0000000000000000e+03,  0.0000000000000000e+00,  2.7291015381734502e+06,  0.0000000000000000e+00, -1.0000000000000000e+03</GeoTransform>
+  <Metadata>
+    <MDI key="AREA_OR_POINT">Area</MDI>
+  </Metadata>
+</PAMDataset>

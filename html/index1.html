@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Illumination Conditions Use Case</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/style.css"/>
+    <script src="js/jquery.min.js" type="text/javascript"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/moment.min.js"></script>
+    <script data-main="landing2" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.17/require.min.js"></script>
+</head>
+<body>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-sm-5">
+            <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="false">
+                <div class="panel panel-default">
+                    <div class="panel-heading" role="tab" id="headingOne">
+                        <h4 class="panel-title">
+                            <a role="button" data-toggle="collapse" href="#collapseOne"
+                               aria-expanded="true" aria-controls="collapseOne">
+                                Available Coverages
+                            </a>
+                        </h4>
+                    </div>
+                    <div id="collapseOne" class="panel-collapse collapse in" role="tabpanel"
+                         aria-labelledby="headingOne">
+                        <div class="panel-body">
+                            <form class="form-horizontal">
+                                <div class="form-group">
+                                    <label for="dataset" class="col-sm-2 control-label">Dataset</label>
+
+                                    <div class="col-sm-10">
+                                        <select id="dataset" class="col-sm-8 form-control">
+
+                                            <option>DTM_integer_latlon</option>
+                                            <option>global_image</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+
+                                <div style="margin-top: 40px;">
+                                    <button type="button" class="btn btn-info" id="retrieve">Retrieve</button>
+
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+
+
+                <div class="panel panel-default">
+                    <div class="panel-heading" role="tab" id="headingOne">
+                        <h4 class="panel-title">
+                            <a role="button" data-toggle="collapse" href="#collapseOne"
+                               aria-expanded="true" aria-controls="collapseOne">
+                                Projections
+                            </a>
+                        </h4>
+                    </div>
+                    <div id="collapseOne" class="panel-collapse collapse in" role="tabpanel"
+                         aria-labelledby="headingOne">
+                        <div class="panel-body">
+                            <form class="form-horizontal">
+                                <div class="form-group">
+                                    <label for="Projections" class="col-sm-2 control-label">Projections</label>
+
+                                    <div class="col-sm-10">
+                                      <div class="dropdown" id="projectionDropdown">
+                                      </div>
+
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+
+
+
+
+
+                <div class="panel panel-default">
+                    <div class="panel-heading" role="tab" id="headingThree">
+                        <h4 class="panel-title">
+                            <a role="button" data-toggle="collapse" href="#collapseThree"
+                               aria-expanded="true" aria-controls="collapseThree">
+                                Your own queries
+                            </a>
+                        </h4>
+                    </div>
+                    <div id="collapseThree" class="panel-collapse collapse in" role="tabpanel"
+                         aria-labelledby="headingOne">
+                        <div class="panel-body">
+                            <form class="form-horizontal">
+                                <div class="form-group">
+                                    <label for="query" class="col-sm-2 control-label">Query</label>
+
+                                    <div class="col-sm-10">
+                                        <textarea id="query" class="form-control" rows="3">for c in (DTM_integer_latlon) return encode(c[Lat:"CRS:1"(0:100), Long:"CRS:1"(0:100)], "jpeg")
+                                        </textarea>
+                                        <span id="helpBlock" class="help-block">You can write your own queries and they will be displayed on the globe</span>
+                                    </div>
+                                </div>
+                                <button id="execute" class="btn btn-info">Run</button>
+                                <button id="clear" class="btn btn-danger">Clear</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="col-sm-7" id="globe">
+            <canvas id="canvasOne" style="min-height:700px; width: 100%; height: auto">
+                Your browser does not support HTML5 Canvas.
+            </canvas>
+        </div>
+    </div>
+</div>
+</body>
+</html>
