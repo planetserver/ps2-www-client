@@ -65,21 +65,21 @@ define([
              * @type {Number}
              * @default 6378137.0 meters
              */
-            this.equatorialRadius = 1738140;
+            this.equatorialRadius = 3396200;
 
             /**
              * This globe's polar radius.
              * @type {Number}
              * @default 6356752.3 meters
              */
-            this.polarRadius = 1735970;
+            this.polarRadius = 3376200;
 
             /**
              * This globe's eccentricity squared.
              * @type {Number}
              * @default 0.00669437999013
              */
-            this.eccentricitySquared = 0.002495363;
+            this.eccentricitySquared = 0.0117431898;
 
             /**
              * The tessellator used to create this globe's terrain.
@@ -421,7 +421,7 @@ define([
                 sinLat = Math.sin(latitude * Angle.DEGREES_TO_RADIANS),
                 sinLon = Math.sin(longitude * Angle.DEGREES_TO_RADIANS),
                 eqSquared = this.equatorialRadius * this.equatorialRadius,
-                polSquared = this.polarRadius * this.polarRadius;
+                polSquared = this.polarRadiuss * this.polarRadius;
 
             result[0] = cosLat * sinLon / eqSquared;
             result[1] = (1 - this.eccentricitySquared) * sinLat / polSquared;

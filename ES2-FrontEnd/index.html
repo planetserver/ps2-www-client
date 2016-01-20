@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>es2 draft</title>
+        <title>Planet Server 2</title>
 
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -16,12 +16,14 @@
         
         <!-- JavaScript-->
         <script type="text/javascript" src="js/script.js"></script>
+      
 
         <!-- Style-->
         <link rel="stylesheet" type="text/css" href="css/styles.css"></link>
 
         <!--scripts that were used for the canvas-->
-        <script data-main="landing" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.17/require.min.js"></script>
+        <script data-main="landing2.js" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.17/require.min.js"></script>
+
         
     </head>
 
@@ -70,7 +72,7 @@
                         </a>
                      </div>
                      
-                     <div id="Mars" title="Mars" onclick="myFunction()" class="col-md-2">
+                     <div id="Mars" title="Mars" class="col-md-2">
                         <a href="#">
                             <img src="/images/mars70.png"/>
                         </a>
@@ -150,7 +152,8 @@
                                         <label for="query" class="col-sm-2 control-label">Query</label>
 
                                         <div class="col-sm-10">
-                                            <textarea id="query" class="form-control" rows="3">for c in (DTM_integer_latlon) return encode(c[Lat:"CRS:1"(0:100), Long:"CRS:1"(0:100)], "jpeg")
+                                            <textarea id="query" class="form-control" rows="3">for c in 
+(test_crism) return encode(c, "png");
                                             </textarea>
                                             <span id="helpBlock" class="help-block">You can write your own queries and they will be displayed on the globe</span>
                                         </div>

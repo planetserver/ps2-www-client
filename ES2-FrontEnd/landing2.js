@@ -45,15 +45,42 @@ requirejs(['../src/WorldWind','./LayerManager','./CoordinateController'], functi
           // polygon.attributes = polygonAttributes;
           // polygonsLayer.addRenderable(polygon);
 
-            var surfaceImageLayer = new WorldWind.RenderableLayer();
-            surfaceImageLayer.displayName = "Timelapse Layer";
-            surfaceImageLayer.addRenderable(new WorldWind.SurfaceImage(new WorldWind.Sector(-90,0,0,180), request));
-            //surfaceImageLayer.addRenderable(new WorldWind.SurfacePolygon(boundaries, request));
 
-            this.removeTimelapseLayer(2);
-            this.wwd.addLayer(surfaceImageLayer);
-            this.wwd.redraw();
-        },
+              // Create a layer to hold the surface shapes.
+            var shapesLayer = new WorldWind.RenderableLayer("hrs00006fea_07_if173s_trr3_CAT_phot.img.tif");
+            this.wwd.addLayer(shapesLayer);
+
+            // Create a simple surface polygon, a triangle.
+            var boundary = [];
+            boundary.push(new WorldWind.Location(72.86521, 87.84786));
+            boundary.push(new WorldWind.Location(72.70216, 88.04056));
+            boundary.push(new WorldWind.Location(76.57143, 87.84738));
+            boundary.push(new WorldWind.Location(76.77301, 88.04004));
+            
+
+            // Create and set attributes for it. The shapes below except the surface polyline use this same attributes
+            // object. Real apps typically create new attributes objects for each shape unless they know the attributes
+            // can be shared among shapes.
+            var attributes = new WorldWind.ShapeAttributes(null);
+            attributes.outlineColor = WorldWind.Color.BLUE;
+            attributes.interiorColor = new WorldWind.Color(30, 30, 30, 0.5);
+
+            var highlightAttributes = new WorldWind.ShapeAttributes(attributes);
+            highlightAttributes.interiorColor = new WorldWind.Color(1, 1, 1, 1);
+
+            var shape = new WorldWind.SurfacePolygon(boundary, attributes);
+            shape.highlightAttributes = highlightAttributes;
+            shapesLayer.addRenderable(shape);
+
+                // var surfaceImageLayer = new WorldWind.RenderableLayer();
+                // surfaceImageLayer.displayName = "Timelapse Layer";
+                // surfaceImageLayer.addRenderable(new WorldWind.SurfaceImage(new WorldWind.Sector(-90,0,0,180), request));
+                // //surfaceImageLayer.addRenderable(new WorldWind.SurfacePolygon(boundaries, request));
+
+                // this.removeTimelapseLayer(2);
+                // this.wwd.addLayer(surfaceImageLayer);
+                // this.wwd.redraw();
+            },
 
         removeTimelapseLayer: function (max) {
             var count = 0;
@@ -174,11 +201,12 @@ requirejs(['../src/WorldWind','./LayerManager','./CoordinateController'], functi
         run: function () {
             this.setupWW();
             this.addInitialLayers(this.wwd);
-
+            this.addLayer();
             this.onRetrieve();
             this.onTimelapse();
             this.onCombine();
             this.onQuery();
+            this.callSlider();
         }
         ,
 

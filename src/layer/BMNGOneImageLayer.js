@@ -7,17 +7,6 @@
  * @version $Id: BMNGOneImageLayer.js 2942 2015-03-30 21:16:36Z tgaskins $
  */
 
-
-function myFunction() {
-    alert("I am an alert box!");
-    //BMNGOneImageLayer("/../images/mars.jpg", "mars");
-    globalURL = "../../images/mars.jpg";
-    this.redraw();
-    
-}
-
-
-
 define([
         '../layer/RenderableLayer',
         '../geom/Sector',
@@ -41,8 +30,6 @@ define([
         var BMNGOneImageLayer = function (url, layerName) {
 
             RenderableLayer.call(this, layerName);
-            url = globalURL; //for testing
-            console.log("the url is: " + url);
             var surfaceImage = new SurfaceImage(Sector.FULL_SPHERE,
                 url || (WWUtil.currentUrlSansFilePart() + "/../images/moon.jpg"));
         
