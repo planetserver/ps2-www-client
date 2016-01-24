@@ -52,10 +52,11 @@ requirejs(['../src/WorldWind','./LayerManager','./CoordinateController'], functi
 
             // Create a simple surface polygon, a triangle.
             var boundary = [];
-            boundary.push(new WorldWind.Location(72.86521, 87.84786));
-            boundary.push(new WorldWind.Location(72.70216, 88.04056));
-            boundary.push(new WorldWind.Location(76.57143, 87.84738));
-            boundary.push(new WorldWind.Location(76.77301, 88.04004));
+            boundary.push(new WorldWind.Location(72.86521, -87.84786));
+            boundary.push(new WorldWind.Location(76.57143, -87.84738));
+            boundary.push(new WorldWind.Location(76.77301, -88.04004));
+            boundary.push(new WorldWind.Location(72.70216, -88.04056));
+            
             
 
             // Create and set attributes for it. The shapes below except the surface polyline use this same attributes
@@ -72,6 +73,7 @@ requirejs(['../src/WorldWind','./LayerManager','./CoordinateController'], functi
             shape.highlightAttributes = highlightAttributes;
             shapesLayer.addRenderable(shape);
 
+            
                 // var surfaceImageLayer = new WorldWind.RenderableLayer();
                 // surfaceImageLayer.displayName = "Timelapse Layer";
                 // surfaceImageLayer.addRenderable(new WorldWind.SurfaceImage(new WorldWind.Sector(-90,0,0,180), request));
@@ -207,7 +209,10 @@ requirejs(['../src/WorldWind','./LayerManager','./CoordinateController'], functi
             this.onCombine();
             this.onQuery();
             this.callSlider();
+
         }
+
+
         ,
 
         getDate: function (value) {
@@ -217,7 +222,7 @@ requirejs(['../src/WorldWind','./LayerManager','./CoordinateController'], functi
 
         getQuery: function (dataset) {
            var query = 'for%20c%20in%20(DTM_integer_latlon)%0Areturn%20encode(%0A%20(unsigned%20char)((%7B%0A%20%20%20red%3A%20%20%20((unsigned%20char)((c%20%3E%20400000)%20*%20215))%3B%0A%20%20%20green%3A%20((unsigned%20char)((c%20%3E%20400000)%20*%2025))%3B%0A%20%20%20blue%3A%20%20((unsigned%20char)((c%20%3E%20400000)%20*%2028))%0A%20%7D%0Aoverlay%0A%20(unsigned%20char)%7B%0A%20%20%20red%3A%20%20%20((unsigned%20char)((c%20%3E%3D%20300000%20and%20c%20%3C%20400000)%20*%20238))%3B%0A%20%20%20green%3A%20((unsigned%20char)((c%20%3E%3D%20300000%20and%20c%20%3C%20400000)%20*%20120))%3B%0A%20%20%20blue%3A%20%20((unsigned%20char)((c%20%3E%3D%20300000%20and%20c%20%3C%20400000)%20*%2071))%0A%20%7D%0Aoverlay%0A%20(unsigned%20char)%7B%0A%20%20%20red%3A%20%20%20((unsigned%20char)((c%20%3E%3D%20150000%20and%20c%20%3C%20300000)%20*%20253))%3B%0A%20%20%20green%3A%20((unsigned%20char)((c%20%3E%3D%20150000%20and%20c%20%3C%20300000)%20*%20199))%3B%0A%20%20%20blue%3A%20%20((unsigned%20char)((c%20%3E%3D%20150000%20and%20c%20%3C%20300000)%20*%20126))%0A%20%7D%0Aoverlay%0A%20(unsigned%20char)%7B%0A%20%20%20red%3A%20%20%20((unsigned%20char)((c%20%3E%3D%203000%20and%20c%20%3C%20150000)%20*%20253))%3B%0A%20%20%20green%3A%20((unsigned%20char)((c%20%3E%3D%203000%20and%20c%20%3C%20150000)%20*%20207))%3B%0A%20%20%20blue%3A%20%20((unsigned%20char)((c%20%3E%3D%203000%20and%20c%20%3C%20150000)%20*%20135))%0A%20%7D%0A%0Aoverlay%0A%20(unsigned%20char)%7B%0A%20%20%20red%3A%20%20%20((unsigned%20char)((c%20%3E%3D%200%20and%20c%20%3C%20150000)%20*%20159))%3B%0A%20%20%20green%3A%20((unsigned%20char)((c%20%3E%3D%200%20and%20c%20%3C%20150000)%20*%20213))%3B%0A%20%20%20blue%3A%20%20((unsigned%20char)((c%20%3E%3D%200%20and%20c%20%3C%20150000)%20*%20165))%0A%20%7D%0A%0Aoverlay%0A%20(unsigned%20char)%7B%0A%20%20%20red%3A%20%20%20((unsigned%20char)((c%20%3E%3D%20-100000%20and%20c%20%3C%200)%20*%20239))%3B%0A%20%20%20green%3A%20((unsigned%20char)((c%20%3E%3D%20-100000%20and%20c%20%3C%200)%20*%20248))%3B%0A%20%20%20blue%3A%20%20((unsigned%20char)((c%20%3E%3D%20-100000%20and%20c%20%3C%200)%20*%20185))%0A%20%7D%0A%0A%0Aoverlay%0A%20(unsigned%20char)%7B%0A%20%20%20red%3A%20%20%20((unsigned%20char)((c%20%3E%3D%20-200000%20and%20c%20%3C%20-100000)%20*%20186))%3B%0A%20%20%20green%3A%20((unsigned%20char)((c%20%3E%3D%20-200000%20and%20c%20%3C%20-100000)%20*%20227))%3B%0A%20%20%20blue%3A%20%20((unsigned%20char)((c%20%3E%3D%20-200000%20and%20c%20%3C%20-100000)%20*%20168))%0A%20%7D%0A%0Aoverlay%0A%20(unsigned%20char)%7B%0A%20%20%20red%3A%20%20%20((unsigned%20char)((c%20%3E%3D%20-300000%20and%20c%20%3C%20-200000)%20*%20147))%3B%0A%20%20%20green%3A%20((unsigned%20char)((c%20%3E%3D%20-300000%20and%20c%20%3C%20-200000)%20*%20204))%3B%0A%20%20%20blue%3A%20%20((unsigned%20char)((c%20%3E%3D%20-300000%20and%20c%20%3C%20-200000)%20*%20167))%0A%20%7D%0A%0Aoverlay%0A%20(unsigned%20char)%7B%0A%20%20%20red%3A%20%20%20((unsigned%20char)((c%20%3E%3D%20-400000%20and%20c%20%3C%20-300000)%20*%2047))%3B%0A%20%20%20green%3A%20((unsigned%20char)((c%20%3E%3D%20-400000%20and%20c%20%3C%20-300000)%20*%20133))%3B%0A%20%20%20blue%3A%20%20((unsigned%20char)((c%20%3E%3D%20-400000%20and%20c%20%3C%20-300000)%20*%20185))%0A%20%7D%0A%0A%0A))%0A%2C%0A%22png%22%2C%20%22nodata%3D0%22)';
-            return 'http://212.201.45.10:8080/rasdaman/ows?query='+query;
+            return 'http://212.201.44.243:8080/rasdaman/ows?query='+query;
         }
 
 

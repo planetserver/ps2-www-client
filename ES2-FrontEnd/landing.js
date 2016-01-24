@@ -9,10 +9,12 @@
 requirejs(['../src/WorldWind',
         './LayerManager',
         './CoordinateController',//ADD WMS LAYER
+        '../src/gesture/TapRecognizer',
         ], 
     function (ww,
               LayerManager,
-              CoordinateController) {
+              CoordinateController,
+              TapRecognizer) {
         "use strict";
 
         WorldWind.Logger.setLoggingLevel(WorldWind.Logger.LEVEL_WARNING);
@@ -46,7 +48,6 @@ requirejs(['../src/WorldWind',
         boundary.push(new WorldWind.Location(76.57143, 87.84738));
         boundary.push(new WorldWind.Location(76.77301, 88.04004));
         boundary.push(new WorldWind.Location(72.70216, 88.04056));
-
         // Create and set attributes for it. The shapes below except the surface polyline use this same attributes
         // object. Real apps typically create new attributes objects for each shape unless they know the attributes
         // can be shared among shapes.
@@ -61,12 +62,34 @@ requirejs(['../src/WorldWind',
         shape.highlightAttributes = highlightAttributes;
         shapesLayer.addRenderable(shape);
 
+        var layerRegognizer = function (o) {
+            // X and Y coordinates of a single click   
+            var x = o.clientX,
+                y = o.clientY;
+
+            var pickList = wwd.pick(wwd.canvasCoordinates(x, y));
+
+            console.log(pickList);
+
+            for (var p = 0; p < pickList.objects.length; p++) {
+                // console.log("pickList.objects[p]: " + pickList.objects[p]);
+                // console.log("pickList.objects[p].userObject: " + pickList.objects[p].userObject);
+
+                if(pickList.objects[p].userObject === shape) {
+                    console.log("The Layer Clicked: " + pickList.objects[p].userObject);
+                }
+            }
+        };
+
+        // Listen for Mouse clicks and regognize layers
+        wwd.addEventListener("click", layerRegognizer);
+
+
         wwd.redraw();
 
         
 
         document.getElementById("Mars").onclick = function() {
-            alert("this is clicked");
             var layers = [
                 {layer: new WorldWind.BMNGOneImageLayer("../../images/moon.jpg", "Moon Image"), enabled: false},
                 {layer: new WorldWind.BMNGOneImageLayer("../../images/mars.jpg", "Mars Image"), enabled: true},
@@ -123,6 +146,9 @@ requirejs(['../src/WorldWind',
             wwd.redraw();
         }
 
+
+
+        
 
         // Create a layer manager for controlling layer visibility.
         var layerManager = new LayerManager(wwd);

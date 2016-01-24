@@ -88,6 +88,47 @@ body{
   overflow: auto;
 }
 
+/*background of the right layer menu*/
+#right-layer-menu{
+  transition: all 0.3s ease;
+  position: fixed;
+  width: 0%;
+  top: 3.60em;
+  right: -20em;
+  height: 95%;
+  background: rgba(0, 62, 128, 0.7);
+  box-shadow: 0em 0em 2em black;
+  z-index: 32;
+}
+
+#right-layer-menu-toggle{
+  position: fixed;
+  height: 4em;
+  width: 4em;
+  right: 0;
+  top: 16em;
+  background: rgba(0, 62, 128, 0.7); 
+  padding-right: 1em;
+  padding-top: 1em;
+  padding-bottom: 1em;
+  padding-left: 1em;
+  border-top-left-radius: 0.5em;
+  border-bottom-left-radius: 0.5em;
+  transition: all 0.3s ease;
+  z-index: 80;
+}
+
+#right-layer-menu-toggle.open{
+  right: 24em;
+}
+
+#right-layer-menu.open{
+  right: 0;
+  width: 24em;
+  display: block;
+  overflow: auto;
+}
+
 
 .container{
   width: 100%;
