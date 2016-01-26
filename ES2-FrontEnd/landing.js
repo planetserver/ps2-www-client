@@ -10,7 +10,7 @@ requirejs(['../src/WorldWind',
         './LayerManager',
         './CoordinateController',//ADD WMS LAYER
         '../src/gesture/TapRecognizer',
-        ], 
+        ],
     function (ww,
               LayerManager,
               CoordinateController,
@@ -22,9 +22,9 @@ requirejs(['../src/WorldWind',
         var wwd = new WorldWind.WorldWindow("canvasOne");
 
         var layers = [
-        {layer: new WorldWind.BMNGOneImageLayer("../../images/moon.jpg", "Moon Image"), enabled: true},
-        {layer: new WorldWind.BMNGOneImageLayer("../../images/mars.jpg", "Mars Image"), enabled: false},
-        {layer: new WorldWind.BMNGOneImageLayer("../../images/earth.jpg", "Earth Image"), enabled: false},
+        {layer: new WorldWind.BMNGOneImageLayer("images/moon.jpg", "Moon Image"), enabled: true},
+        {layer: new WorldWind.BMNGOneImageLayer("images/mars.jpg", "Mars Image"), enabled: false},
+        {layer: new WorldWind.BMNGOneImageLayer("images/earth.jpg", "Earth Image"), enabled: false},
         {layer: new WorldWind.BMNGLayer("DTM"), enabled: true}//THATS THE WMS CONSTRUCTOR //CHANGE name
 
         //{layer: new WorldWind.BMNGOneImageLayer("../../images/moon.jpg", "Moon Image"), enabled: true}
@@ -63,7 +63,7 @@ requirejs(['../src/WorldWind',
         shapesLayer.addRenderable(shape);
 
         var layerRegognizer = function (o) {
-            // X and Y coordinates of a single click   
+            // X and Y coordinates of a single click
             var x = o.clientX,
                 y = o.clientY;
 
@@ -87,13 +87,13 @@ requirejs(['../src/WorldWind',
 
         wwd.redraw();
 
-        
+
 
         document.getElementById("Mars").onclick = function() {
             var layers = [
-                {layer: new WorldWind.BMNGOneImageLayer("../../images/moon.jpg", "Moon Image"), enabled: false},
-                {layer: new WorldWind.BMNGOneImageLayer("../../images/mars.jpg", "Mars Image"), enabled: true},
-                {layer: new WorldWind.BMNGOneImageLayer("../../images/earth.jpg", "Earth Image"), enabled: false},
+                {layer: new WorldWind.BMNGOneImageLayer("images/moon.jpg", "Moon Image"), enabled: false},
+                {layer: new WorldWind.BMNGOneImageLayer("images/mars.jpg", "Mars Image"), enabled: true},
+                {layer: new WorldWind.BMNGOneImageLayer("images/earth.jpg", "Earth Image"), enabled: false},
                 {layer: new WorldWind.BMNGLayer("DTM"), enabled: true}//THATS THE WMS CONSTRUCTOR //CHANGE name
 
                 //{layer: new WorldWind.BMNGOneImageLayer("../../images/moon.jpg", "Moon Image"), enabled: true}
@@ -110,9 +110,9 @@ requirejs(['../src/WorldWind',
 
         document.getElementById("Earth").onclick = function() {
             var layers = [
-                {layer: new WorldWind.BMNGOneImageLayer("../../images/moon.jpg", "Moon Image"), enabled: false},
-                {layer: new WorldWind.BMNGOneImageLayer("../../images/mars.jpg", "Mars Image"), enabled: false},
-                {layer: new WorldWind.BMNGOneImageLayer("../../images/earth.jpg", "Earth Image"), enabled: true},
+                {layer: new WorldWind.BMNGOneImageLayer("images/moon.jpg", "Moon Image"), enabled: false},
+                {layer: new WorldWind.BMNGOneImageLayer("images/mars.jpg", "Mars Image"), enabled: false},
+                {layer: new WorldWind.BMNGOneImageLayer("images/earth.jpg", "Earth Image"), enabled: true},
                 {layer: new WorldWind.BMNGLayer("DTM"), enabled: true}//THATS THE WMS CONSTRUCTOR //CHANGE name
 
                 //{layer: new WorldWind.BMNGOneImageLayer("../../images/moon.jpg", "Moon Image"), enabled: true}
@@ -129,9 +129,9 @@ requirejs(['../src/WorldWind',
 
         document.getElementById("Moon").onclick = function() {
             var layers = [
-                {layer: new WorldWind.BMNGOneImageLayer("../../images/moon.jpg", "Moon Image"), enabled: true},
-                {layer: new WorldWind.BMNGOneImageLayer("../../images/mars.jpg", "Mars Image"), enabled: false},
-                {layer: new WorldWind.BMNGOneImageLayer("../../images/earth.jpg", "Earth Image"), enabled: false},
+                {layer: new WorldWind.BMNGOneImageLayer("images/moon.jpg", "Moon Image"), enabled: true},
+                {layer: new WorldWind.BMNGOneImageLayer("images/mars.jpg", "Mars Image"), enabled: false},
+                {layer: new WorldWind.BMNGOneImageLayer("images/earth.jpg", "Earth Image"), enabled: false},
                 {layer: new WorldWind.BMNGLayer("DTM"), enabled: true}//THATS THE WMS CONSTRUCTOR //CHANGE name
 
                 //{layer: new WorldWind.BMNGOneImageLayer("../../images/moon.jpg", "Moon Image"), enabled: true}
@@ -148,7 +148,7 @@ requirejs(['../src/WorldWind',
 
 
 
-        
+
 
         // Create a layer manager for controlling layer visibility.
         var layerManager = new LayerManager(wwd);
