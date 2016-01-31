@@ -34,10 +34,10 @@ $(document).ready(function () {
 			$('#right-layer-menu').removeClass('open');
 			$('#right-layer-menu-toggle').removeClass('open');
 		}
-		else {
-			$('#right-layer-menu').addClass('open');
-			$('#right-layer-menu-toggle').addClass('open');
-		}
+		// else {
+		// 	$('#right-layer-menu').addClass('open');
+		// 	$('#right-layer-menu-toggle').addClass('open');
+		// }
 	});
 });
 
