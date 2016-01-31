@@ -79,6 +79,8 @@ requirejs(['../src/WorldWind',
                     console.log("The Layer Clicked: " + pickList.objects[p].userObject);
                     $('#right-layer-menu').addClass('open');
                     $('#right-layer-menu-toggle').addClass('open');
+
+                    
                 }
             }
         };

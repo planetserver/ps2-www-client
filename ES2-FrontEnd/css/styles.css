@@ -91,7 +91,7 @@ nav.service-navbar .navbar-brand.navbar-right {
   width: 4em;
   right: 0;
   top: 12em;
-  background: rgba(0, 62, 127, 0.7);
+  background: rgba(0, 62, 127, 0.4);
   padding-right: 1em;
   padding-top: 1em;
   padding-bottom: 1em;
@@ -121,7 +121,7 @@ nav.service-navbar .navbar-brand.navbar-right {
   top: 3.60em;
   right: -20em;
   height: 95%;
-  background: rgba(0, 62, 127, 0.7);
+  background: rgba(0, 62, 127, 1);
 
   z-index: 32;
 }
@@ -132,7 +132,7 @@ nav.service-navbar .navbar-brand.navbar-right {
   width: 4em;
   right: 0;
   top: 16em;
-  background: rgba(0, 62, 127, 0.7);
+  background: rgba(0, 62, 127, 1);
   padding-right: 1em;
   padding-top: 1em;
   padding-bottom: 1em;
@@ -141,9 +141,11 @@ nav.service-navbar .navbar-brand.navbar-right {
   border-bottom-left-radius: 0.5em;
   transition: all 0.3s ease;
   z-index: 80;
+  display: none;
 }
 
 #right-layer-menu-toggle.open{
+  display: inline;
   right: 24em;
 }
 
@@ -156,7 +158,7 @@ nav.service-navbar .navbar-brand.navbar-right {
 
 .jumbotron{
   width: 100%;
-  height: 100%;
+  height: 71.5em;
   background-color: black;
   margin: 0;
   padding-left: 0 !important;
