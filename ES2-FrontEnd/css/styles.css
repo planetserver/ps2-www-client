@@ -196,3 +196,19 @@ nav.service-navbar .navbar-brand.navbar-right {
     color: yellow;
     z-index: 99;
 }
+
+
+/*Graph style*/
+.axis path,
+.axis line {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+
+.line {
+  fill: none;
+  stroke: steelblue;
+  stroke-width: 1.5px;
+}
+
