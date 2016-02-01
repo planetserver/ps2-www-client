@@ -39,15 +39,15 @@ requirejs(['../src/WorldWind',
         }
 
         // Create a layer to hold the surface shapes.
-        var shapesLayer = new WorldWind.RenderableLayer("hrs00006fea_07_if173s_trr3_CAT_phot.img.tif");
+        var shapesLayer = new WorldWind.RenderableLayer("hrs00006fea_07_if173s_trr3_CAT_phot_p.img.tif");
         wwd.addLayer(shapesLayer);
 
         // Create a simple surface polygon, a triangle.
         var boundary = [];
-        boundary.push(new WorldWind.Location(-72.86521, 87.84786));
-        boundary.push(new WorldWind.Location(-76.57143, 87.84738));
-        boundary.push(new WorldWind.Location(-76.77301, 88.04004));
-        boundary.push(new WorldWind.Location(-72.70216, 88.04056));
+        boundary.push(new WorldWind.Location(-87.84786, 72.86521));
+        boundary.push(new WorldWind.Location(-87.84738, 76.57143));
+        boundary.push(new WorldWind.Location(-88.04004, 76.77301));
+        boundary.push(new WorldWind.Location(-88.04056, 72.70216));
         // Create and set attributes for it. The shapes below except the surface polyline use this same attributes
         // object. Real apps typically create new attributes objects for each shape unless they know the attributes
         // can be shared among shapes.
@@ -80,7 +80,7 @@ requirejs(['../src/WorldWind',
                     $('#right-layer-menu').addClass('open');
                     $('#right-layer-menu-toggle').addClass('open');
 
-                    
+
                 }
             }
         };
