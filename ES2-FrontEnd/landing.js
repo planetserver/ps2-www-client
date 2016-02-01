@@ -52,14 +52,14 @@ requirejs(['../src/WorldWind',
         // object. Real apps typically create new attributes objects for each shape unless they know the attributes
         // can be shared among shapes.
         var attributes = new WorldWind.ShapeAttributes(null);
-        attributes.outlineColor = WorldWind.Color.BLUE;
-        attributes.interiorColor = new WorldWind.Color(30, 30, 30, 0.5);
+        attributes.outlineColor = WorldWind.Color.RED;
+        attributes.interiorColor = new WorldWind.Color(1, 0.6, 0.6, 0);
 
         var highlightAttributes = new WorldWind.ShapeAttributes(attributes);
-        highlightAttributes.interiorColor = new WorldWind.Color(1, 1, 1, 1);
+        highlightAttributes.interiorColor = new WorldWind.Color(1, 0.6, 0.6, 0);
 
         var shape = new WorldWind.SurfacePolygon(boundary, attributes);
-        shape.highlightAttributes = highlightAttributes;
+        //shape.highlightAttributes = highlightAttributes;
         shapesLayer.addRenderable(shape);
 
         var layerRegognizer = function (o) {
