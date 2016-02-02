@@ -25,7 +25,7 @@ requirejs(['../src/WorldWind',
         {layer: new WorldWind.BMNGOneImageLayer("images/moon.jpg", "Moon Image"), enabled: true},
         {layer: new WorldWind.BMNGOneImageLayer("images/mars.jpg", "Mars Image"), enabled: false},
         {layer: new WorldWind.BMNGOneImageLayer("images/earth.jpg", "Earth Image"), enabled: false},
-        {layer: new WorldWind.BMNGLayer("DTM"), enabled: true}//THATS THE WMS CONSTRUCTOR //CHANGE name
+        {layer: new WorldWind.BMNGLayer("wgs_global_test_moon"), enabled: true}//THATS THE WMS CONSTRUCTOR //CHANGE name
 
         //{layer: new WorldWind.BMNGOneImageLayer("../../images/moon.jpg", "Moon Image"), enabled: true}
         // {layer: new WorldWind.ViewConrolsLayer(wwd), enabled: true}
@@ -98,7 +98,7 @@ requirejs(['../src/WorldWind',
                 {layer: new WorldWind.BMNGOneImageLayer("images/moon.jpg", "Moon Image"), enabled: false},
                 {layer: new WorldWind.BMNGOneImageLayer("images/mars.jpg", "Mars Image"), enabled: true},
                 {layer: new WorldWind.BMNGOneImageLayer("images/earth.jpg", "Earth Image"), enabled: false},
-                {layer: new WorldWind.BMNGLayer("DTM"), enabled: true}//THATS THE WMS CONSTRUCTOR //CHANGE name
+                {layer: new WorldWind.BMNGLayer("wgs_global_test_moon"), enabled: true}//THATS THE WMS CONSTRUCTOR //CHANGE name
 
                 //{layer: new WorldWind.BMNGOneImageLayer("../../images/moon.jpg", "Moon Image"), enabled: true}
                 // {layer: new WorldWind.ViewConrolsLayer(wwd), enabled: true}
@@ -117,7 +117,7 @@ requirejs(['../src/WorldWind',
                 {layer: new WorldWind.BMNGOneImageLayer("images/moon.jpg", "Moon Image"), enabled: false},
                 {layer: new WorldWind.BMNGOneImageLayer("images/mars.jpg", "Mars Image"), enabled: false},
                 {layer: new WorldWind.BMNGOneImageLayer("images/earth.jpg", "Earth Image"), enabled: true},
-                {layer: new WorldWind.BMNGLayer("DTM"), enabled: true}//THATS THE WMS CONSTRUCTOR //CHANGE name
+                {layer: new WorldWind.BMNGLayer("wgs_global_test_moon"), enabled: true}//THATS THE WMS CONSTRUCTOR //CHANGE name
 
                 //{layer: new WorldWind.BMNGOneImageLayer("../../images/moon.jpg", "Moon Image"), enabled: true}
                 // {layer: new WorldWind.ViewConrolsLayer(wwd), enabled: true}
@@ -136,7 +136,7 @@ requirejs(['../src/WorldWind',
                 {layer: new WorldWind.BMNGOneImageLayer("images/moon.jpg", "Moon Image"), enabled: true},
                 {layer: new WorldWind.BMNGOneImageLayer("images/mars.jpg", "Mars Image"), enabled: false},
                 {layer: new WorldWind.BMNGOneImageLayer("images/earth.jpg", "Earth Image"), enabled: false},
-                {layer: new WorldWind.BMNGLayer("DTM"), enabled: true}//THATS THE WMS CONSTRUCTOR //CHANGE name
+                {layer: new WorldWind.BMNGLayer("wgs_global_test_moon"), enabled: true}//THATS THE WMS CONSTRUCTOR //CHANGE name
 
                 //{layer: new WorldWind.BMNGOneImageLayer("../../images/moon.jpg", "Moon Image"), enabled: true}
                 // {layer: new WorldWind.ViewConrolsLayer(wwd), enabled: true}
