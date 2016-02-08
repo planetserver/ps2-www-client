@@ -31,13 +31,13 @@ define([
         var BMNGLayer = function (layerName) {
           var wcpsImageLayer = new WorldWind.RenderableLayer();
             TiledImageLayer.call(this,
-                Sector.FULL_SPHERE, new Location(45, 45), 5, "image/jpeg", layerName, 256, 256);
+                Sector.FULL_SPHERE, new Location(45, 45), 5, "image/png", layerName, 256, 256);
 
             this.displayName = "Moon WMS service";
             this.pickEnabled = false;
 
             this.urlBuilder = new WmsUrlBuilder("http://212.201.45.10:8080/rasdaman/ows",
-              layerName || "LRO_LOLA_ClrShade_Global_128ppd_v04", "", "1.3.0");
+              layerName || "moon_wgs84", "", "1.3.0");
 
 
         };

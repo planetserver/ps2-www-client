@@ -63,7 +63,7 @@ define([
              * @type {Boolean}
              * @default true
              */
-            this.transparent = true;
+            this.transparent = false;
 
             /**
              * The WMS version to specify when requesting resources.
