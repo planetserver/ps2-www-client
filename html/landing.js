@@ -44,10 +44,28 @@ requirejs(['../src/WorldWind',
 
         // Create a simple surface polygon, a triangle.
         var boundary = [];
-        boundary.push(new WorldWind.Location(-87.84786, 72.86521));
-        boundary.push(new WorldWind.Location(-87.84738, 76.57143));
-        boundary.push(new WorldWind.Location(-88.04004, 76.77301));
-        boundary.push(new WorldWind.Location(-88.04056, 72.70216));
+        //boundary.push(new WorldWind.Location(-87.84786, 72.86521));
+        //boundary.push(new WorldWind.Location(-87.84738, 76.57143));
+        //boundary.push(new WorldWind.Location(-88.04004, 76.77301));
+        //boundary.push(new WorldWind.Location(-88.04056, 72.70216));
+
+        boundary.push(new WorldWind.Location(	-87.858	,	76.571));
+        boundary.push(new WorldWind.Location(	-87.904	,	76.41	));
+        boundary.push(new WorldWind.Location(	-87.949	,	76.24	));
+        boundary.push(new WorldWind.Location(	-87.995	,	76.062));
+        boundary.push(new WorldWind.Location(	-88.041	,	75.877));
+        boundary.push(new WorldWind.Location(	-88.033	,	75.009));
+        boundary.push(new WorldWind.Location(	-88.027	,	74.259));
+        boundary.push(new WorldWind.Location(	-88.024	,	73.558));
+        boundary.push(new WorldWind.Location(	-88.022	,	72.745));
+        boundary.push(new WorldWind.Location(	-87.979	,	72.856));
+        boundary.push(new WorldWind.Location(	-87.935	,	72.963));
+        boundary.push(new WorldWind.Location(	-87.891	,	73.066));
+        boundary.push(new WorldWind.Location(	-87.848	,	73.163));
+        boundary.push(new WorldWind.Location(	-87.856	,	74.033));
+        boundary.push(new WorldWind.Location(	-87.859	,	74.82	));
+        boundary.push(new WorldWind.Location(	-87.86	,	75.668));
+
         // Create and set attributes for it. The shapes below except the surface polyline use this same attributes
         // object. Real apps typically create new attributes objects for each shape unless they know the attributes
         // can be shared among shapes.
