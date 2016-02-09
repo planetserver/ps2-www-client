@@ -23,7 +23,7 @@ requirejs(['../src/WorldWind',
 
         var layers = [
         {layer: new WorldWind.BMNGLayer("moon_wgs84"), enabled: true},
-        {layer: new WorldWind.BMNGOneImageLayer("images/mars.jpg", "Mars Image"), enabled: false},
+        {layer: new WorldWind.BMNGLayer("mars_wgs84"), enabled: false},
         {layer: new WorldWind.BMNGOneImageLayer("images/earth.jpg", "Earth Image"), enabled: false}
         //{layer: new WorldWind.BMNGLayer("moon_wgs84"), enabled: true}//THATS THE WMS CONSTRUCTOR //CHANGE name
 
@@ -114,7 +114,7 @@ requirejs(['../src/WorldWind',
         document.getElementById("Mars").onclick = function() {
             var layers = [
               {layer: new WorldWind.BMNGLayer("moon_wgs84"), enabled: false},
-              {layer: new WorldWind.BMNGOneImageLayer("images/mars.jpg", "Mars Image"), enabled: true},
+              {layer: new WorldWind.BMNGLayer("mars_wgs84"), enabled: true},
               {layer: new WorldWind.BMNGOneImageLayer("images/earth.jpg", "Earth Image"), enabled: false}
                 //{layer: new WorldWind.BMNGLayer("moon_wgs84"), enabled: true}//THATS THE WMS CONSTRUCTOR //CHANGE name
 
@@ -133,7 +133,7 @@ requirejs(['../src/WorldWind',
         document.getElementById("Earth").onclick = function() {
             var layers = [
               {layer: new WorldWind.BMNGLayer("moon_wgs84"), enabled: false},
-              {layer: new WorldWind.BMNGOneImageLayer("images/mars.jpg", "Mars Image"), enabled: false},
+              {layer: new WorldWind.BMNGLayer("mars_wgs84"), enabled: false},
               {layer: new WorldWind.BMNGOneImageLayer("images/earth.jpg", "Earth Image"), enabled: true}
                 //{layer: new WorldWind.BMNGLayer("moon_wgs84"), enabled: true}//THATS THE WMS CONSTRUCTOR //CHANGE name
 
@@ -152,7 +152,7 @@ requirejs(['../src/WorldWind',
         document.getElementById("Moon").onclick = function() {
             var layers = [
               {layer: new WorldWind.BMNGLayer("moon_wgs84"), enabled: true},
-              {layer: new WorldWind.BMNGOneImageLayer("images/mars.jpg", "Mars Image"), enabled: false},
+              {layer: new WorldWind.BMNGLayer("mars_wgs84"), enabled: false},
               {layer: new WorldWind.BMNGOneImageLayer("images/earth.jpg", "Earth Image"), enabled: false}
               //  {layer: new WorldWind.BMNGLayer("moon_wgs84"), enabled: true}//THATS THE WMS CONSTRUCTOR //CHANGE name
 
