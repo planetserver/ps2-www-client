@@ -222,8 +222,8 @@
                     </div>
                     <div id="collapse5" class="panel-collapse collapse">
                         <div class="panel-body">
-				<p><a href="http://access.planetserver.eu" target="_blank">PlanetServer Landing page</a></p>
-				<p><a href="http://www.earthserver.eu" target="_blank">EarthServer Landing page</a></p>
+				<p><a href="http://access.planetserver.eu">PlanetServer Landing page</a></p>
+				<p><a href="http://www.earthserver.eu">EarthServer Landing page</a></p>
                         </div>
                     </div>
                 </div>
