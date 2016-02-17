@@ -31,7 +31,7 @@ define([
         var BMNGLayer = function (layerName) {
           var wcpsImageLayer = new WorldWind.RenderableLayer();
             TiledImageLayer.call(this,
-                Sector.FULL_SPHERE, new Location(45, 45), 5, "image/jpeg", layerName, 256, 256);
+                Sector.FULL_SPHERE, new Location(45, 45), 5, "image/jpeg", layerName, 128, 128);
 
             this.displayName = "Moon WMS service";
             this.pickEnabled = false;

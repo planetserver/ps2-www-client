@@ -61,6 +61,55 @@ requirejs(['../src/WorldWind',
         boundary.push(new WorldWind.Location(-47.472, 4.499 )); 
         boundary.push(new WorldWind.Location(-47.5 , 4.508)); 
 
+	var boundary2 = [];
+    boundary2.push(new WorldWind.Location(	-46.966	,	4.478	));
+    boundary2.push(new WorldWind.Location(	-46.968	,	4.404	));
+    boundary2.push(new WorldWind.Location(	-46.974	,	4.257	));
+    boundary2.push(new WorldWind.Location(	-46.97	,	4.181	));
+    boundary2.push(new WorldWind.Location(	-46.929	,	4.194	));
+    boundary2.push(new WorldWind.Location(	-46.9	,	4.197	));
+    boundary2.push(new WorldWind.Location(	-46.874	,	4.187	));
+    boundary2.push(new WorldWind.Location(	-46.828	,	4.165	));
+    boundary2.push(new WorldWind.Location(	-46.826	,	4.238	));
+    boundary2.push(new WorldWind.Location(	-46.82	,	4.312	));
+    boundary2.push(new WorldWind.Location(	-46.805	,	4.386	));
+    boundary2.push(new WorldWind.Location(	-46.793	,	4.459	));
+    boundary2.push(new WorldWind.Location(	-46.847	,	4.446	));
+    boundary2.push(new WorldWind.Location(	-46.882	,	4.443	));
+    boundary2.push(new WorldWind.Location(	-46.916	,	4.453	));
+
+	var boundary3 = [];
+boundary3.push(new WorldWind.Location(	-47.067	,	4.677	));
+boundary3.push(new WorldWind.Location(	-47.073	,	4.457	));
+boundary3.push(new WorldWind.Location(	-47.074	,	4.383	));
+boundary3.push(new WorldWind.Location(	-47.034	,	4.395	));
+boundary3.push(new WorldWind.Location(	-47.009	,	4.398	));
+boundary3.push(new WorldWind.Location(	-46.985	,	4.386	));
+boundary3.push(new WorldWind.Location(	-46.944	,	4.362	));
+boundary3.push(new WorldWind.Location(	-46.924	,	4.512	));
+boundary3.push(new WorldWind.Location(	-46.904	,	4.66	));
+boundary3.push(new WorldWind.Location(	-46.958	,	4.648	));
+boundary3.push(new WorldWind.Location(	-46.99	,	4.645	));
+boundary3.push(new WorldWind.Location(	-47.022	,	4.654	));
+boundary3.push(new WorldWind.Location(	-47.067	,	4.677	));
+ var boundary4 = [];
+boundary4.push(new WorldWind.Location(	-47.814	,	4.738	));
+boundary4.push(new WorldWind.Location(	-47.817	,	4.665	));
+boundary4.push(new WorldWind.Location(	-47.823	,	4.442	));
+boundary4.push(new WorldWind.Location(	-47.776	,	4.453	));
+boundary4.push(new WorldWind.Location(	-47.745	,	4.455	));
+boundary4.push(new WorldWind.Location(	-47.715	,	4.444	));
+boundary4.push(new WorldWind.Location(	-47.668	,	4.42	));
+boundary4.push(new WorldWind.Location(	-47.671	,	4.494	));
+boundary4.push(new WorldWind.Location(	-47.67	,	4.57	));
+boundary4.push(new WorldWind.Location(	-47.661	,	4.645	));
+boundary4.push(new WorldWind.Location(	-47.651	,	4.72	));
+boundary4.push(new WorldWind.Location(	-47.696	,	4.706	));
+boundary4.push(new WorldWind.Location(	-47.727	,	4.704	));
+boundary4.push(new WorldWind.Location(	-47.763	,	4.714	));
+
+
+
 
 
 
@@ -73,6 +122,12 @@ requirejs(['../src/WorldWind',
         var shape = new WorldWind.SurfacePolygon(boundary, attributes);
         shapesLayer.addRenderable(shape);
 
+var shape2 = new WorldWind.SurfacePolygon(boundary2, attributes);
+    shapesLayer.addRenderable(shape2);
+var shape3 = new WorldWind.SurfacePolygon(boundary3, attributes);
+    shapesLayer.addRenderable(shape3);
+var shape4 = new WorldWind.SurfacePolygon(boundary4, attributes);
+    shapesLayer.addRenderable(shape4);
         //surface image test begin
         var surfaceImage2 = new WorldWind.SurfaceImage(new WorldWind.Sector(-47.57565, -47.36640, 4.220789, 4.535433),
         "http://212.201.45.10:8080/rasdaman/ows?query=for%20data%20in%20(%20esp_test_frt00003590_07_if164l_trr3%20)%20return%20encode(%20(int)(255%20/%20(max(%20(data.band_100%20!=%2065535)%20*%20data.band_100)%20-%20min(data.band_100)))%20*%20(data.band_100%20-%20min(data.band_100)),%20%22png%22,%22nodata=null%22)");
