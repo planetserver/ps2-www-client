@@ -59,14 +59,14 @@ var implementChart = function(valuesArray) {
 
 	var chart = c3.generate({
 		bindto: "#right-layer-menu",
-	size: {
+		size: {
 	        height: 500,
 	        width: 300
     	},
 
 	zoom: {
         enabled: true
-   	 },
+    },
 
 	    data: {
 	      columns: [
