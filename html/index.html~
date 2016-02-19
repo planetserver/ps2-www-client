@@ -1,31 +1,37 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Planet Server 2</title>
+  <title>Planet Server 2</title>
 
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        <!--D3 library for chart implementation-->
-        <script src="//d3js.org/d3.v3.min.js"></script>
+  <!--D3 library for chart implementation-->
+  <script type="text/javascript" src="../thirdparty/d3.v3.min.js"></script>
 
-        <!--jQuery-->
-        <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+  <!--C3 library for easier chart implementation-->
+  <script type="text/javascript" src="../thirdparty/c3/c3.js"></script>
 
-        <!-- Bootstrap-->
-        <link href="css/bootstrap.min.css" rel="stylesheet">
-        <script src="js/bootstrap.min.js"></script>
+  <!--jQuery-->
+  <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
 
-        <!-- JavaScript-->
-        <script type="text/javascript" src="js/script.js"></script>
+  <!-- Bootstrap-->
+  <link href="css/bootstrap.min.css" rel="stylesheet">
+  <script src="js/bootstrap.min.js"></script>
 
-        <!-- Style-->
-        <link rel="stylesheet" type="text/css" href="css/styles.css"></link>
+  <!-- JavaScript-->
+  <script type="text/javascript" src="js/script.js"></script>
 
-        <!--scripts that were used for the canvas-->
-        <script data-main="landing.js" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.17/require.min.js"></script>
-    </head>
+  <!-- Style-->
+  <link rel="stylesheet" type="text/css" href="css/styles.css"></link>
+  <!-- Styles for the chart-->
+  <link rel="stylesheet" type="text/css" href="../thirdparty/c3/c3.css"></link>
+
+
+  <!--scripts that were used for the canvas-->
+  <script data-main="landing" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.17/require.min.js"></script>
+</head>
 
     <body>
 
@@ -63,11 +69,11 @@
                 </div>
 		
                 <div id="Moon" title="Moon" class="col-md-2">
-                    <a href="#"><img src="images/logo_moon.png"/></a>
+                    <a href="#"><img src="images/moon_logo.png"/></a>
                 </div>
 
                 <div id="Mars" title="Mars" class="col-md-2">
-                    <a href="#"><img src="images/mars70.png"/></a>
+                    <a href="#"><img src="images/mars_logo.png"/></a>
                 </div>
             </div>
 
