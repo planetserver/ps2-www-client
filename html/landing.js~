@@ -205,7 +205,6 @@ var implementChart = function(valuesArray) {
 }
 
 // function for loading the graph library //d3js.org/d3.v3.min.js located in the index.html
-var serverResponse = " ";
 function loadScriptAndCall(url, callback) {
     // Adding the script tag to the head as suggested before
     var head = document.getElementsByTagName('head')[0];
