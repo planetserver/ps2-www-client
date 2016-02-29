@@ -130,7 +130,7 @@ var shape4 = new WorldWind.SurfacePolygon(boundary4, attributes);
     shapesLayer.addRenderable(shape4);
         //surface image test begin
         var surfaceImage2 = new WorldWind.SurfaceImage(new WorldWind.Sector(-47.57565, -47.36640, 4.220789, 4.535433),
-        "http://212.201.45.10:8080/rasdaman/ows?query=for%20data%20in%20(%20esp_test_frt00003590_07_if164l_trr3%20)%20return%20encode(%20(int)(255%20/%20(max(%20(data.band_100%20!=%2065535)%20*%20data.band_100)%20-%20min(data.band_100)))%20*%20(data.band_100%20-%20min(data.band_100)),%20%22png%22,%22nodata=null%22)");
+        "http://212.201.45.10:8080/rasdaman/ows?query=for%20data%20in%20(%20esp_test_frt00003590_07_if164l_trr3%20)%20return%20encode(%20{red:%20(int)(255%20/%20(max((data.band_233%20!=%2065535)%20*%20data.band_233)%20-%20min(data.band_233)))%20*%20(data.band_233%20-%20min(data.band_233));%20green:%20(int)(255%20/%20(max((data.band_78%20!=%2065535)%20*%20data.band_78)%20-%20min(data.band_78)))%20*%20(data.band_78%20-%20min(data.band_78));%20blue:(int)(255%20/%20(max((data.band_13%20!=%2065535)%20*%20data.band_13)%20-%20min(data.band_13)))%20*%20(data.band_13%20-%20min(data.band_13));%20alpha:%20(int)(255%20/%20(max(%20(data.band_100%20!=%2065535)%20*%20data.band_100)%20-min(data.band_100)))%20*%20(data.band_100%20-%20min(data.band_100))%20*%20(data.band_100%20!=%2065535)},%20%22png%22,%20%22nodata=null%22)");
 
         // Add the surface images to a layer and the layer to the World Window's layer list.
         var surfaceImageLayer = new WorldWind.RenderableLayer();
@@ -155,7 +155,7 @@ var shape4 = new WorldWind.SurfacePolygon(boundary4, attributes);
 
       for (var p = 0; p < pickList.objects.length; p++) {
         // console.log("pickList.objects[p]: " + pickList.objects[p]);
-        // console.log("pickList.objects[p].userObject: " + pickList.objects[p].userObject);
+        //console.log("LAYERS!!!!: " + pickList.objects[p].userObject);
 
         if(pickList.objects[p].userObject === surfaceImage2) {
           console.log("The Layer Clicked: " + pickList.objects[p].userObject);
@@ -205,6 +205,7 @@ var implementChart = function(valuesArray) {
 }
 
 // function for loading the graph library //d3js.org/d3.v3.min.js located in the index.html
+var serverResponse = " ";
 function loadScriptAndCall(url, callback) {
     // Adding the script tag to the head as suggested before
     var head = document.getElementsByTagName('head')[0];
