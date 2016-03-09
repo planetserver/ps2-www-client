@@ -196,6 +196,10 @@ var implementChart = function(valuesArray) {
         enabled: true
    	 },
 
+	point: {
+        show: false
+    	},
+
 	    data: {
 	      columns: [
 	        valuesArray
