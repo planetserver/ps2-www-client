@@ -36,7 +36,7 @@ define([
             this.displayName = "Moon WMS service";
             this.pickEnabled = false;
 
-            this.urlBuilder = new WmsUrlBuilder("http://212.201.45.10:8080/rasdaman/ows",
+            this.urlBuilder = new WmsUrlBuilder("http://212.201.45.9:8080/rasdaman/ows",
               layerName || "moon_wgs84", "", "1.3.0");
 
 

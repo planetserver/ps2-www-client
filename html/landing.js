@@ -44,22 +44,22 @@ requirejs(['../src/WorldWind',
 
         // Create a simple surface polygon, a triangle.
         var boundary = [];
-         boundary.push(new WorldWind.Location(-47.548, 4.535)); 
-        boundary.push(new WorldWind.Location(-47.552, 4.46 ));  
-        boundary.push(new WorldWind.Location(-47.563, 4.389 )); 
-        boundary.push(new WorldWind.Location(-47.575, 4.318)); 
-        boundary.push(new WorldWind.Location(-47.574, 4.241)); 
-        boundary.push(new WorldWind.Location(-47.521, 4.254)); 
-        boundary.push(new WorldWind.Location(-47.489, 4.258)); 
-        boundary.push(new WorldWind.Location(-47.457, 4.247)); 
-        boundary.push(new WorldWind.Location(-47.409, 4.221)); 
-        boundary.push(new WorldWind.Location(-47.407, 4.295)); 
-        boundary.push(new WorldWind.Location(-47.404, 4.37)); 
-        boundary.push(new WorldWind.Location(-47.384, 4.448)); 
-        boundary.push(new WorldWind.Location(-47.366, 4.524)); 
-        boundary.push(new WorldWind.Location(-47.441, 4.505)); 
-        boundary.push(new WorldWind.Location(-47.472, 4.499 )); 
-        boundary.push(new WorldWind.Location(-47.5 , 4.508)); 
+         boundary.push(new WorldWind.Location(-47.548, 4.535));
+        boundary.push(new WorldWind.Location(-47.552, 4.46 ));
+        boundary.push(new WorldWind.Location(-47.563, 4.389 ));
+        boundary.push(new WorldWind.Location(-47.575, 4.318));
+        boundary.push(new WorldWind.Location(-47.574, 4.241));
+        boundary.push(new WorldWind.Location(-47.521, 4.254));
+        boundary.push(new WorldWind.Location(-47.489, 4.258));
+        boundary.push(new WorldWind.Location(-47.457, 4.247));
+        boundary.push(new WorldWind.Location(-47.409, 4.221));
+        boundary.push(new WorldWind.Location(-47.407, 4.295));
+        boundary.push(new WorldWind.Location(-47.404, 4.37));
+        boundary.push(new WorldWind.Location(-47.384, 4.448));
+        boundary.push(new WorldWind.Location(-47.366, 4.524));
+        boundary.push(new WorldWind.Location(-47.441, 4.505));
+        boundary.push(new WorldWind.Location(-47.472, 4.499 ));
+        boundary.push(new WorldWind.Location(-47.5 , 4.508));
 
 	var boundary2 = [];
     boundary2.push(new WorldWind.Location(	-46.966	,	4.478	));
@@ -130,7 +130,7 @@ var shape4 = new WorldWind.SurfacePolygon(boundary4, attributes);
     shapesLayer.addRenderable(shape4);
         //surface image test begin
         var surfaceImage2 = new WorldWind.SurfaceImage(new WorldWind.Sector(-47.57565, -47.36640, 4.220789, 4.535433),
-        "http://212.201.45.10:8080/rasdaman/ows?query=for%20data%20in%20(%20esp_test_frt00003590_07_if164l_trr3%20)%20return%20encode(%20{%20red:%20(int)(255%20/%20(max((data.band_233%20!=%2065535)%20*%20data.band_233)%20-%20min(data.band_233)))%20*%20(data.band_233%20-%20min(data.band_233));%20green:%20(int)(255%20/%20(max((data.band_78%20!=%2065535)%20*%20data.band_78)%20-%20min(data.band_78)))%20*%20(data.band_78%20-%20min(data.band_78));%20blue:(int)(255%20/%20(max((data.band_13%20!=%2065535)%20*%20data.band_13)%20-%20min(data.band_13)))%20*%20(data.band_13%20-%20min(data.band_13));%20alpha:%20(data.band_100%20!=%2065535)%20*%20255%20},%20%22png%22,%20%22nodata=null%22)");
+        "http://212.201.45.9:8080/rasdaman/ows?query=for%20data%20in%20(%20frt00003590_07_if164l_trr3%20)%20return%20encode(%20{%20red:%20(int)(255%20/%20(max((data.band_233%20!=%2065535)%20*%20data.band_233)%20-%20min(data.band_233)))%20*%20(data.band_233%20-%20min(data.band_233));%20green:%20(int)(255%20/%20(max((data.band_78%20!=%2065535)%20*%20data.band_78)%20-%20min(data.band_78)))%20*%20(data.band_78%20-%20min(data.band_78));%20blue:(int)(255%20/%20(max((data.band_13%20!=%2065535)%20*%20data.band_13)%20-%20min(data.band_13)))%20*%20(data.band_13%20-%20min(data.band_13));%20alpha:%20(data.band_100%20!=%2065535)%20*%20255%20},%20%22png%22,%20%22nodata=null%22)");
 
         // Add the surface images to a layer and the layer to the World Window's layer list.
         var surfaceImageLayer = new WorldWind.RenderableLayer();
@@ -174,7 +174,7 @@ var shape4 = new WorldWind.SurfacePolygon(boundary4, attributes);
                 var E = longitude * cosOf0 * r * (PI/180);
 		console.log("N: " +N);
 		console.log("E: " +E);
-                var query = "http://212.201.45.10:8080/rasdaman/ows?query=for%20c%20in%20(esp_test_frt00003590_07_if164l_trr3)%20return%20encode(c[%20N("
+                var query = "http://212.201.45.9:8080/rasdaman/ows?query=for%20c%20in%20(frt00003590_07_if164l_trr3)%20return%20encode(c[%20N("
                                 + N +":" + N + "),%20E(" + E + ":" + E + ")%20],%20%22csv%22)";
 
                 console.log("Query for the click: " + query);
