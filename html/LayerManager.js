@@ -54,7 +54,7 @@ define(function () {
 
     LayerManager.prototype.onProjectionClick = function (event) {
         var projectionName = event.target.innerText || event.target.innerHTML;
-        $("#projectionDropdown").find("button").html(projectionName + ' <span class="caret"></span>');
+        //$("#projectionDropdown").find("button").html(projectionName + ' <span class="caret"></span>');
 
         if (projectionName === "3D") {
             if (!this.roundGlobe) {
@@ -161,34 +161,6 @@ define(function () {
     //    }
     //};
 
-    LayerManager.prototype.createProjectionList = function () {
-        var projectionNames = [
-            "3D",
-            "Equirectangular",
-            "Mercator",
-            "North Polar",
-            "South Polar",
-            "North UPS",
-            "South UPS",
-            "North Gnomonic",
-            "South Gnomonic"
-        ];
-        var projectionDropdown = $("#projectionDropdown");
-
-        var dropdownButton = $('<button class="btn btn-info btn-block dropdown-toggle" type="button" data-toggle="dropdown">3D<span class="caret"></span></button>');
-        projectionDropdown.append(dropdownButton);
-
-        var ulItem = $('<ul class="dropdown-menu">');
-        projectionDropdown.append(ulItem);
-
-        for (var i = 0; i < projectionNames.length; i++) {
-            var projectionItem = $('<li><a >' + projectionNames[i] + '</a></li>');
-            ulItem.append(projectionItem);
-        }
-
-        ulItem = $('</ul>');
-        projectionDropdown.append(ulItem);
-    };
 
     LayerManager.prototype.onSearchButton = function (event) {
         this.performSearch($("#searchText")[0].value)
