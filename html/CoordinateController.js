@@ -159,4 +159,3 @@ define(function () {
 
     return CoordinateController;
 });
-
