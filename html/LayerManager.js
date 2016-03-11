@@ -4,7 +4,6 @@
  */
 /**
  * @exports LayerManager
- * @version $Id: LayerManager.js 3313 2015-07-10 17:59:29Z dcollins $
  */
 define(function () {
     "use strict";
@@ -29,10 +28,6 @@ define(function () {
         });
 
         this.synchronizeLayerList();
-
-        $("#layerList").find("button").on("click", function (e) {
-            thisExplorer.onLayerClick($(this));
-        });
 
         $("#searchBox").find("button").on("click", function (e) {
             thisExplorer.onSearchButton(e);
@@ -82,9 +77,9 @@ define(function () {
             } else if (projectionName === "South UPS") {
                 this.flatGlobe.projection = new WorldWind.ProjectionUPS("South");
             } else if (projectionName === "North Gnomonic") {
-                this.flatGlobe.projection = new WorldWind.ProjectionGnomonic("North");
+                this.flatGlobe.projection = new WorldWind.ProjectionUPS("North");
             } else if (projectionName === "South Gnomonic") {
-                this.flatGlobe.projection = new WorldWind.ProjectionGnomonic("South");
+                this.flatGlobe.projection = new WorldWind.ProjectionUPS("South");
             }
 
             if (this.wwd.globe !== this.flatGlobe) {
@@ -113,6 +108,7 @@ define(function () {
                     layerButton.removeClass("active");
                 }
                 this.wwd.redraw();
+                break;
             }
         }
     };
@@ -132,13 +128,25 @@ define(function () {
             var layerItem = $('<button class="list-group-item btn btn-block">' + layer.displayName + '</button>');
             layerListItem.append(layerItem);
 
+            if (layer.showSpinner && Spinner) {
+                var opts = {
+                    scale: 0.9,
+                };
+                var spinner = new Spinner(opts).spin();
+                layerItem.append(spinner.el);
+            }
+
             if (layer.enabled) {
                 layerItem.addClass("active");
             } else {
                 layerItem.removeClass("active");
             }
-            this.wwd.redraw();
         }
+
+        var self = this;
+        layerListItem.find("button").on("click", function (e) {
+            self.onLayerClick($(this));
+        });
     };
     //
     //LayerManager.prototype.updateVisibilityState = function (worldWindow) {
@@ -161,6 +169,34 @@ define(function () {
     //    }
     //};
 
+    LayerManager.prototype.createProjectionList = function () {
+        var projectionNames = [
+            "3D",
+            "Equirectangular",
+            "Mercator",
+            "North Polar",
+            "South Polar",
+            "North UPS",
+            "South UPS",
+            "North Gnomonic",
+            "South Gnomonic"
+        ];
+        var projectionDropdown = $("#projectionDropdown");
+
+        // var dropdownButton = $('<button class="btn btn-info btn-block dropdown-toggle" type="button" data-toggle="dropdown">3D<span class="caret"></span></button>');
+        // projectionDropdown.append(dropdownButton); --> comment this to use the dropdown menu from service-template
+
+        var ulItem = $('<ul class="dropdown-menu">');
+        projectionDropdown.append(ulItem);
+
+        for (var i = 0; i < projectionNames.length; i++) {
+            var projectionItem = $('<li><a >' + projectionNames[i] + '</a></li>');
+            ulItem.append(projectionItem);
+        }
+
+        ulItem = $('</ul>');
+        projectionDropdown.append(ulItem);
+    };
 
     LayerManager.prototype.onSearchButton = function (event) {
         this.performSearch($("#searchText")[0].value)

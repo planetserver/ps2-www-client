@@ -2,7 +2,7 @@ $(function () {
     $.widget("dock.infoDock", $.earthserver.dock, {
         options: {
             position: "right",
-            toggleIcon: "images/icons/info(h100)w.png"
+            toggleIcon: "images/icons/info(h100).png"
         },
         _create: function () {
             this._super();

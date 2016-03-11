@@ -87,9 +87,9 @@ define(function () {
     CoordinateController.prototype.updateTerrainPosition = function () {
         // Look for the DOM elements to update, and exit if none exist.
         var terrainLat = $("#terrainLatitude"),
-            terrainLon = $("#terrainLongitude");
-
-        if (!terrainLat && !terrainLon) {
+            terrainLon = $("#terrainLongitude"),
+            terrainElev = $("#terrainElevation");
+        if (!terrainLat && !terrainLon && !terrainElev) {
             return;
         }
 
@@ -108,16 +108,23 @@ define(function () {
 
         // Update the DOM elements with the current terrain position.
         if (terrainObject) {
-            terrainLat.html(this.formatLatitude(terrainObject.position.latitude));
-            terrainLon.html(this.formatLongitude(terrainObject.position.longitude));
+           terrainLat.parent().show();
+           terrainLon.parent().show();
+           terrainElev.parent().show();
+           terrainLat.text(this.formatLatitude(terrainObject.position.latitude));
+           terrainLon.text(this.formatLongitude(terrainObject.position.longitude));
+           terrainElev.text(this.formatAltitude(terrainObject.position.altitude, "m"));
+       } else {
+           terrainLat.parent().hide();
+           terrainLon.parent().hide();
+           terrainElev.parent().hide();
+       }
 
+        if (wwd.globe.is2D()) {
+            terrainElev.hide();
         } else {
-            terrainLat.empty();
-            terrainLon.empty();
-
+            terrainElev.show();
         }
-
-
     };
 
     CoordinateController.prototype.formatLatitude = function (number) {

@@ -14,7 +14,7 @@ $(function () {
                         "data-container": "body",
                         "title": "Zoom In"
                     }).append(
-                        $("<img>", {class: "gis-icon", src: "images/icons/zoom_in(h100)w.png"})
+                        $("<img>", {class: "gis-icon", src: "images/icons/zoom_in(h100).png"})
                     )
                 ).append(
                 $("<div>", {
@@ -25,7 +25,7 @@ $(function () {
                     "data-container": "body",
                     "title": "Zoom Out"
                 }).append(
-                        $("<img>", {class: "gis-icon", src: "images/icons/zoom_out(h100)w.png"})
+                        $("<img>", {class: "gis-icon", src: "images/icons/zoom_out(h100).png"})
                     )
             ).append(
                 $("<div>", {
@@ -36,7 +36,7 @@ $(function () {
                     "data-container": "body",
                     "title": "Fit to Screen"
                 }).append(
-                        $("<img>", {class: "gis-icon", src: "images/icons/fit_to_screen(h100)w.png"})
+                        $("<img>", {class: "gis-icon", src: "images/icons/fit_to_screen(h100).png"})
                     )
             ).append(
                 $("<div>", {
@@ -47,7 +47,7 @@ $(function () {
                     "data-container": "body",
                     "title": "Select"
                 }).append(
-                        $("<img>", {class: "gis-icon", src: "images/icons/select(h100)w.png"})
+                        $("<img>", {class: "gis-icon", src: "images/icons/linear_distance(h100).png"})
                     )
             ).append(
                 $("<div>", {
@@ -58,7 +58,7 @@ $(function () {
                     "data-container": "body",
                     "title": "Pan"
                 }).append(
-                        $("<img>", {class: "gis-icon", src: "images/icons/pan(h100)w.png"})
+                        $("<img>", {class: "gis-icon", src: "images/icons/pan(h100).png"})
                     )
             ).appendTo(this.options.container);
 

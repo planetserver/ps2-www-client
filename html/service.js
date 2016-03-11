@@ -6,7 +6,8 @@ $(function () {
 
             /* main dock (required) */
             var leftDock = $("<div>").mainDock().mainDock("instance");
-            /* */
+            /*leftDock.addQueryTerinalPanel().addQueryTerminalPanel().addQueryTerminalPanel().addQueryTerminalPanel();*/
+
             /*leftDock
                 .addProjectionSelectPanel(function(elemClicked) {
                     console.log(elemClicked.text())
