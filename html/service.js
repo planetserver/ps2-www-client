@@ -18,8 +18,8 @@ $(function () {
                 })
                 .addQueryTerminalPanel().addQueryTerminalPanel().addQueryTerminalPanel().addQueryTerminalPanel().addQueryTerminalPanel().addQueryTerminalPanel().addQueryTerminalPanel();*/
 
-            var exampleRightDock = $("<div>").secondaryDock().secondaryDock("instance");
-            exampleRightDock.addEmptyPanel();
+            var plotDock = $("<div>").plotDock().plotDock("instance");
+            plotDock.addEmptyPanel();
 
             /* info dock (required) */
             var infoDock = $("<div>").infoDock().infoDock("instance");
