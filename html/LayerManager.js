@@ -22,7 +22,7 @@ define(function () {
 
         this.roundGlobe = this.wwd.globe;
 
-        this.createProjectionList();
+        //this.createProjectionList();
         $("#projectionDropdown").find(" li").on("click", function (e) {
             thisExplorer.onProjectionClick(e);
         });

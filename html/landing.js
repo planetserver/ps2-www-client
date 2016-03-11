@@ -130,12 +130,6 @@ function (ww,
     shapesLayer.addRenderable(surfaceImageLayer);
     //surface image test end
 
-
-
-
-
-
-
     // Create a layer manager for controlling layer visibility.
     var layerManger = new LayerManager(wwd);
 
