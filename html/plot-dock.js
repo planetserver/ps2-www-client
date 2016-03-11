@@ -1,3 +1,4 @@
+
 $(function () {
     $.widget("dock.plotDock", $.earthserver.dock, {
         options: {
@@ -10,16 +11,7 @@ $(function () {
             this.dockToggle.append(
                 $("<img>", {class: "dock-toggle-icon", src: this.options.toggleIcon})
             );
-            this.plotPanel = this.addPlotPanel();
-        },
-        addPlotPanel: function() {
-            return $("<div>").tabPanel({
-                dock: this.dock,
-                panelId: "plot-panel"
-            }).tabPanel("instance");
-        },
-        getPlotPanel: function() {
-            return this.plotPanel;
+            this.plotPanel = this.addEmptyPanel();
         }
     })
 });
