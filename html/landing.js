@@ -10,12 +10,14 @@ requirejs(['../src/WorldWind',
         './LayerManager',
         './CoordinateController',//ADD WMS LAYER
         '../src/gesture/TapRecognizer',
+        './Footprints'
         ],
     function (ww,
               LayerManager,
               CoordinateController,
-              TapRecognizer) {
-        "use strict";
+              TapRecognizer,
+              Footprints) {
+        //"use strict";
 
         WorldWind.Logger.setLoggingLevel(WorldWind.Logger.LEVEL_WARNING);
 
@@ -31,6 +33,8 @@ requirejs(['../src/WorldWind',
         // {layer: new WorldWind.ViewConrolsLayer(wwd), enabled: true}
         ];
 
+
+
         for (var l = 0; l < layers.length; l++) {
             //console.log("layers[l].layer.enabled: " + layers[l].layer.enabled);
             //console.log("layers[l].enabled: " + layers[l].enabled);
@@ -38,9 +42,13 @@ requirejs(['../src/WorldWind',
             wwd.addLayer(layers[l].layer);
         }
 
+
+
         // Create a layer to hold the surface shapes.
         var shapesLayer = new WorldWind.RenderableLayer("hrs00006fea_07_if173s_trr3_CAT_phot_p.img.tif");
         wwd.addLayer(shapesLayer);
+
+
 
         // Create a simple surface polygon, a triangle.
         var boundary = [];
@@ -140,6 +148,23 @@ var shape4 = new WorldWind.SurfacePolygon(boundary4, attributes);
         shapesLayer.addRenderable(surfaceImageLayer);
         //surface image test end
 
+
+        // // var newFootprints = new Footprints();
+        // console.log(Footprints[0].latitude);
+        // console.log(Footprints[0].latitude[5]);
+        // //var shapesLayers = null;
+        // var boundaryOfOneLayer = [];
+        // for(var i = 0; i < Footprints.length; i++) {
+        //      //shapesLayers = new WorldWind.RenderableLayer(Footprints[i].name);
+        //     for(var j = 0; j < (Footprints[i].latitude.length - 1); j++) {
+        //         boundaryOfOneLayer.push(new WorldWind.Location(Footprints[j].latitude[j], 
+        //                                                        Footprints[j].longitude[j]));
+        //     }
+        //     var newShape = new WorldWind.SurfacePolygon(boundaryOfOneLayer, attributes);
+        //     shapesLayer.addRenderable(newShape);
+        //     boundaryOfOneLayer = []; // empty the array for boundaries to use it for the next layer
+        //     console.log(i);
+        // }
 
        var layerRegognizer = function (o) {
       // X and Y coordinates of a single click
