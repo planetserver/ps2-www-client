@@ -7,11 +7,13 @@
 */
 
 requirejs(['../src/WorldWind',
-'./CoordinateController',
-'./LayerManager'],
+           './CoordinateController',
+           './LayerManager',
+           './Footprints'],
 function (ww,
-  CoordinateController,
-  LayerManager) {
+          CoordinateController,
+          LayerManager,
+          Footprints) {
     "use strict";
 
     WorldWind.Logger.setLoggingLevel(WorldWind.Logger.LEVEL_WARNING);
