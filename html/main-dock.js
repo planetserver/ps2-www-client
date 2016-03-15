@@ -60,7 +60,7 @@ $(function () {
                 }
                 self.coverageSelectPanel.addSelectOption(coverage.replace(/ /g, '').toLowerCase(), coverage);
             });
-            self.coverageSelectPanel.addButton("Retrieve");
+            self.coverageSelectPanel.addButton("retrieve-coverage", "Retrieve");
 
             return this;
         },

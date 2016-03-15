@@ -1,7 +1,7 @@
 $(function () {
     $.widget("panel.queryTerminalPanel", $.dock.panel, {
         options: {
-            panelType: "query-terminal"
+            panelType: "query-terminal",
         },
         _create: function () {
             this._super();
@@ -10,7 +10,7 @@ $(function () {
                     $("<textarea>", {class: "code-area"})
                 )
             ;
-            this.addButton("Run Query").addButton("Reset");
+            this.addButton("run-query", "Run Query").addButton("reset-query", "Reset");
         }
     })
 });
