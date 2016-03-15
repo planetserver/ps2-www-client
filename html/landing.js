@@ -133,7 +133,7 @@ function (ww,
         shapesLayer.addRenderable(shapes[i]);
      }
 
-
+     console.log("daskldklashs");
     // Add the surface images to a layer and the layer to the World Window's layer list.
     var surfaceImageLayer = new WorldWind.RenderableLayer();
     surfaceImageLayer.displayName = "Surface Images";
@@ -142,6 +142,136 @@ function (ww,
     shapesLayer.addRenderable(surfaceImageLayer);
     //surface image test end
 
+//////////////////
+
+       var layerRegognizer = function (o) {
+      // X and Y coordinates of a single click
+      var x = o.clientX,
+      y = o.clientY;
+      //console.log("The coordinates are: " + x + " " + y);
+      var pickList = wwd.pick(wwd.canvasCoordinates(x, y));
+               console.log(pickList);
+               console.log("The latitude value clicked is: " + pickList.objects[1].position.latitude);
+               console.log("The longtitude value clicked is: " + pickList.objects[1].position.longitude);
+               queryBuilder(pickList.objects[1].position.latitude, pickList.objects[1].position.longitude);
+      console.log(pickList);
+
+      // for (var p = 0; p < pickList.objects.length; p++) {
+      //   // console.log("pickList.objects[p]: " + pickList.objects[p]);
+      //   //console.log("LAYERS!!!!: " + pickList.objects[p].userObject);
+
+      //   if(pickList.objects[p].userObject === surfaceImage2) {
+      //     console.log("The Layer Clicked: " + pickList.objects[p].userObject);
+      //     $('#right-layer-menu').addClass('open');
+      //     $('#right-layer-menu-toggle').addClass('open');
+
+
+      //   }
+      // }
+    };
+    var queryBuilder = function (latitude, longitude) {
+        var PI = 3.141516;
+                var r = 3396200;
+                var cosOf0 = 1;
+                var N = latitude * r * (PI/180);
+                var E = longitude * cosOf0 * r * (PI/180);
+        console.log("N: " +N);
+        console.log("E: " +E);
+                var query = "http://212.201.45.9:8080/rasdaman/ows?query=for%20c%20in%20(frt00003590_07_if164l_trr3)%20return%20encode(c[%20N("
+                                + N +":" + N + "),%20E(" + E + ":" + E + ")%20],%20%22csv%22)";
+
+                console.log("Query for the click: " + query);
+getQueryResponseAndSetChart(query);
+
+            };
+
+
+            function getQueryResponseAndSetChart(query) {
+    var rawFile = new XMLHttpRequest();
+    rawFile.open("GET", query, true);
+    rawFile.onreadystatechange = function () {
+        if(rawFile.readyState === 4) {
+            if(rawFile.status === 200 || rawFile.status == 0) {
+                serverResponse = rawFile.responseText;
+                var parsedFloats = [];
+                parsedFloats = parseFloats(serverResponse);
+                loadScriptAndCall("//d3js.org/d3.v3.min.js", implementChart(parsedFloats));
+            }
+        }
+    }
+
+    rawFile.send(null);
+}
+
+
+//Implementation function of the graph
+var implementChart = function(valuesArray) {
+
+    var chart = c3.generate({
+        bindto: ".container-fluid",
+    size: {
+            height: 500,
+            width: 300
+        },
+
+    zoom: {
+        enabled: true
+     },
+
+    point: {
+        show: false
+        },
+
+        data: {
+          columns: [
+            valuesArray
+          ]
+        }
+    });
+}
+
+// function for loading the graph library //d3js.org/d3.v3.min.js located in the index.html
+var serverResponse = " ";
+function loadScriptAndCall(url, callback) {
+    // Adding the script tag to the head as suggested before
+    var head = document.getElementsByTagName('head')[0];
+    var script = document.createElement('script');
+    script.type = 'text/javascript';
+    script.src = url;
+
+    // Then bind the event to the callback function.
+    // There are several events for cross browser compatibility.
+    script.onreadystatechange = callback;
+    script.onload = callback;
+
+    // Fire the loading
+    head.appendChild(script);
+}
+
+
+function parseFloats(input) {
+    var floatsArray = [];
+    var helpString = input;
+
+    var parsedFloat = parseFloat(helpString.slice(2, helpString.indexOf(" ")));
+
+    while(helpString.indexOf(" ") != -1) {
+        if(parsedFloat != 65535){
+            floatsArray.push(parsedFloat);
+        }
+        helpString = helpString.slice(helpString.indexOf(" ") + 1, helpString.length);
+        var parsedFloat = parseFloat(helpString.slice(0, helpString.indexOf(" ")));
+    }
+    console.log(floatsArray);
+    return floatsArray;
+}
+
+
+
+        // Listen for Mouse clicks and regognize layers
+        wwd.addEventListener("click", layerRegognizer);
+
+////////////////
 
     // Create a layer manager for controlling layer visibility.
     var layerManger = new LayerManager(wwd);
