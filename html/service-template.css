@@ -17,6 +17,31 @@ body {
     padding-right: 3em !important;
 }
 
+
+/* Styles for the graph */
+.axis path,
+.axis line {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+
+.grid path,
+.grid line {
+  fill: none;
+  stroke: rgba(0, 0, 0, 0.25);
+  shape-rendering: crispEdges;
+}
+
+.x.axis path {
+  display: none;
+}
+
+.line {
+  fill: none;
+  stroke-width: 2.5px;
+}
+
 /*.triangle {
     border-left: 1.7em solid transparent;
     border-right: 1.7em solid transparent;
