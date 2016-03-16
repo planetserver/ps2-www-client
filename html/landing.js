@@ -220,18 +220,9 @@ function parseFloats(input) {
     // Create a coordinate controller to update the coordinate overlay elements.
     var coordinateController = new CoordinateController(wwd);
 
+    //go to Location given in the URL
+    var myLocation = new WorldWind.Position(qsParam.lat, qsParam.lon,qsParam.range);
+    wwd.goTo(myLocation);
 
-///// On load - only run this once:
-
-//alert(wwd.parent)
-
-//function eventWindowLoaded() {
-//alert("lat = " + qsParam.lat + "\nlon = " + qsParam.lon + "\nrange = " + qsParam.range + "\ncoverage = " + qsParam.coverage);
-if (!(qsParam.lat   === false)) {wwd.navigator.lookAtLocation.latitude  = qsParam.lat  };
-if (!(qsParam.lon   === false)) {wwd.navigator.lookAtLocation.longitude = qsParam.lon  };
-if (!(qsParam.range === false)) {wwd.navigator.range                    = qsParam.range};
-//}
-
-//window.addEventListener("load", eventWindowLoaded, false);
 
   });
