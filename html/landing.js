@@ -129,7 +129,7 @@ getQueryResponseAndSetChart(query);
 
 // adjusting the data we have for plotting with D3 library
 function adjustData(parsedFloats){
-  
+
   var Xaxis = [];
   for(var i = 0; i < parsedFloats.length; i++){
     Xaxis.push(i);
@@ -149,7 +149,7 @@ function adjustData(parsedFloats){
                 serverResponse = rawFile.responseText;
                 var parsedFloats = [];
                 parsedFloats = parseFloats(serverResponse);
-                
+
                 loadScriptAndCall("//d3js.org/d3.v3.min.js", implementChart(adjustData(parsedFloats)));
             }
         }
@@ -162,8 +162,7 @@ function adjustData(parsedFloats){
 //Implementation function of the graph
   var implementChart = function(valuesArray) {
 
-var data = [ { label: "Data Set 1", 
-               x: valuesArray[0], 
+var data = [ { x: valuesArray[0],
                y: valuesArray[1] } ] ;
 var xy_chart = d3_xy_chart()
     .width(660)
@@ -175,25 +174,25 @@ var svg = d3.select(".right-dock.open").append("svg")
     .call(xy_chart) ;
 
 function d3_xy_chart() {
-    var width = 440,  
-        height = 280, 
+    var width = 440,
+        height = 280,
         xlabel = "X Axis Label",
         ylabel = "Y Axis Label" ;
-    
+
     function chart(selection) {
         selection.each(function(datasets) {
             //
-            // Create the plot. 
+            // Create the plot.
             //
-            var margin = {top: 20, right: 80, bottom: 30, left: 50}, 
-                innerwidth = width - margin.left - margin.right,
+            var margin = {top: 20, right: 10, bottom: 30, left: 40},
+                innerwidth = width- margin.left - margin.right,
                 innerheight = height - margin.top - margin.bottom ;
-            
+
             var x_scale = d3.scale.linear()
                 .range([0, innerwidth])
-                .domain([ d3.min(datasets, function(d) { return d3.min(d.x); }), 
+                .domain([ d3.min(datasets, function(d) { return d3.min(d.x); }),
                           d3.max(datasets, function(d) { return d3.max(d.x); }) ]) ;
-            
+
             var y_scale = d3.scale.linear()
                 .range([innerheight, 0])
                 .domain([ d3.min(datasets, function(d) { return d3.min(d.y); }),
@@ -218,7 +217,7 @@ function d3_xy_chart() {
 
             var y_grid = d3.svg.axis()
                 .scale(y_scale)
-                .orient("left") 
+                .orient("left")
                 .tickSize(-innerwidth)
                 .tickFormat("") ;
 
@@ -227,12 +226,22 @@ function d3_xy_chart() {
                 .x(function(d) { return x_scale(d[0]); })
                 .y(function(d) { return y_scale(d[1]); }) ;
 
+            // var zoom = d3.behavior.zoom()
+            //     .x(x_scale)
+            //     .y(y_scale)
+            //     .scaleExtent([1, 10])
+            //     .on("zoom", zoomed);
+            //     function zoomed() {
+            //         svg.select(".x_scale.axis").call(x_axis);
+            //         svg.select(".y_scale.axis").call(y_axis);
+            //       }
+
             var svg = d3.select(this)
                 .attr("width", width)
                 .attr("height", height)
                 .append("g")
                 .attr("transform", "translate(" + margin.left + "," + margin.top + ")") ;
-            
+
             svg.append("g")
                 .attr("class", "x grid")
                 .attr("transform", "translate(0," + innerheight + ")")
@@ -244,14 +253,14 @@ function d3_xy_chart() {
 
             svg.append("g")
                 .attr("class", "x axis")
-                .attr("transform", "translate(0," + innerheight + ")") 
+                .attr("transform", "translate(0," + innerheight + ")")
                 .call(x_axis)
                 .append("text")
                 .attr("dy", "-.71em")
                 .attr("x", innerwidth)
                 .style("text-anchor", "end")
                 .text(xlabel) ;
-            
+
             svg.append("g")
                 .attr("class", "y axis")
                 .call(y_axis)
@@ -266,23 +275,25 @@ function d3_xy_chart() {
                 .data(datasets.map(function(d) {return d3.zip(d.x, d.y);}))
                 .enter().append("g")
                 .attr("class", "d3_xy_chart_line") ;
-            
+
             data_lines.append("path")
                 .attr("class", "line")
                 .attr("d", function(d) {return draw_line(d); })
                 .attr("stroke", function(_, i) {return color_scale(i);}) ;
-            
+
             data_lines.append("text")
-                .datum(function(d, i) { return {name: datasets[i].label, final: d[d.length-1]}; }) 
-                .attr("transform", function(d) { 
-                    return ( "translate(" + x_scale(d.final[0]) + "," + 
+                .datum(function(d, i) { return {name: datasets[i].label, final: d[d.length-1]}; })
+                .attr("transform", function(d) {
+                    return ( "translate(" + x_scale(d.final[0]) + "," +
                              y_scale(d.final[1]) + ")" ) ; })
                 .attr("x", 3)
                 .attr("dy", ".35em")
                 .attr("fill", function(_, i) { return color_scale(i); })
                 .text(function(d) { return d.name; }) ;
 
+
         }) ;
+
     }
 
     chart.width = function(value) {

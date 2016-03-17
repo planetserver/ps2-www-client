@@ -17,7 +17,6 @@ body {
     padding-right: 3em !important;
 }
 
-
 /* Styles for the graph */
 .axis path,
 .axis line {
@@ -41,6 +40,9 @@ body {
   fill: none;
   stroke-width: 2.5px;
 }
+
+
+/////////////////
 
 /*.triangle {
     border-left: 1.7em solid transparent;
@@ -190,6 +192,11 @@ body {
     background: -moz-linear-gradient(right, #2f5597, #203864); /* For Firefox 3.6 to 15 */
     background: linear-gradient(to right, #2f5597, #203864); /* Standard syntax */
     /*padding-right: 0px;*/
+}
+
+#service-container .right-dock.plot-dock {
+    width: 35%;
+    right: -35%;
 }
 
 #service-container .right-dock .right-dock-toggle {
