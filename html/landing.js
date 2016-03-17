@@ -161,7 +161,7 @@ function adjustData(parsedFloats){
 
 //Implementation function of the graph
   var implementChart = function(valuesArray) {
-
+d3.select("svg").remove();
 var data = [ { x: valuesArray[0],
                y: valuesArray[1] } ] ;
 var xy_chart = d3_xy_chart()
