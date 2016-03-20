@@ -19,7 +19,8 @@ var qsParam = {lat:          getQueryVariable("lat"),
                   coverage:     getQueryVariable("coverage") };
 //alert(qsParam.lat);
 
-requirejs(['../src/WorldWind',
+requirejs(['./config/config',
+	   '../src/WorldWind',
            './CoordinateController',
            './LayerManager',
            '../src/navigate/Navigator',
@@ -48,7 +49,7 @@ function (ww,
 wwd.redraw();
 
     // Create a layer to hold the surface shapes.
-    var shapesLayer = new WorldWind.RenderableLayer("hrs00006fea_07_if173s_trr3_CAT_phot_p.img.tif");
+    var shapesLayer = new WorldWind.RenderableLayer("");
     wwd.addLayer(shapesLayer);
 
     // Create and set attributes for it. The shapes below except the surface polyline use this same attributes
@@ -56,23 +57,34 @@ wwd.redraw();
     // can be shared among shapes.
     var attributes = new WorldWind.ShapeAttributes(null);
     attributes.outlineColor = WorldWind.Color.RED;
+    //attributes.interiorColor = new WorldWind.Color(0, 255, 25, 0.00001);
     attributes.drawInterior = false;
       //surface image test begin
     var surfaceImage2 = new WorldWind.SurfaceImage(new WorldWind.Sector(-47.57565, -47.36640, 4.220789, 4.535433),
     "http://212.201.45.9:8080/rasdaman/ows?query=for%20data%20in%20(%20frt00003590_07_if164l_trr3%20)%20return%20encode(%20{%20red:%20(int)(255%20/%20(max((data.band_233%20!=%2065535)%20*%20data.band_233)%20-%20min(data.band_233)))%20*%20(data.band_233%20-%20min(data.band_233));%20green:%20(int)(255%20/%20(max((data.band_78%20!=%2065535)%20*%20data.band_78)%20-%20min(data.band_78)))%20*%20(data.band_78%20-%20min(data.band_78));%20blue:(int)(255%20/%20(max((data.band_13%20!=%2065535)%20*%20data.band_13)%20-%20min(data.band_13)))%20*%20(data.band_13%20-%20min(data.band_13));%20alpha:%20(data.band_100%20!=%2065535)%20*%20255%20},%20%22png%22,%20%22nodata=null%22)");
 
-    //Adding footprints
+    var checkedAttributes = new WorldWind.ShapeAttributes(null);
+    checkedAttributes.outlineColor = WorldWind.Color.BLUE;
+    checkedAttributes.interiorColor = new WorldWind.Color(0, 1, 1, 0.5);
+    checkedAttributes.drawInterior = false;
+
+    //Adding allFootPrintsArray    
     var boundaries = []; // array for boundary locations of the footprints
     var shapes = []; // array for shape SurfacePolygon objects with corresponding boundaries and attributes
-    for(var i = 0; i < Footprints.length; i++) {
+    for(var i = 0; i < allFootPrintsArray.length; i++) {
         boundaries.push([]); // new array for the boundaries of a single footprint
         shapes.push([]);
-        for(var j = 0; j < Footprints[i].latitude.length; j++) {
+        for(var j = 0; j < allFootPrintsArray[i].latList.length; j++) {
             // adding all the boundaries of a single polygon into boundaries[i]
-            boundaries[i].push(new WorldWind.Location(Footprints[i].latitude[j], Footprints[i].longitude[j]));
+            boundaries[i].push(new WorldWind.Location(allFootPrintsArray[i].latList[j], allFootPrintsArray[i].longList[j]));
         }
+
         shapes[i] = new WorldWind.SurfacePolygon(boundaries[i], attributes);
-        shapes[i]._displayName = Footprints[i].name; // setting the exact name of the polygon into _displayName
+        shapes[i]._displayName = allFootPrintsArray[i].coverageID; // setting the exact name of the polygon into _displayName
+
+
+        shapes[i].highlightAttributes = checkedAttributes;
+
         shapesLayer.addRenderable(shapes[i]);
      }
 
@@ -87,30 +99,60 @@ wwd.redraw();
 //////////////////
 
        var layerRegognizer = function (o) {
-      // X and Y coordinates of a single click
-      var x = o.clientX,
-      y = o.clientY;
-      //console.log("The coordinates are: " + x + " " + y);
-      var pickList = wwd.pick(wwd.canvasCoordinates(x, y));
-               console.log(pickList);
-               console.log("The latitude value clicked is: " + pickList.objects[1].position.latitude);
-               console.log("The longtitude value clicked is: " + pickList.objects[1].position.longitude);
-               queryBuilder(pickList.objects[1].position.latitude, pickList.objects[1].position.longitude);
-      console.log(pickList);
+	      // X and Y coordinates of a single click
+	      var x = o.clientX,
+	      y = o.clientY;
+	      //console.log("The coordinates are: " + x + " " + y);
+	      var pickList = wwd.pick(wwd.canvasCoordinates(x, y));
 
-      // for (var p = 0; p < pickList.objects.length; p++) {
-      //   // console.log("pickList.objects[p]: " + pickList.objects[p]);
-      //   //console.log("LAYERS!!!!: " + pickList.objects[p].userObject);
+	      // NOTE: if click onto checked footprint (color fill polygon with another attribute), this function below does not work 
+	      var clickedLatitude = pickList.objects[0].position.latitude;
+	      var clickedLongitude = pickList.objects[0].position.longitude;
+	      //alert(clickedLatitude + " " + clickedLongitude);
 
-      //   if(pickList.objects[p].userObject === surfaceImage2) {
-      //     console.log("The Layer Clicked: " + pickList.objects[p].userObject);
-      //     $('#right-layer-menu').addClass('open');
-      //     $('#right-layer-menu-toggle').addClass('open');
+	      console.log(pickList);
+	      console.log("The latitude value clicked is: " + clickedLatitude);
+	      console.log("The longtitude value clicked is: " + clickedLongitude);
+	      queryBuilder(clickedLatitude, clickedLongitude);
+
+	      console.log(pickList);
+	  
+	      // get all the coverages containing clicked point
+	      getFootPrintsContainingPoint(shapes, attributes, checkedAttributes, clickedLatitude, clickedLongitude);
+
+	      // for (var p = 0; p < pickList.objects.length; p++) {
+	      //   // console.log("pickList.objects[p]: " + pickList.objects[p]);
+	      //   //console.log("LAYERS!!!!: " + pickList.objects[p].userObject);
+
+	      //   if(pickList.objects[p].userObject === surfaceImage2) {
+	      //     console.log("The Layer Clicked: " + pickList.objects[p].userObject);
+	      //     $('#right-layer-menu').addClass('open');
+	      //     $('#right-layer-menu-toggle').addClass('open');
 
 
-      //   }
-      // }
+	      //   }
+	      // }
     };
+
+
+   window.viewCheckedFootPrintRow = function (viewObj) {
+	// view to clicked position of this checked coverage
+        var lat_long = viewObj.getAttribute("data-content");
+	var lat = lat_long.split("_")[0];
+	var long = lat_long.split("_")[1];
+	// move to the position
+	//wwd.navigator.range = 5e6; (zoom 5*10^6 meters)
+        wwd.goTo(new WorldWind.Location(lat, long));
+   }
+
+
+
+
+
+
+
+
+
     var queryBuilder = function (latitude, longitude) {
         var PI = 3.141516;
                 var r = 3396200;
@@ -366,6 +408,9 @@ function parseFloats(input) {
 
     // Create a layer manager for controlling layer visibility.
     var layerManger = new LayerManager(wwd);
+
+    // Now set up to handle highlighting.
+    var highlightController = new WorldWind.HighlightController(wwd);
 
     // Create a coordinate controller to update the coordinate overlay elements.
     var coordinateController = new CoordinateController(wwd);
