@@ -1,4 +1,4 @@
 var config = {
-    clientHost:"http://localhost:8088/",
-    serverHost:"http://localhost:8088/ps2/" // get data in JSON from web services here
+    clientHost:"http://access.planetserver.eu:8080/",
+    serverHost:"http://access.planetserver.eu:8080/ps2/" // get data in JSON from web services here
 };
