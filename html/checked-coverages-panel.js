@@ -8,7 +8,7 @@ $(function () {
             this.panelBody
                 .append(
                     $("<div id='checkedFootPrintsDiv'>" +
-                        "<h2> Checked table </h2><table class='table" +
+                        "<table class='table" +
                         " table-bordered'><thead><tr><th>CoverageID</th><th>Active</th><th>View</th></tr></thead>" +
                         "<tbody id='checkedFootPrintsTable'></tbody></table></div>"
                     )

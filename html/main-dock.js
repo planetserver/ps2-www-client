@@ -80,7 +80,7 @@ $(function () {
             this.checkedCoveragesPanel = $("<div>").checkedCoveragesPanel({
                 dock: this.dock,
                 panelId: "checked-coverages",
-                panelTitle: "checked"
+                panelTitle: "selected coverages"
             }).checkedCoveragesPanel("instance");
 
             return this;
