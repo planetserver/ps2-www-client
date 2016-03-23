@@ -9,7 +9,7 @@ $(function () {
                 .append(
                     $("<div id='checkedFootPrintsDiv'>" +
                         "<h2> Checked table </h2><table class='table" +
-                        " table-bordered'><thead><tr><th>No</th><th>CoverageID</th><th>Checked</th><th>View</th></tr></thead>" +
+                        " table-bordered'><thead><tr><th>CoverageID</th><th>Active</th><th>View</th></tr></thead>" +
                         "<tbody id='checkedFootPrintsTable'></tbody></table></div>"
                     )
                 );

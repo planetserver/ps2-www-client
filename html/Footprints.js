@@ -164,7 +164,7 @@ function getFootPrintsContainingPoint(shapes, attributes, checkedAttributes, lat
         	</td>
          </tr>*/
         var tableContent = "";
-        var templateRow = "<tr>" + "<td>$rowNumber</td>" + "<td>$COVERAGE_ID</td>" + "<td>" + " <input type='checkbox' id='checkedFootPrintsTable_checked_$rowNumber' value='$COVERAGE_ID' onclick='removeCheckedFootPrintRow(this);' checked>" + "</td>" + "<td>" + " <button type='button' class='btn btn-info' id='checkedFootPrintsTable_view_$rowNumber' data-content='$LAT_CLICKED_POINT_$LONG_CLICKED_POINT' onclick='viewCheckedFootPrintRow(this);'>" + " <span class='glyphicon glyphicon-search'></span> View" + "</button>" + "</td>" + "</tr>";
+        var templateRow = "<tr>" +  "<td>$COVERAGE_ID</td>" + "<td>" + " <input type='checkbox' id='checkedFootPrintsTable_checked_$rowNumber' value='$COVERAGE_ID' onclick='removeCheckedFootPrintRow(this);' checked>" + "</td>" + "<td>" + " <button type='button' class='btn btn-info' id='checkedFootPrintsTable_view_$rowNumber' data-content='$LAT_CLICKED_POINT_$LONG_CLICKED_POINT' onclick='viewCheckedFootPrintRow(this);'>" + " <span class='glyphicon glyphicon-search'></span> View" + "</button>" + "</td>" + "</tr>";
 
         for (i = 0; i < checkedFootPrintsArray.length; i++) {
             var tmp = templateRow.replace("$rowNumber", i + 1);
