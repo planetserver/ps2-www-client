@@ -51,6 +51,7 @@ function getFootPrintsContainingPoint(shapes, attributes, checkedAttributes, lat
         url: config.serverHost + "dataset",
         data: "request=getCoveragesContainingPoint&latPoint=" + latitude + "&longPoint=" + longitude,
         dataType: 'json',
+        //async:false,
         success: function(data) {
             console.log("Get footprints containing point:" + " request=getCoveragesContainingPoint&latPoint=" + latitude + "&longPoint=" + longitude);
             $.each(data, function(key, val) {

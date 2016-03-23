@@ -102,7 +102,7 @@ wwd.redraw();
 
 //////////////////
 
-       window.layerRecognizer = function (o) {
+       var layerRecognizer = function (o) {
 	      // X and Y coordinates of a single click
 	      var x = o.clientX,
 	      y = o.clientY;
@@ -117,7 +117,10 @@ wwd.redraw();
           var clickedLatitude = pickList.objects[1].position.latitude;
   	      var clickedLongitude = pickList.objects[1].position.longitude;
           var coverageName = accessCheckedFootPrintsArray();
+          //var coverageName = checkedFootPrintsArray.coverageID;   // as I said, you are doing it wrong (here is wrong also, as it is an array,)then how?
           queryBuilder(clickedLatitude, clickedLongitude, coverageName);
+          //alert(checkedFootPrintsArray[checkedFootPrintsArray.length - 1].coverageID);
+          // copy the alert to here
         }
 	      //alert(clickedLatitude + " " + clickedLongitude);
 
@@ -131,6 +134,9 @@ wwd.redraw();
 
 	      // get all the coverages containing clicked point
 	      getFootPrintsContainingPoint(shapes, attributes, checkedAttributes, clickedLatitude, clickedLongitude);
+
+
+
     };
 
    // This function is called in Footprints.js of getFootPrintsContainingPoint() to get access to the checkedFootPrintsArray.
@@ -140,23 +146,23 @@ wwd.redraw();
    window.accessCheckedFootPrintsArray = function() {
 	  for(i = 0; i < checkedFootPrintsArray.length; i++) {
 	       var coverageID = checkedFootPrintsArray[i].coverageID.toLowerCase();
-	       console.log("Checked Footprint: " + i + " ");
+	      //  console.log("Checked Footprint: " + i + " ");
 	       var WCPSLoadImage = "http://212.201.45.9:8080/rasdaman/ows?query=for%20data%20in%20(%20" + coverageID +"%20)%20return%20encode(%20{%20red:%20(int)(255%20/%20(max((data.band_233%20!=%2065535)%20*%20data.band_233)%20-%20min(data.band_233)))%20*%20(data.band_233%20-%20min(data.band_233));%20green:%20(int)(255%20/%20(max((data.band_78%20!=%2065535)%20*%20data.band_78)%20-%20min(data.band_78)))%20*%20(data.band_78%20-%20min(data.band_78));%20blue:(int)(255%20/%20(max((data.band_13%20!=%2065535)%20*%20data.band_13)%20-%20min(data.band_13)))%20*%20(data.band_13%20-%20min(data.band_13));%20alpha:%20(data.band_100%20!=%2065535)%20*%20255%20},%20%22png%22,%20%22nodata=null%22)";
 
 		  // surfaceImage.push([]);
 		  surfaceImage[i] = new WorldWind.SurfaceImage( new WorldWind.Sector(checkedFootPrintsArray[i].Minimum_latitude, checkedFootPrintsArray[i].Maximum_latitude, checkedFootPrintsArray[i].Westernmost_longitude, checkedFootPrintsArray[i].Easternmost_longitude), WCPSLoadImage);
-		   console.log("pute: " + surfaceImage[i]);
-       console.log("WCPS query: "  + WCPSLoadImage);
-		   console.log("max lat: " + checkedFootPrintsArray[i].Maximum_latitude);
-		   console.log("min lat: " + checkedFootPrintsArray[i].Minimum_latitude);
-		   console.log("west lon: " + checkedFootPrintsArray[i].Westernmost_longitude);
-		   console.log("east lon: " + checkedFootPrintsArray[i].Easternmost_longitude);
+		  //  console.log("pute: " + surfaceImage[i]);
+      //  console.log("WCPS query: "  + WCPSLoadImage);
+		  //  console.log("max lat: " + checkedFootPrintsArray[i].Maximum_latitude);
+		  //  console.log("min lat: " + checkedFootPrintsArray[i].Minimum_latitude);
+		  //  console.log("west lon: " + checkedFootPrintsArray[i].Westernmost_longitude);
+		  //  console.log("east lon: " + checkedFootPrintsArray[i].Easternmost_longitude);
        renderLayer[i] = new WorldWind.RenderableLayer();
        renderLayer[i].addRenderable(surfaceImage[i]);
        wwd.addLayer(renderLayer[i]);
        shapesLayer.addRenderable(renderLayer[i]);
          }
-
+         return(checkedFootPrintsArray[checkedFootPrintsArray.length-1].coverageID);
 
    }
 
@@ -180,7 +186,7 @@ wwd.redraw();
               console.log("cov name: " +covID);
         console.log("N: " +N);
         console.log("E: " +E);
-                var query = "http://212.201.45.9:8080/rasdaman/ows?query=for%20c%20in%20(frt00003590_07_if164l_trr3)%20return%20encode(c[%20N("
+                var query = "http://212.201.45.9:8080/rasdaman/ows?query=for%20c%20in%20("+covID.toLowerCase()+")%20return%20encode(c[%20N("
                                 + N +":" + N + "),%20E(" + E + ":" + E + ")%20],%20%22csv%22)";
 
                 console.log("Query for the click: " + query);
