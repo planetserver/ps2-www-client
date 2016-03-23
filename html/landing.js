@@ -102,7 +102,7 @@ wwd.redraw();
 
 //////////////////
 
-       var layerRegognizer = function (o) {
+       window.layerRecognizer = function (o) {
 	      // X and Y coordinates of a single click
 	      var x = o.clientX,
 	      y = o.clientY;
@@ -116,7 +116,8 @@ wwd.redraw();
         }else{
           var clickedLatitude = pickList.objects[1].position.latitude;
   	      var clickedLongitude = pickList.objects[1].position.longitude;
-          queryBuilder(clickedLatitude, clickedLongitude);
+          var coverageName = accessCheckedFootPrintsArray();
+          queryBuilder(clickedLatitude, clickedLongitude, coverageName);
         }
 	      //alert(clickedLatitude + " " + clickedLongitude);
 
@@ -134,21 +135,29 @@ wwd.redraw();
 
    // This function is called in Footprints.js of getFootPrintsContainingPoint() to get access to the checkedFootPrintsArray.
    var surfaceImage = []; // array for images
+   //var renderLayer = new WorldWind.RenderableLayer();
    var renderLayer = [];
    window.accessCheckedFootPrintsArray = function() {
-	    for(i = 0; i < checkedFootPrintsArray.length; i++) {
-		      console.log("Checked Footprint: " + i + " " + checkedFootPrintsArray[i].coverageID);
-          // surfaceImage.push([]);
-          surfaceImage[i] = new WorldWind.SurfaceImage(new WorldWind.Sector(checkedFootPrintsArray[i].Westernmost_longitude, checkedFootPrintsArray[i].Easternmost_longitude, checkedFootPrintsArray[i].Minimum_latitude, checkedFootPrintsArray[i].Maximum_latitude),
-          "http://212.201.45.9:8080/rasdaman/ows?query=for%20data%20in%20(%20"+checkedFootPrintsArray[i].coverageID+"%20)%20return%20encode(%20{%20red:%20(int)(255%20/%20(max((data.band_233%20!=%2065535)%20*%20data.band_233)%20-%20min(data.band_233)))%20*%20(data.band_233%20-%20min(data.band_233));%20green:%20(int)(255%20/%20(max((data.band_78%20!=%2065535)%20*%20data.band_78)%20-%20min(data.band_78)))%20*%20(data.band_78%20-%20min(data.band_78));%20blue:(int)(255%20/%20(max((data.band_13%20!=%2065535)%20*%20data.band_13)%20-%20min(data.band_13)))%20*%20(data.band_13%20-%20min(data.band_13));%20alpha:%20(data.band_100%20!=%2065535)%20*%20255%20},%20%22png%22,%20%22nodata=null%22)");
-	         console.log("max lat: " + checkedFootPrintsArray[i].Maximum_latitude);
-           console.log("min lat: " + checkedFootPrintsArray[i].Minimum_latitude);
-           console.log("west lon: " + checkedFootPrintsArray[i].Westernmost_longitude);
-           console.log("east lon: " + checkedFootPrintsArray[i].Easternmost_longitude);
-           renderLayer[i] = new WorldWind.RenderableLayer();
-           renderLayer[i].addRenderable(surfaceImage[i]);
-           wwd.addLayer(renderLayer[i]);
+	  for(i = 0; i < checkedFootPrintsArray.length; i++) {
+	       var coverageID = checkedFootPrintsArray[i].coverageID.toLowerCase();
+	       console.log("Checked Footprint: " + i + " ");
+	       var WCPSLoadImage = "http://212.201.45.9:8080/rasdaman/ows?query=for%20data%20in%20(%20" + coverageID +"%20)%20return%20encode(%20{%20red:%20(int)(255%20/%20(max((data.band_233%20!=%2065535)%20*%20data.band_233)%20-%20min(data.band_233)))%20*%20(data.band_233%20-%20min(data.band_233));%20green:%20(int)(255%20/%20(max((data.band_78%20!=%2065535)%20*%20data.band_78)%20-%20min(data.band_78)))%20*%20(data.band_78%20-%20min(data.band_78));%20blue:(int)(255%20/%20(max((data.band_13%20!=%2065535)%20*%20data.band_13)%20-%20min(data.band_13)))%20*%20(data.band_13%20-%20min(data.band_13));%20alpha:%20(data.band_100%20!=%2065535)%20*%20255%20},%20%22png%22,%20%22nodata=null%22)";
+
+		  // surfaceImage.push([]);
+		  surfaceImage[i] = new WorldWind.SurfaceImage( new WorldWind.Sector(checkedFootPrintsArray[i].Minimum_latitude, checkedFootPrintsArray[i].Maximum_latitude, checkedFootPrintsArray[i].Westernmost_longitude, checkedFootPrintsArray[i].Easternmost_longitude), WCPSLoadImage);
+		   console.log("pute: " + surfaceImage[i]);
+       console.log("WCPS query: "  + WCPSLoadImage);
+		   console.log("max lat: " + checkedFootPrintsArray[i].Maximum_latitude);
+		   console.log("min lat: " + checkedFootPrintsArray[i].Minimum_latitude);
+		   console.log("west lon: " + checkedFootPrintsArray[i].Westernmost_longitude);
+		   console.log("east lon: " + checkedFootPrintsArray[i].Easternmost_longitude);
+       renderLayer[i] = new WorldWind.RenderableLayer();
+       renderLayer[i].addRenderable(surfaceImage[i]);
+       wwd.addLayer(renderLayer[i]);
+       shapesLayer.addRenderable(renderLayer[i]);
          }
+
+
    }
 
 
@@ -160,7 +169,7 @@ wwd.redraw();
 	// move to the position
 	//wwd.navigator.range = 5e6; (zoom 5*10^6 meters)
         wwd.goTo(new WorldWind.Position(lat, long, qsParam.range));
-   };
+   }
 
     var queryBuilder = function (latitude, longitude, covID) {
         var PI = 3.141516;
@@ -412,7 +421,7 @@ function parseFloats(input) {
 }
 
         // Listen for Mouse clicks and regognize layers
-        wwd.addEventListener("click", layerRegognizer);
+        wwd.addEventListener("click", layerRecognizer);
 
 ////////////////
 
