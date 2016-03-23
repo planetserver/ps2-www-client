@@ -64,8 +64,8 @@ wwd.redraw();
     //attributes.interiorColor = new WorldWind.Color(0, 255, 25, 0.00001);
     attributes.drawInterior = false;
       //surface image test begin
-    var surfaceImage2 = new WorldWind.SurfaceImage(new WorldWind.Sector(-47.57565, -47.36640, 4.220789, 4.535433),
-    "http://212.201.45.9:8080/rasdaman/ows?query=for%20data%20in%20(%20frt00003590_07_if164l_trr3%20)%20return%20encode(%20{%20red:%20(int)(255%20/%20(max((data.band_233%20!=%2065535)%20*%20data.band_233)%20-%20min(data.band_233)))%20*%20(data.band_233%20-%20min(data.band_233));%20green:%20(int)(255%20/%20(max((data.band_78%20!=%2065535)%20*%20data.band_78)%20-%20min(data.band_78)))%20*%20(data.band_78%20-%20min(data.band_78));%20blue:(int)(255%20/%20(max((data.band_13%20!=%2065535)%20*%20data.band_13)%20-%20min(data.band_13)))%20*%20(data.band_13%20-%20min(data.band_13));%20alpha:%20(data.band_100%20!=%2065535)%20*%20255%20},%20%22png%22,%20%22nodata=null%22)");
+    // var surfaceImage2 = new WorldWind.SurfaceImage(new WorldWind.Sector(-47.57565, -47.36640, 4.220789, 4.535433),
+    // "http://212.201.45.9:8080/rasdaman/ows?query=for%20data%20in%20(%20frt00003590_07_if164l_trr3%20)%20return%20encode(%20{%20red:%20(int)(255%20/%20(max((data.band_233%20!=%2065535)%20*%20data.band_233)%20-%20min(data.band_233)))%20*%20(data.band_233%20-%20min(data.band_233));%20green:%20(int)(255%20/%20(max((data.band_78%20!=%2065535)%20*%20data.band_78)%20-%20min(data.band_78)))%20*%20(data.band_78%20-%20min(data.band_78));%20blue:(int)(255%20/%20(max((data.band_13%20!=%2065535)%20*%20data.band_13)%20-%20min(data.band_13)))%20*%20(data.band_13%20-%20min(data.band_13));%20alpha:%20(data.band_100%20!=%2065535)%20*%20255%20},%20%22png%22,%20%22nodata=null%22)");
 
     var checkedAttributes = new WorldWind.ShapeAttributes(null);
     checkedAttributes.outlineColor = WorldWind.Color.BLUE;
@@ -93,11 +93,11 @@ wwd.redraw();
      }
 
     // Add the surface images to a layer and the layer to the World Window's layer list.
-    var surfaceImageLayer = new WorldWind.RenderableLayer();
-    surfaceImageLayer.displayName = "Surface Images";
-    surfaceImageLayer.addRenderable(surfaceImage2);
-    wwd.addLayer(surfaceImageLayer);
-    shapesLayer.addRenderable(surfaceImageLayer);
+    // var surfaceImageLayer = new WorldWind.RenderableLayer();
+    // surfaceImageLayer.displayName = "Surface Images";
+    // surfaceImageLayer.addRenderable(surfaceImage2);
+    // wwd.addLayer(surfaceImageLayer);
+    // shapesLayer.addRenderable(surfaceImageLayer);
     //surface image test end
 
 //////////////////
