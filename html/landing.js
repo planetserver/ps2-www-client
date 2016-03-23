@@ -5,6 +5,9 @@
 /**
 * @version $Id: BasicExample.js 3320 2015-07-15 20:53:05Z dcollins $
 */
+
+checkedFootPrintsArray = []; // array of footprints that user choosed
+
 function getQueryVariable(variable){
    var query = window.location.search.substring(1);
    var vars  = query.split("&");
@@ -62,7 +65,7 @@ wwd.redraw();
     attributes.drawInterior = false;
       //surface image test begin
     var surfaceImage2 = new WorldWind.SurfaceImage(new WorldWind.Sector(-47.57565, -47.36640, 4.220789, 4.535433),
-    "http://access.planetserver.eu:8080/rasdaman/ows?query=for%20data%20in%20(%20frt00003590_07_if164l_trr3%20)%20return%20encode(%20{%20red:%20(int)(255%20/%20(max((data.band_233%20!=%2065535)%20*%20data.band_233)%20-%20min(data.band_233)))%20*%20(data.band_233%20-%20min(data.band_233));%20green:%20(int)(255%20/%20(max((data.band_78%20!=%2065535)%20*%20data.band_78)%20-%20min(data.band_78)))%20*%20(data.band_78%20-%20min(data.band_78));%20blue:(int)(255%20/%20(max((data.band_13%20!=%2065535)%20*%20data.band_13)%20-%20min(data.band_13)))%20*%20(data.band_13%20-%20min(data.band_13));%20alpha:%20(data.band_100%20!=%2065535)%20*%20255%20},%20%22png%22,%20%22nodata=null%22)");
+    "http://212.201.45.9:8080/rasdaman/ows?query=for%20data%20in%20(%20frt00003590_07_if164l_trr3%20)%20return%20encode(%20{%20red:%20(int)(255%20/%20(max((data.band_233%20!=%2065535)%20*%20data.band_233)%20-%20min(data.band_233)))%20*%20(data.band_233%20-%20min(data.band_233));%20green:%20(int)(255%20/%20(max((data.band_78%20!=%2065535)%20*%20data.band_78)%20-%20min(data.band_78)))%20*%20(data.band_78%20-%20min(data.band_78));%20blue:(int)(255%20/%20(max((data.band_13%20!=%2065535)%20*%20data.band_13)%20-%20min(data.band_13)))%20*%20(data.band_13%20-%20min(data.band_13));%20alpha:%20(data.band_100%20!=%2065535)%20*%20255%20},%20%22png%22,%20%22nodata=null%22)");
 
     var checkedAttributes = new WorldWind.ShapeAttributes(null);
     checkedAttributes.outlineColor = WorldWind.Color.BLUE;
@@ -106,34 +109,47 @@ wwd.redraw();
 	      //console.log("The coordinates are: " + x + " " + y);
 	      var pickList = wwd.pick(wwd.canvasCoordinates(x, y));
 
-	      // NOTE: if click onto checked footprint (color fill polygon with another attribute), this function below does not work
-	      var clickedLatitude = pickList.objects[1].position.latitude;
-	      var clickedLongitude = pickList.objects[1].position.longitude;
+        // NOTE: if click onto checked footprint (color fill polygon with another attribute), this function below does not work
+	      if (pickList.objects.length < 2){
+          var clickedLatitude = pickList.objects[0].position.latitude;
+  	      var clickedLongitude = pickList.objects[0].position.longitude;
+        }else{
+          var clickedLatitude = pickList.objects[1].position.latitude;
+  	      var clickedLongitude = pickList.objects[1].position.longitude;
+          queryBuilder(clickedLatitude, clickedLongitude);
+        }
 	      //alert(clickedLatitude + " " + clickedLongitude);
 
 	      console.log(pickList);
 	      console.log("The latitude value clicked is: " + clickedLatitude);
 	      console.log("The longtitude value clicked is: " + clickedLongitude);
-	      queryBuilder(clickedLatitude, clickedLongitude);
+
+        // queryBuilder(clickedLatitude, clickedLongitude);
 
 	      console.log(pickList);
 
 	      // get all the coverages containing clicked point
 	      getFootPrintsContainingPoint(shapes, attributes, checkedAttributes, clickedLatitude, clickedLongitude);
-
-	      // for (var p = 0; p < pickList.objects.length; p++) {
-	      //   // console.log("pickList.objects[p]: " + pickList.objects[p]);
-	      //   //console.log("LAYERS!!!!: " + pickList.objects[p].userObject);
-
-	      //   if(pickList.objects[p].userObject === surfaceImage2) {
-	      //     console.log("The Layer Clicked: " + pickList.objects[p].userObject);
-	      //     $('#right-layer-menu').addClass('open');
-	      //     $('#right-layer-menu-toggle').addClass('open');
-
-
-	      //   }
-	      // }
     };
+
+   // This function is called in Footprints.js of getFootPrintsContainingPoint() to get access to the checkedFootPrintsArray.
+   var surfaceImage = []; // array for images
+   var renderLayer = [];
+   window.accessCheckedFootPrintsArray = function() {
+	    for(i = 0; i < checkedFootPrintsArray.length; i++) {
+		      console.log("Checked Footprint: " + i + " " + checkedFootPrintsArray[i].coverageID);
+          // surfaceImage.push([]);
+          surfaceImage[i] = new WorldWind.SurfaceImage(new WorldWind.Sector(checkedFootPrintsArray[i].Westernmost_longitude, checkedFootPrintsArray[i].Easternmost_longitude, checkedFootPrintsArray[i].Minimum_latitude, checkedFootPrintsArray[i].Maximum_latitude),
+          "http://212.201.45.9:8080/rasdaman/ows?query=for%20data%20in%20(%20"+checkedFootPrintsArray[i].coverageID+"%20)%20return%20encode(%20{%20red:%20(int)(255%20/%20(max((data.band_233%20!=%2065535)%20*%20data.band_233)%20-%20min(data.band_233)))%20*%20(data.band_233%20-%20min(data.band_233));%20green:%20(int)(255%20/%20(max((data.band_78%20!=%2065535)%20*%20data.band_78)%20-%20min(data.band_78)))%20*%20(data.band_78%20-%20min(data.band_78));%20blue:(int)(255%20/%20(max((data.band_13%20!=%2065535)%20*%20data.band_13)%20-%20min(data.band_13)))%20*%20(data.band_13%20-%20min(data.band_13));%20alpha:%20(data.band_100%20!=%2065535)%20*%20255%20},%20%22png%22,%20%22nodata=null%22)");
+	         console.log("max lat: " + checkedFootPrintsArray[i].Maximum_latitude);
+           console.log("min lat: " + checkedFootPrintsArray[i].Minimum_latitude);
+           console.log("west lon: " + checkedFootPrintsArray[i].Westernmost_longitude);
+           console.log("east lon: " + checkedFootPrintsArray[i].Easternmost_longitude);
+           renderLayer[i] = new WorldWind.RenderableLayer();
+           renderLayer[i].addRenderable(surfaceImage[i]);
+           wwd.addLayer(renderLayer[i]);
+         }
+   }
 
 
    window.viewCheckedFootPrintRow = function (viewObj) {
@@ -143,26 +159,19 @@ wwd.redraw();
 	var long = lat_long.split("_")[1];
 	// move to the position
 	//wwd.navigator.range = 5e6; (zoom 5*10^6 meters)
-        wwd.goTo(new WorldWind.Location(lat, long));
+        wwd.goTo(new WorldWind.Position(lat, long, qsParam.range));
    };
 
-
-
-
-
-
-
-
-
-    var queryBuilder = function (latitude, longitude) {
+    var queryBuilder = function (latitude, longitude, covID) {
         var PI = 3.141516;
                 var r = 3396200;
                 var cosOf0 = 1;
                 var N = latitude * r * (PI/180);
                 var E = longitude * cosOf0 * r * (PI/180);
+              console.log("cov name: " +covID);
         console.log("N: " +N);
         console.log("E: " +E);
-                var query = "http://access.planetserver.eu:8080/rasdaman/ows?query=for%20c%20in%20(frt00003590_07_if164l_trr3)%20return%20encode(c[%20N("
+                var query = "http://212.201.45.9:8080/rasdaman/ows?query=for%20c%20in%20(frt00003590_07_if164l_trr3)%20return%20encode(c[%20N("
                                 + N +":" + N + "),%20E(" + E + ":" + E + ")%20],%20%22csv%22)";
 
                 console.log("Query for the click: " + query);

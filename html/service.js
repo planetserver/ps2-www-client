@@ -20,6 +20,7 @@ $(function () {
 
             var plotDock = $("<div>").plotDock().plotDock("instance");
             //plotDock.addEmptyPanel();
+            
 
             /* info dock (required) */
             var infoDock = $("<div>").infoDock().infoDock("instance");

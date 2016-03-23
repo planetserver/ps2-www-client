@@ -1,20 +1,20 @@
 // Create constructor for dataset object
-function DataSetConstructor(coverageID, Eastermonst_longtitude, Maximum_latitude, Minimum_latitude, Westermost_longitude, latList, longList) {
+function DataSetConstructor(coverageID, Easternmost_longitude, Maximum_latitude, Minimum_latitude, Westernmost_longitude, latList, longList) {
     this.coverageID = coverageID;
-    this.Eastermonst_longtitude = Eastermonst_longtitude;
+    this.Easternmost_longitude = Easternmost_longitude;
     this.Maximum_latitude = Maximum_latitude;
     this.Minimum_latitude = Minimum_latitude;
-    this.Westermost_longitude = Westermost_longitude;
+    this.Westernmost_longitude = Westernmost_longitude;
     this.latList = latList;
     this.longList = longList;
 }
 
-function CheckedDataSetConstructor(coverageID, Eastermonst_longtitude, Maximum_latitude, Minimum_latitude, Westermost_longitude, latList, longList, latClickedPoint, longClickedPoint) {
+function CheckedDataSetConstructor(coverageID, Easternmost_longitude, Maximum_latitude, Minimum_latitude, Westernmost_longitude, latList, longList, latClickedPoint, longClickedPoint) {
     this.coverageID = coverageID;
-    this.Eastermonst_longtitude = Eastermonst_longtitude;
+    this.Easternmost_longitude = Easternmost_longitude;
     this.Maximum_latitude = Maximum_latitude;
     this.Minimum_latitude = Minimum_latitude;
-    this.Westermost_longitude = Westermost_longitude;
+    this.Westernmost_longitude = Westernmost_longitude;
     this.latList = latList;
     this.longList = longList;
 
@@ -25,7 +25,6 @@ function CheckedDataSetConstructor(coverageID, Eastermonst_longtitude, Maximum_l
 
 var allFootPrintsArray = []; // array of all footprints
 var footPrintsContainingPointArray = []; // array of footprints containing clicked point
-var checkedFootPrintsArray = []; // array of footprints that user choosed
 var MAXIMUM_CHECKED_FOOTPRINTS = 10;
 
 // when page loads then load all footprints
@@ -36,7 +35,7 @@ $.ajax({
     dataType: 'json',
     success: function(data) {
         $.each(data, function(key, val) {
-            var dataSetFootPrint = new DataSetConstructor(val.coverageID, val.Easternmost_longtitude, val.Maximum_latitude, val.Minimum_latitude, val.Westernmost_longtitude, val.latList, val.longList);
+            var dataSetFootPrint = new DataSetConstructor(val.coverageID, val.Easternmost_longitude, val.Maximum_latitude, val.Minimum_latitude, val.Westernmost_longitude, val.latList, val.longList);
 
             // push this dataSet to array for displaying later
             allFootPrintsArray.push(dataSetFootPrint);
@@ -46,7 +45,7 @@ $.ajax({
 
 // get footprints containing clicked point
 function getFootPrintsContainingPoint(shapes, attributes, checkedAttributes, latitude, longitude) {
-    //alert(shapes.length);    
+    //alert(shapes.length);
     $.ajax({
         type: "get",
         url: config.serverHost + "dataset",
@@ -55,7 +54,7 @@ function getFootPrintsContainingPoint(shapes, attributes, checkedAttributes, lat
         success: function(data) {
             console.log("Get footprints containing point:" + " request=getCoveragesContainingPoint&latPoint=" + latitude + "&longPoint=" + longitude);
             $.each(data, function(key, val) {
-                var dataSetFootPrint = new CheckedDataSetConstructor(val.coverageID, val.Easternmost_longtitude, val.Maximum_latitude, val.Minimum_latitude, val.Westernmost_longtitude, val.latList, val.longList, latitude, longitude);
+                var dataSetFootPrint = new CheckedDataSetConstructor(val.coverageID, val.Easternmost_longitude, val.Maximum_latitude, val.Minimum_latitude, val.Westernmost_longitude, val.latList, val.longList, latitude, longitude);
 
                 // push this dataSet to array for displaying later
                 footPrintsContainingPointArray.push(dataSetFootPrint);
@@ -69,11 +68,11 @@ function getFootPrintsContainingPoint(shapes, attributes, checkedAttributes, lat
                     for (i = 0; i < checkedFootPrintsArray.length; i++) {
                         if (checkedFootPrintsArray[i].coverageID === val.coverageID) {
                             isChecked = true;
-                            var r = confirm("Uncheck this footprint: " + val.coverageID + " ?");
-                            if (r == true) {
+                           // var r = confirm("Uncheck this footprint: " + val.coverageID + " ?");
+                           // if (r == true) {
                                 // remove coverageID from checkedFootPrintsArray and change attribute to unchecked
-                                removeCheckedFootPrint(val.coverageID)
-                            }
+                            //    removeCheckedFootPrint(val.coverageID)
+                           // }
                             break;
                         }
                     }
@@ -97,16 +96,21 @@ function getFootPrintsContainingPoint(shapes, attributes, checkedAttributes, lat
 
 
                 } else {
-                    alert("You've choosen greater than " + MAXIMUM_CHECKED_FOOTPRINTS + " footprints.");
+                    alert("A maximum of " + MAXIMUM_CHECKED_FOOTPRINTS + " footprints has been choosen. Please uncheck some before choosing more.");
+
                 }
             });
+
+	    // This function is called in landing.js after checkedFootPrintsArray has been updated.
+            accessCheckedFootPrintsArray();
         }
     });
 
 
     // in checked footprints table, user uncheck row then remove this row and uncheck the footprint also
     window.removeCheckedFootPrintRow = function(checkboxObj) {
-        var r = confirm("Do you want to uncheck this footprint?");
+        //var r = confirm("Do you want to uncheck this footprint?");
+        r = true;
         if (r == true) {
             // call this function from Footprints.js to update the content of checked table
             var coverageID = checkboxObj.value;
@@ -149,10 +153,10 @@ function getFootPrintsContainingPoint(shapes, attributes, checkedAttributes, lat
         /*<tr>
         	<td>1</td>
         	<td>HRL00004839_07_IF182L_TRR3</td>
-        	<td>	   
-        		<input type="checkbox" id="checkedFootPrintsTable_checked_1" value="HRL00004839_07_IF182L_TRR3" onclick="removeCheckedFootPrintRow(this);" checked>	   
+        	<td>
+        		<input type="checkbox" id="checkedFootPrintsTable_checked_1" value="HRL00004839_07_IF182L_TRR3" onclick="removeCheckedFootPrintRow(this);" checked>
         	</td>
-        	<td>	   
+        	<td>
         		<button type="button" class="btn btn-info" id="checkedFootPrintsTable_view_1" data-content="10_39" onclick="viewCheckedFootPrintRow(this);">
         		      <span class="glyphicon glyphicon-search"></span> View
         		</button>
@@ -171,7 +175,7 @@ function getFootPrintsContainingPoint(shapes, attributes, checkedAttributes, lat
             tableContent = tableContent + tmp;
         }
 
-        // finally, update checkedFootPrintsTable content with tableContent 
+        // finally, update checkedFootPrintsTable content with tableContent
         $("#checkedFootPrintsTable").html(tableContent);
     }
 }
