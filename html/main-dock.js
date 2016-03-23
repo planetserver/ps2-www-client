@@ -75,6 +75,15 @@ $(function () {
             }).queryTerminalPanel("instance");
 
             return this;
+        },
+        addCheckedCoveragesPanel: function() {
+            this.checkedCoveragesPanel = $("<div>").checkedCoveragesPanel({
+                dock: this.dock,
+                panelId: "checked-coverages",
+                panelTitle: "checked"
+            }).checkedCoveragesPanel("instance");
+
+            return this;
         }
     })
 });

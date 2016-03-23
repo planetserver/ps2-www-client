@@ -6,6 +6,7 @@ $(function () {
 
             /* main dock (required) */
             var leftDock = $("<div>").mainDock().mainDock("instance");
+            leftDock.addCheckedCoveragesPanel();
             /*leftDock.addQueryTerinalPanel().addQueryTerminalPanel().addQueryTerminalPanel().addQueryTerminalPanel();*/
 
             /*leftDock
@@ -20,7 +21,7 @@ $(function () {
 
             var plotDock = $("<div>").plotDock().plotDock("instance");
             //plotDock.addEmptyPanel();
-            
+
 
             /* info dock (required) */
             var infoDock = $("<div>").infoDock().infoDock("instance");
