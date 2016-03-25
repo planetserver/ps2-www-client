@@ -194,20 +194,7 @@ getQueryResponseAndSetChart(query);
 
             };
 
-// adjusting the data we have for plotting with D3 library
-function adjustData(parsedFloats){
-
-  var Xaxis = [];
-  for(var i = 0; i < parsedFloats.length; i++){
-    Xaxis.push(i);
-  }
-  var XandYaxis = [];
-  XandYaxis.push(Xaxis);
-  XandYaxis.push(parsedFloats);
-  return XandYaxis;
-}
-
-            function getQueryResponseAndSetChart(query) {
+function getQueryResponseAndSetChart(query) {
     var rawFile = new XMLHttpRequest();
     rawFile.open("GET", query, true);
     rawFile.onreadystatechange = function () {
@@ -217,7 +204,7 @@ function adjustData(parsedFloats){
                 var parsedFloats = [];
                 parsedFloats = parseFloats(serverResponse);
 
-                loadScriptAndCall("//d3js.org/d3.v3.min.js", implementChart(adjustData(parsedFloats)));
+                loadScriptAndCall("http://d3js.org/d3.v3.min.js", implementChart(parsedFloats));
             }
         }
     }
@@ -227,168 +214,169 @@ function adjustData(parsedFloats){
 
 
 //Implementation function of the graph
-  var implementChart = function(valuesArray) {
-d3.select("svg").remove();
-var data = [ { x: valuesArray[0],
-               y: valuesArray[1] } ] ;
-var xy_chart = d3_xy_chart()
-    .width(660)
-    .height(350)
-    .xlabel("X Axis")
-    .ylabel("Y Axis") ;
-var svg = d3.select(".right-dock.open").append("svg")
-    .datum(data)
-    .call(xy_chart) ;
+var implementChart = function(floatsArray) {
+    //************************************************************
+    // Data notice the structure
+    //************************************************************
 
-function d3_xy_chart() {
-    var width = 440,
-        height = 280,
-        xlabel = "X Axis Label",
-        ylabel = "Y Axis Label" ;
+    var data = [];
+    var i = 0;
+    var j = 0;
 
-    function chart(selection) {
-        selection.each(function(datasets) {
-            //
-            // Create the plot.
-            //
-            var margin = {top: 20, right: 10, bottom: 30, left: 40},
-                innerwidth = width- margin.left - margin.right,
-                innerheight = height - margin.top - margin.bottom ;
-
-            var x_scale = d3.scale.linear()
-                .range([0, innerwidth])
-                .domain([ d3.min(datasets, function(d) { return d3.min(d.x); }),
-                          d3.max(datasets, function(d) { return d3.max(d.x); }) ]) ;
-
-            var y_scale = d3.scale.linear()
-                .range([innerheight, 0])
-                .domain([ d3.min(datasets, function(d) { return d3.min(d.y); }),
-                          d3.max(datasets, function(d) { return d3.max(d.y); }) ]) ;
-
-            var color_scale = d3.scale.category10()
-                .domain(d3.range(datasets.length)) ;
-
-            var x_axis = d3.svg.axis()
-                .scale(x_scale)
-                .orient("bottom") ;
-
-            var y_axis = d3.svg.axis()
-                .scale(y_scale)
-                .orient("left") ;
-
-            var x_grid = d3.svg.axis()
-                .scale(x_scale)
-                .orient("bottom")
-                .tickSize(-innerheight)
-                .tickFormat("") ;
-
-            var y_grid = d3.svg.axis()
-                .scale(y_scale)
-                .orient("left")
-                .tickSize(-innerwidth)
-                .tickFormat("") ;
-
-            var draw_line = d3.svg.line()
-                .interpolate("basis")
-                .x(function(d) { return x_scale(d[0]); })
-                .y(function(d) { return y_scale(d[1]); }) ;
-
-            // var zoom = d3.behavior.zoom()
-            //     .x(x_scale)
-            //     .y(y_scale)
-            //     .scaleExtent([1, 10])
-            //     .on("zoom", zoomed);
-            //     function zoomed() {
-            //         svg.select(".x_scale.axis").call(x_axis);
-            //         svg.select(".y_scale.axis").call(y_axis);
-            //       }
-
-            var svg = d3.select(this)
-                .attr("width", width)
-                .attr("height", height)
-                .append("g")
-                .attr("transform", "translate(" + margin.left + "," + margin.top + ")") ;
-
-            svg.append("g")
-                .attr("class", "x grid")
-                .attr("transform", "translate(0," + innerheight + ")")
-                .call(x_grid) ;
-
-            svg.append("g")
-                .attr("class", "y grid")
-                .call(y_grid) ;
-
-            svg.append("g")
-                .attr("class", "x axis")
-                .attr("transform", "translate(0," + innerheight + ")")
-                .call(x_axis)
-                .append("text")
-                .attr("dy", "-.71em")
-                .attr("x", innerwidth)
-                .style("text-anchor", "end")
-                .text(xlabel) ;
-
-            svg.append("g")
-                .attr("class", "y axis")
-                .call(y_axis)
-                .append("text")
-                .attr("transform", "rotate(-90)")
-                .attr("y", 6)
-                .attr("dy", "0.71em")
-                .style("text-anchor", "end")
-                .text(ylabel) ;
-
-            var data_lines = svg.selectAll(".d3_xy_chart_line")
-                .data(datasets.map(function(d) {return d3.zip(d.x, d.y);}))
-                .enter().append("g")
-                .attr("class", "d3_xy_chart_line") ;
-
-            data_lines.append("path")
-                .attr("class", "line")
-                .attr("d", function(d) {return draw_line(d); })
-                .attr("stroke", function(_, i) {return color_scale(i);}) ;
-
-            data_lines.append("text")
-                .datum(function(d, i) { return {name: datasets[i].label, final: d[d.length-1]}; })
-                .attr("transform", function(d) {
-                    return ( "translate(" + x_scale(d.final[0]) + "," +
-                             y_scale(d.final[1]) + ")" ) ; })
-                .attr("x", 3)
-                .attr("dy", ".35em")
-                .attr("fill", function(_, i) { return color_scale(i); })
-                .text(function(d) { return d.name; }) ;
-
-
-        }) ;
-
+    /*Adjusting the data so that every single point is with point has a format {'x':__,'y':__}*/
+    /*splitting the datasets when 65535 is occured so that points with values 65535 are not ploted*/
+    while(i < floatsArray.length) {
+        if(floatsArray[i] != 65535){
+            data.push([]);
+            while(floatsArray[i] != 65535) {
+                data[j].push({'x':i,'y':floatsArray[i]});
+                i++;
+            }
+            j++;
+        }
+        i++;
     }
 
-    chart.width = function(value) {
-        if (!arguments.length) return width;
-        width = value;
-        return chart;
-    };
+    /*Different collors for plotting the distinct datasets formed in the above while loop*/
+    var colors = [
+    'yellow',
+    'red',
+    'green',
+    'orange', 
+    'white'
+    ]
 
-    chart.height = function(value) {
-        if (!arguments.length) return height;
-        height = value;
-        return chart;
-    };
+    //************************************************************
+    // Create Margins and Axis and hook our zoom function
+    //************************************************************
+    var margin = {top: 20, right: 30, bottom: 30, left: 50},
+        width = 620 - margin.left - margin.right,
+        height = 500 - margin.top - margin.bottom;
 
-    chart.xlabel = function(value) {
-        if(!arguments.length) return xlabel ;
-        xlabel = value ;
-        return chart ;
-    } ;
-
-    chart.ylabel = function(value) {
-        if(!arguments.length) return ylabel ;
-        ylabel = value ;
-        return chart ;
-    } ;
-
-    return chart;
-  }
+    var innerwidth = width - margin.left - margin.right, 
+        innerheight = height - margin.top - margin.bottom ;
+        
+    var x = d3.scale.linear()
+         .domain([0, floatsArray.length])
+        .range([0, width]);
+     
+    var y = d3.scale.linear()
+        .domain([0, 1])
+        .range([height, 0]);
+        
+    var xAxis = d3.svg.axis()
+        .scale(x)
+        .tickSize(-height)
+        .tickPadding(10)    
+        .tickSubdivide(true)    
+        .orient("bottom");  
+        
+    var yAxis = d3.svg.axis()
+        .scale(y)
+        .tickPadding(10)
+        .tickSize(-width)
+        .tickSubdivide(true)    
+        .orient("left");
+        
+    var zoom = d3.behavior.zoom()
+        .x(x)
+        .y(y)
+        .scaleExtent([1, (floatsArray.length / 4)])
+        .on("zoom", zoomed);    
+        
+    //************************************************************
+    // Generate our SVG object
+    //************************************************************  
+    var svg = d3.select(".right-dock.open").append("svg")
+        .call(zoom)
+        .attr("width", width + margin.left + margin.right)
+        .attr("height", height + margin.top + margin.bottom)
+        .append("g")
+        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+     
+    svg.append("g")
+        .attr("class", "x axis")
+        .attr("transform", "translate(0," + height + ")")
+        .call(xAxis);
+     
+    svg.append("g")
+        .attr("class", "y axis")
+        .call(yAxis);
+     
+    svg.append("g")
+        .attr("class", "y axis")
+        .append("text")
+        .attr("class", "axis-label")
+        .attr("transform", "rotate(-90)")
+        .attr("y", (-margin.left) + 10)
+        .attr("x", -height/2)
+        .text('Axis Label');    
+     
+    svg.append("clipPath")
+        .attr("id", "clip")
+        .append("rect")
+        .attr("width", width)
+        .attr("height", height);
+        
+    //************************************************************
+    // Create D3 line object and draw data on our SVG object
+    //************************************************************
+    var line = d3.svg.line()
+        .interpolate("linear")  
+        .x(function(d) { return x(d.x); })
+        .y(function(d) { return y(d.y); });     
+        
+    svg.selectAll('.line')
+        .data(data)
+        .enter()
+        .append("path")
+        .attr("class", "line")
+        .attr("clip-path", "url(#clip)")
+        .attr('stroke', function(d,i){         
+            return colors[i%colors.length];
+        })
+        .attr("d", line);
+        
+    //************************************************************
+    // Draw points on SVG object based on the data given
+    //************************************************************
+    var points = svg.selectAll('.dots')
+        .data(data)
+        .enter()
+        .append("g")
+        .attr("class", "dots")
+        .attr("clip-path", "url(#clip)");   
+     
+      points.selectAll('.dot')
+        .data(function(d, index){
+            var a = [];
+            d.forEach(function(point,i){
+                a.push({'index': index, 'point': point});
+            });
+        })
+        .enter()
+        .append('circle')
+        .attr('class','dot')
+        .attr("r", 2.5)
+        .attr('fill', function(d,i){    
+            return colors[d.index%colors.length];
+        })  
+        .attr("transform", function(d) { 
+            return "translate(" + x(d.point.x) + "," + y(d.point.y) + ")"; }
+        );
+    
+    //************************************************************
+    // Zoom specific updates
+    //************************************************************
+    function zoomed() {
+        svg.select(".x.axis").call(xAxis);
+        svg.select(".y.axis").call(yAxis);   
+        svg.selectAll('path.line').attr('d', line);  
+     
+        points.selectAll('circle').attr("transform", function(d) { 
+            return "translate(" + x(d.point.x) + "," + y(d.point.y) + ")"; }
+        );  
+    }
 }
 
 // function for loading the graph library //d3js.org/d3.v3.min.js located in the index.html
@@ -417,12 +405,11 @@ function parseFloats(input) {
     var parsedFloat = parseFloat(helpString.slice(2, helpString.indexOf(" ")));
 
     while(helpString.indexOf(" ") != -1) {
-        if(parsedFloat != 65535){
-            floatsArray.push(parsedFloat);
-        }
+        floatsArray.push(parsedFloat);
         helpString = helpString.slice(helpString.indexOf(" ") + 1, helpString.length);
         var parsedFloat = parseFloat(helpString.slice(0, helpString.indexOf(" ")));
     }
+
     return floatsArray;
 }
 
