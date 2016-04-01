@@ -147,7 +147,7 @@ wwd.redraw();
 	  for(i = 0; i < checkedFootPrintsArray.length; i++) {
 	       var coverageID = checkedFootPrintsArray[i].coverageID.toLowerCase();
 	      //  console.log("Checked Footprint: " + i + " ");
-	       var WCPSLoadImage = "http://212.201.45.9:8080/rasdaman/ows?query=for%20data%20in%20(%20" + coverageID +"%20)%20return%20encode(%20{%20red:%20(int)(255%20/%20(max((data.band_233%20!=%2065535)%20*%20data.band_233)%20-%20min(data.band_233)))%20*%20(data.band_233%20-%20min(data.band_233));%20green:%20(int)(255%20/%20(max((data.band_78%20!=%2065535)%20*%20data.band_78)%20-%20min(data.band_78)))%20*%20(data.band_78%20-%20min(data.band_78));%20blue:(int)(255%20/%20(max((data.band_13%20!=%2065535)%20*%20data.band_13)%20-%20min(data.band_13)))%20*%20(data.band_13%20-%20min(data.band_13));%20alpha:%20(data.band_100%20!=%2065535)%20*%20255%20},%20%22png%22,%20%22nodata=null%22)";
+	       var WCPSLoadImage = "http://access.planetserver.eu:8080/rasdaman/ows?query=for%20data%20in%20(%20" + coverageID +"%20)%20return%20encode(%20{%20red:%20(int)(255%20/%20(max((data.band_233%20!=%2065535)%20*%20data.band_233)%20-%20min(data.band_233)))%20*%20(data.band_233%20-%20min(data.band_233));%20green:%20(int)(255%20/%20(max((data.band_78%20!=%2065535)%20*%20data.band_78)%20-%20min(data.band_78)))%20*%20(data.band_78%20-%20min(data.band_78));%20blue:(int)(255%20/%20(max((data.band_13%20!=%2065535)%20*%20data.band_13)%20-%20min(data.band_13)))%20*%20(data.band_13%20-%20min(data.band_13));%20alpha:%20(data.band_100%20!=%2065535)%20*%20255%20},%20%22png%22,%20%22nodata=null%22)";
 
 		  // surfaceImage.push([]);
 		  surfaceImage[i] = new WorldWind.SurfaceImage( new WorldWind.Sector(checkedFootPrintsArray[i].Minimum_latitude, checkedFootPrintsArray[i].Maximum_latitude, checkedFootPrintsArray[i].Westernmost_longitude, checkedFootPrintsArray[i].Easternmost_longitude), WCPSLoadImage);
@@ -186,7 +186,7 @@ wwd.redraw();
               console.log("cov name: " +covID);
         console.log("N: " +N);
         console.log("E: " +E);
-                var query = "http://212.201.45.9:8080/rasdaman/ows?query=for%20c%20in%20("+covID.toLowerCase()+")%20return%20encode(c[%20N("
+                var query = "http://access.planetserver.eu:8080/rasdaman/ows?query=for%20c%20in%20("+covID.toLowerCase()+")%20return%20encode(c[%20N("
                                 + N +":" + N + "),%20E(" + E + ":" + E + ")%20],%20%22csv%22)";
 
                 console.log("Query for the click: " + query);
@@ -239,10 +239,10 @@ d3.select("svg").remove();
 
     /*Different collors for plotting the distinct datasets formed in the above while loop*/
     var colors = [
-    'yellow',
-    'red',
-    'green',
-    'orange',
+    'white',
+    'white',
+    'white',
+    'white',
     'white'
     ]
 
