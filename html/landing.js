@@ -5,8 +5,9 @@
 /**
 * @version $Id: BasicExample.js 3320 2015-07-15 20:53:05Z dcollins $
 */
-var huevos;
+
 checkedFootPrintsArray = []; // array of footprints that user choosed
+
 function getQueryVariable(variable){
    var query = window.location.search.substring(1);
    var vars  = query.split("&");
@@ -99,7 +100,7 @@ wwd.redraw();
     // shapesLayer.addRenderable(surfaceImageLayer);
     //surface image test end
 
-//////////////////  can you show the log?
+//////////////////
 
        var layerRecognizer = function (o) {
 	      // X and Y coordinates of a single click
@@ -108,26 +109,18 @@ wwd.redraw();
 	      //console.log("The coordinates are: " + x + " " + y);
 	      var pickList = wwd.pick(wwd.canvasCoordinates(x, y));
 
-        if (pickList.objects.length < 2){
+        // NOTE: if click onto checked footprint (color fill polygon with another attribute), this function below does not work
+	      if (pickList.objects.length < 2){
           var clickedLatitude = pickList.objects[0].position.latitude;
   	      var clickedLongitude = pickList.objects[0].position.longitude;
-          // getFootPrintsContainingPoint(shapes, attributes, checkedAttributes, clickedLatitude, clickedLongitude);
-           console.log("uno: " +lastCovID);
-
         }else{
           var clickedLatitude = pickList.objects[1].position.latitude;
   	      var clickedLongitude = pickList.objects[1].position.longitude;
-          // var coverageName = accessCheckedFootPrintsArray();
-           console.log("dos: " +lastCovID);
-          var coverageName = lastCovID;
-
-          //var coverageName = checkedFootPrintsArray.coverageID;  
-
-        alert(coverageName);
-
-
+          var coverageName = accessCheckedFootPrintsArray();
+          //var coverageName = checkedFootPrintsArray.coverageID;   // as I said, you are doing it wrong (here is wrong also, as it is an array,)then how?
           queryBuilder(clickedLatitude, clickedLongitude, coverageName);
-
+          //alert(checkedFootPrintsArray[checkedFootPrintsArray.length - 1].coverageID);
+          // copy the alert to here
         }
 	      //alert(clickedLatitude + " " + clickedLongitude);
 
@@ -169,8 +162,7 @@ wwd.redraw();
        wwd.addLayer(renderLayer[i]);
        shapesLayer.addRenderable(renderLayer[i]);
          }
-        //  return(checkedFootPrintsArray[checkedFootPrintsArray.length-1].coverageID);
-        //return(checkedFootPrintsArray[i].coverageID);
+         return(checkedFootPrintsArray[checkedFootPrintsArray.length-1].coverageID);
 
    }
 
@@ -192,7 +184,7 @@ wwd.redraw();
                 var N = latitude * r * (PI/180);
                 var E = longitude * cosOf0 * r * (PI/180);
               console.log("cov name: " +covID);
-              console.log("N: " +N);
+        console.log("N: " +N);
         console.log("E: " +E);
                 var query = "http://access.planetserver.eu:8080/rasdaman/ows?query=for%20c%20in%20("+covID.toLowerCase()+")%20return%20encode(c[%20N("
                                 + N +":" + N + "),%20E(" + E + ":" + E + ")%20],%20%22csv%22)";
@@ -228,9 +220,8 @@ var implementChart = function(floatsArray) {
     //************************************************************
 d3.select("svg").remove();
     var data = [];
-    var i = 0;
-    var j = 0;
-
+    var i = 0, j = 0;
+    var Ymin = Infinity, Ymax = -Infinity;   // Values for getting the minimum and maximum out of the array
     /*Adjusting the data so that every single point is with point has a format {'x':__,'y':__}*/
     /*splitting the datasets when 65535 is occured so that points with values 65535 are not ploted*/
     while(i < floatsArray.length) {
@@ -238,6 +229,12 @@ d3.select("svg").remove();
             data.push([]);
             while(floatsArray[i] != 65535) {
                 data[j].push({'x':i,'y':floatsArray[i]});
+                if (Ymin > floatsArray[i]) {  // Getting the minimum
+                    Ymin = floatsArray[i];
+                }
+                else if (Ymax < floatsArray[i]) {  // Getting up the minimum
+                    Ymax = floatsArray[i];
+                }
                 i++;
             }
             j++;
@@ -269,7 +266,7 @@ d3.select("svg").remove();
         .range([0, width]);
 
     var y = d3.scale.linear()
-        .domain([0, 0.4])
+        .domain([Ymin, Ymax])
         .range([height, 0]);
 
     var xAxis = d3.svg.axis()
@@ -289,7 +286,7 @@ d3.select("svg").remove();
     var zoom = d3.behavior.zoom()
         .x(x)
         .y(y)
-        .scaleExtent([1, (floatsArray.length / 4)])
+        .scaleExtent([0.5, (floatsArray.length / 4)])  // 1st value is for zooming out; 2nd is for zooming in
         .on("zoom", zoomed);
 
     //************************************************************
