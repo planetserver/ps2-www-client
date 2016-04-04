@@ -5,9 +5,8 @@
 /**
 * @version $Id: BasicExample.js 3320 2015-07-15 20:53:05Z dcollins $
 */
-
+var huevos;
 checkedFootPrintsArray = []; // array of footprints that user choosed
-
 function getQueryVariable(variable){
    var query = window.location.search.substring(1);
    var vars  = query.split("&");
@@ -100,7 +99,7 @@ wwd.redraw();
     // shapesLayer.addRenderable(surfaceImageLayer);
     //surface image test end
 
-//////////////////
+//////////////////  can you show the log?
 
        var layerRecognizer = function (o) {
 	      // X and Y coordinates of a single click
@@ -109,18 +108,27 @@ wwd.redraw();
 	      //console.log("The coordinates are: " + x + " " + y);
 	      var pickList = wwd.pick(wwd.canvasCoordinates(x, y));
 
-        // NOTE: if click onto checked footprint (color fill polygon with another attribute), this function below does not work
-	      if (pickList.objects.length < 2){
+        if (pickList.objects.length < 2){
           var clickedLatitude = pickList.objects[0].position.latitude;
   	      var clickedLongitude = pickList.objects[0].position.longitude;
+          getFootPrintsContainingPoint(shapes, attributes, checkedAttributes, clickedLatitude, clickedLongitude);
+           console.log("uno: " +lastCovID);
+
         }else{
           var clickedLatitude = pickList.objects[1].position.latitude;
   	      var clickedLongitude = pickList.objects[1].position.longitude;
-          var coverageName = accessCheckedFootPrintsArray();
-          //var coverageName = checkedFootPrintsArray.coverageID;   // as I said, you are doing it wrong (here is wrong also, as it is an array,)then how?
+          // var coverageName = accessCheckedFootPrintsArray();
+          //getFootPrintsContainingPoint(shapes, attributes, checkedAttributes, clickedLatitude, clickedLongitude);
+           console.log("dos: " +lastCovID);
+          var coverageName = lastCovID;
+
+          //var coverageName = checkedFootPrintsArray.coverageID;
+
+        // alert(coverageName);
+
+
           queryBuilder(clickedLatitude, clickedLongitude, coverageName);
-          //alert(checkedFootPrintsArray[checkedFootPrintsArray.length - 1].coverageID);
-          // copy the alert to here
+
         }
 	      //alert(clickedLatitude + " " + clickedLongitude);
 
@@ -133,7 +141,7 @@ wwd.redraw();
 	      console.log(pickList);
 
 	      // get all the coverages containing clicked point
-	      getFootPrintsContainingPoint(shapes, attributes, checkedAttributes, clickedLatitude, clickedLongitude);
+	      // getFootPrintsContainingPoint(shapes, attributes, checkedAttributes, clickedLatitude, clickedLongitude);
 
 
 
@@ -146,6 +154,7 @@ wwd.redraw();
    window.accessCheckedFootPrintsArray = function() {
 	  for(i = 0; i < checkedFootPrintsArray.length; i++) {
 	       var coverageID = checkedFootPrintsArray[i].coverageID.toLowerCase();
+
 	      //  console.log("Checked Footprint: " + i + " ");
 	       var WCPSLoadImage = "http://access.planetserver.eu:8080/rasdaman/ows?query=for%20data%20in%20(%20" + coverageID +"%20)%20return%20encode(%20{%20red:%20(int)(255%20/%20(max((data.band_233%20!=%2065535)%20*%20data.band_233)%20-%20min(data.band_233)))%20*%20(data.band_233%20-%20min(data.band_233));%20green:%20(int)(255%20/%20(max((data.band_78%20!=%2065535)%20*%20data.band_78)%20-%20min(data.band_78)))%20*%20(data.band_78%20-%20min(data.band_78));%20blue:(int)(255%20/%20(max((data.band_13%20!=%2065535)%20*%20data.band_13)%20-%20min(data.band_13)))%20*%20(data.band_13%20-%20min(data.band_13));%20alpha:%20(data.band_100%20!=%2065535)%20*%20255%20},%20%22png%22,%20%22nodata=null%22)";
 
@@ -162,7 +171,8 @@ wwd.redraw();
        wwd.addLayer(renderLayer[i]);
        shapesLayer.addRenderable(renderLayer[i]);
          }
-         return(checkedFootPrintsArray[checkedFootPrintsArray.length-1].coverageID);
+        //  return(checkedFootPrintsArray[checkedFootPrintsArray.length-1].coverageID);
+        //return(checkedFootPrintsArray[i].coverageID);
 
    }
 
@@ -184,8 +194,9 @@ wwd.redraw();
                 var N = latitude * r * (PI/180);
                 var E = longitude * cosOf0 * r * (PI/180);
               console.log("cov name: " +covID);
-        console.log("N: " +N);
+              console.log("N: " +N);
         console.log("E: " +E);
+
                 var query = "http://access.planetserver.eu:8080/rasdaman/ows?query=for%20c%20in%20("+covID.toLowerCase()+")%20return%20encode(c[%20N("
                                 + N +":" + N + "),%20E(" + E + ":" + E + ")%20],%20%22csv%22)";
 
@@ -237,12 +248,12 @@ d3.select("svg").remove();
                 else if (Ymax < floatsArray[i]) {  // Getting up the minimum
                     Ymax = floatsArray[i];
                 }
-                xPrev = xPrev + xDist; // Setting the correct X-axis wavelength of the current Band/point 
+                xPrev = xPrev + xDist; // Setting the correct X-axis wavelength of the current Band/point
                 i++;
             }
             j++;
         }
-        xPrev = xPrev + xDist;  // Setting the correct X-axis wavelength of the current Band/point 
+        xPrev = xPrev + xDist;  // Setting the correct X-axis wavelength of the current Band/point
         i++;
     }
 
