@@ -26,6 +26,7 @@ function CheckedDataSetConstructor(coverageID, Easternmost_longitude, Maximum_la
 var allFootPrintsArray = []; // array of all footprints
 var footPrintsContainingPointArray = []; // array of footprints containing clicked point
 var MAXIMUM_CHECKED_FOOTPRINTS = 10;
+var lastCovID;
 
 // when page loads then load all footprints
 $.ajax({
@@ -56,11 +57,13 @@ function getFootPrintsContainingPoint(shapes, attributes, checkedAttributes, lat
             console.log("Get footprints containing point:" + " request=getCoveragesContainingPoint&latPoint=" + latitude + "&longPoint=" + longitude);
             $.each(data, function(key, val) {
                 var dataSetFootPrint = new CheckedDataSetConstructor(val.coverageID, val.Easternmost_longitude, val.Maximum_latitude, val.Minimum_latitude, val.Westernmost_longitude, val.latList, val.longList, latitude, longitude);
-
+                console.log("mememe: "+val.coverageID);
+                lastCovID = val.coverageID;
                 // push this dataSet to array for displaying later
                 footPrintsContainingPointArray.push(dataSetFootPrint);
 
                 console.log("Footprint containing clicked point: " + val.coverageID);
+
 
                 // check if checkedFootPrintsArray is not over maximum then push to this array
                 if (checkedFootPrintsArray.length < MAXIMUM_CHECKED_FOOTPRINTS) {
@@ -70,11 +73,11 @@ function getFootPrintsContainingPoint(shapes, attributes, checkedAttributes, lat
                         if (checkedFootPrintsArray[i].coverageID === val.coverageID) {
                             isChecked = true;
                            // var r = confirm("Uncheck this footprint: " + val.coverageID + " ?");
-                           // if (r == true) {
+                            // if (r == true) {
                                 // remove coverageID from checkedFootPrintsArray and change attribute to unchecked
-                            //    removeCheckedFootPrint(val.coverageID)
-                           // }
-                            break;
+                              //  removeCheckedFootPrint(val.coverageID)
+                            // }
+                            //break;
                         }
                     }
 
@@ -93,6 +96,7 @@ function getFootPrintsContainingPoint(shapes, attributes, checkedAttributes, lat
                     }
 
                     // update checkedFootPrintsTable in service-template.html
+
                     updateCheckedFootPrintsTable();
 
 
@@ -103,6 +107,7 @@ function getFootPrintsContainingPoint(shapes, attributes, checkedAttributes, lat
             });
 
 	    // This function is called in landing.js after checkedFootPrintsArray has been updated.
+
             accessCheckedFootPrintsArray();
         }
     });
@@ -166,7 +171,8 @@ function getFootPrintsContainingPoint(shapes, attributes, checkedAttributes, lat
         var tableContent = "";
         var templateRow = "<tr>" +  "<td>$COVERAGE_ID</td>" + "<td>" + " <input type='checkbox' id='checkedFootPrintsTable_checked_$rowNumber' value='$COVERAGE_ID' onclick='removeCheckedFootPrintRow(this);' checked>" + "</td>" + "<td>" + " <button type='button' class='btn btn-info' id='checkedFootPrintsTable_view_$rowNumber' data-content='$LAT_CLICKED_POINT_$LONG_CLICKED_POINT' onclick='viewCheckedFootPrintRow(this);'>" + " <span class='glyphicon glyphicon-search'></span> View" + "</button>" + "</td>" + "</tr>";
 
-        for (i = 0; i < checkedFootPrintsArray.length; i++) {
+        for (i = 0; i < checkedFootPrintsArray.length; i++) { //add if to not update the cov if already exist
+
             var tmp = templateRow.replace("$rowNumber", i + 1);
             tmp = tmp.replaceAll("$COVERAGE_ID", checkedFootPrintsArray[i].coverageID);
             tmp = tmp.replaceAll("$LAT_CLICKED_POINT", checkedFootPrintsArray[i].latClickedPoint);
