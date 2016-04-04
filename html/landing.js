@@ -221,6 +221,8 @@ var implementChart = function(floatsArray) {
 d3.select("svg").remove();
     var data = [];
     var i = 0, j = 0;
+    var xDist = (4.0-1.0) / floatsArray.length;  // Value for setting the equidistance Band wavelength which should be between 1 and 4
+    var xPrev = 1.0;  // Value used for storing the Band wavelength of the previous Band
     var Ymin = Infinity, Ymax = -Infinity;   // Values for getting the minimum and maximum out of the array
     /*Adjusting the data so that every single point is with point has a format {'x':__,'y':__}*/
     /*splitting the datasets when 65535 is occured so that points with values 65535 are not ploted*/
@@ -228,28 +230,24 @@ d3.select("svg").remove();
         if(floatsArray[i] != 65535){
             data.push([]);
             while(floatsArray[i] != 65535) {
-                data[j].push({'x':i,'y':floatsArray[i]});
+                data[j].push({'x':xPrev,'y':floatsArray[i]});
                 if (Ymin > floatsArray[i]) {  // Getting the minimum
                     Ymin = floatsArray[i];
                 }
                 else if (Ymax < floatsArray[i]) {  // Getting up the minimum
                     Ymax = floatsArray[i];
                 }
+                xPrev = xPrev + xDist; // Setting the correct X-axis wavelength of the current Band/point 
                 i++;
             }
             j++;
         }
+        xPrev = xPrev + xDist;  // Setting the correct X-axis wavelength of the current Band/point 
         i++;
     }
 
     /*Different collors for plotting the distinct datasets formed in the above while loop*/
-    var colors = [
-    'white',
-    'white',
-    'white',
-    'white',
-    'white'
-    ]
+    var colors = ['white']
 
     //************************************************************
     // Create Margins and Axis and hook our zoom function
@@ -262,7 +260,7 @@ d3.select("svg").remove();
         innerheight = height - margin.top - margin.bottom ;
 
     var x = d3.scale.linear()
-         .domain([0, floatsArray.length])
+        .domain([1.0, 4.0])
         .range([0, width]);
 
     var y = d3.scale.linear()
