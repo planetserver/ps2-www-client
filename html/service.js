@@ -6,9 +6,9 @@ $(function () {
 
             /* Build navbar */
             $("#service-navbar").navbar({
-                serviceLogo: "images/logos/service_logo_dummy.jpg",
-                serviceLogoUrl: "http://www.serviceUrl.com",
-                homeUrl: "http://www.homeUrl.com"
+                serviceLogo: "images/logos/planet_server_logo.png",
+                serviceLogoUrl: "http://access.planetserver.eu",
+                homeUrl: "http://access.planetserver.eu"
             });
 
             /* main dock (required) */
