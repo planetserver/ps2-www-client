@@ -75,7 +75,7 @@ requirejs(['./config/config',
         attributes.outlineColor = WorldWind.Color.RED;
         //attributes.interiorColor = new WorldWind.Color(0, 255, 25, 0.00001);
         attributes.drawInterior = false;
-  
+
         var checkedAttributes = new WorldWind.ShapeAttributes(null);
         checkedAttributes.outlineColor = WorldWind.Color.BLUE;
         checkedAttributes.interiorColor = new WorldWind.Color(0, 1, 1, 0.5);
@@ -101,7 +101,7 @@ requirejs(['./config/config',
             shapesLayer.addRenderable(shapes[i]);
         }
 
- 
+
         /* This function will check if user click on globe or click on loaded image for footprint:
             + If click on globe then check if it is inside a footprint. If it is then add these footprints to checkedFootPrintsArray
             + If click on loaded image then draw the chart which contains the values of all bands for the clicked point
@@ -112,12 +112,12 @@ requirejs(['./config/config',
                 y = o.clientY;
             //console.log("The coordinates are: " + x + " " + y);
             var pickList = wwd.pick(wwd.canvasCoordinates(x, y));
-            
+
             // Get the clicked point (if it clicks on the globe then use object[0] or click on loaded image then use object[1])
             var clickedLatitude  = pickList.objects[0].position != null ? pickList.objects[0].position.latitude  : pickList.objects[1].position.latitude;
             var clickedLongitude = pickList.objects[0].position != null ? pickList.objects[0].position.longitude : pickList.objects[1].position.longitude;
-            
-            // get last footprint which contains the new clicked point (load image by synchronous)                
+
+            // get last footprint which contains the new clicked point (load image by synchronous)
             $.when(getFootPrintsContainingPoint(shapes, attributes, checkedAttributes, clickedLatitude, clickedLongitude)).then(function() {
                 console.log("Found containing footprints now check to draw chart.");
                 // if click on loaded image then draw chart
@@ -127,15 +127,15 @@ requirejs(['./config/config',
                     queryBuilder(clickedLatitude, clickedLongitude, lastCovID);
                 }
 
-            });            
-        };        
+            });
+        };
 
         // This function is called in Footprints.js of getFootPrintsContainingPoint() to get access to the checkedFootPrintsArray.
         var surfaceImage = []; // array for images
-        
+
         //var renderLayer = new WorldWind.RenderableLayer();
         var renderLayer = [];
-        
+
         /* This function is called from landing.js after all checked footprints are updated to checkedFootPrintsArray
         and it loads the image accordingly to checked footprints
         */
@@ -147,7 +147,7 @@ requirejs(['./config/config',
                 var WCPSLoadImage = "http://access.planetserver.eu:8080/rasdaman/ows?query=for%20data%20in%20(%20" + coverageID + "%20)%20return%20encode(%20{%20red:%20(int)(255%20/%20(max((data.band_233%20!=%2065535)%20*%20data.band_233)%20-%20min(data.band_233)))%20*%20(data.band_233%20-%20min(data.band_233));%20green:%20(int)(255%20/%20(max((data.band_78%20!=%2065535)%20*%20data.band_78)%20-%20min(data.band_78)))%20*%20(data.band_78%20-%20min(data.band_78));%20blue:(int)(255%20/%20(max((data.band_13%20!=%2065535)%20*%20data.band_13)%20-%20min(data.band_13)))%20*%20(data.band_13%20-%20min(data.band_13));%20alpha:%20(data.band_100%20!=%2065535)%20*%20255%20},%20%22png%22,%20%22nodata=null%22)";
                 surfaceImage[i] = new WorldWind.SurfaceImage(new WorldWind.Sector(checkedFootPrintsArray[i].Minimum_latitude, checkedFootPrintsArray[i].Maximum_latitude, checkedFootPrintsArray[i].Westernmost_longitude, checkedFootPrintsArray[i].Easternmost_longitude), WCPSLoadImage);
                 //  console.log("pute: " + surfaceImage[i]);
-                //  console.log("WCPS query: "  + WCPSLoadImage);
+                  console.log("WCPS query: "  + WCPSLoadImage);
                 //  console.log("max lat: " + checkedFootPrintsArray[i].Maximum_latitude);
                 //  console.log("min lat: " + checkedFootPrintsArray[i].Minimum_latitude);
                 //  console.log("west lon: " + checkedFootPrintsArray[i].Westernmost_longitude);

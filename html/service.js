@@ -4,6 +4,8 @@ $(function () {
         _create: function () {
             var self = this;
 
+            
+
             /* main dock (required) */
             var leftDock = $("<div>").mainDock().mainDock("instance");
             leftDock.addCheckedCoveragesPanel();
