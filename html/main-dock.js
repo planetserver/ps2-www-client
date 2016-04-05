@@ -11,7 +11,7 @@ $(function () {
             the projections, the coverages and the query terminal panels */
         _create: function () {
             this._super();
-            this.dockToggle
+            this.dockToggleIconWrapper
                 .append(
                     $("<span>", {class: this.options.toggleIcon + " dock-toggle-icon"})
                 );
@@ -50,17 +50,15 @@ $(function () {
                 dock: this.dock,
                 panelId: "coverage-selector",
                 panelTitle: "available coverages",
-                buttonId: "coverageDropdown"
+                buttonId: "coverageDropdown",
+                defaultOption: "Select coverage"
             }).selectPanel("instance");
 
             var self = this;
             $.each(coverageNames, function (index, coverage) {
-                if (index == 0) {
-                    self.coverageSelectPanel.setButtonContent(coverage);
-                }
                 self.coverageSelectPanel.addSelectOption(coverage.replace(/ /g, '').toLowerCase(), coverage);
             });
-            self.coverageSelectPanel.addButton("retrieve-coverage", "Retrieve");
+            this.coverageSelectPanel.addButton("retrieve-coverage", "Retrieve");
 
             return this;
         },
@@ -77,13 +75,13 @@ $(function () {
             return this;
         },
         addCheckedCoveragesPanel: function() {
-            this.checkedCoveragesPanel = $("<div>").checkedCoveragesPanel({
-                dock: this.dock,
-                panelId: "checked-coverages",
-                panelTitle: "selected coverages"
-            }).checkedCoveragesPanel("instance");
+          this.checkedCoveragesPanel = $("<div>").checkedCoveragesPanel({
+              dock: this.dock,
+              panelId: "checked-coverages",
+              panelTitle: "selected coverages"
+          }).checkedCoveragesPanel("instance");
 
-            return this;
-        }
+          return this;
+      }
     })
 });

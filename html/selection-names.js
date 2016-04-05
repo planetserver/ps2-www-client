@@ -18,3 +18,10 @@ coverageNames = [
     "coverage5",
     "coverage6"
 ];
+
+customWCPSQueries = [
+    {
+        name: "Example query",
+        value: "for c in ( AvgLandTemp )\n  return encode(1, 'csv')"
+    }
+];

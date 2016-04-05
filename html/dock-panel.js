@@ -5,7 +5,8 @@ $(function () {
             panelId: undefined,
             panelType: "empty",
             panelTitle: "",
-            panelSubtitle: ""
+            panelSubtitle: "",
+            collapsible: false
         },
         _create: function () {
             var panel = this._buildPanel();
@@ -47,8 +48,36 @@ $(function () {
                             )
                 );
             }
-            var panelBody = $("<div>", {class: "panel-body"})/*.append(bodyContent)*/
-                .appendTo(panel);
+            var panelBody = $("<div>", {class: "panel-body"}).appendTo(panel);
+
+            if (this.options.collapsible) {
+                panel.addClass("collapsible");
+                panelBody.uniqueId().addClass("collapse in");
+                /*panel.children(".panel-heading")
+                    .attr({"data-toggle":"collapse", "data-target": "#" + panelBody.attr("id"), "aria-expanded": false, "aria-controls": "panelCollapse"});*/
+                panel.find(".panel-title:not(.panel-subtitle)")
+                    .addClass("panel-collapser")
+                    .append($("<span>", {
+                        class: "glyphicon glyphicon-minus",
+                        "data-toggle": "collapse",
+                        "data-target": "#" + panelBody.attr("id"),
+                        "aria-expanded": false,
+                        "aria-controls": "panelCollapse"
+                    }).hover(function() {
+                            $(this).parents(".collapsible").addClass("hovered");
+                        }, function() {
+                            $(this).parents(".collapsible").removeClass("hovered");
+                        })
+                        .click(function() {
+                            if (panelBody.hasClass("in")) {
+                                $(this).removeClass("glyphicon glyphicon-minus");
+                                $(this).addClass("glyphicon glyphicon-modal-window");
+                            } else {
+                                $(this).removeClass("glyphicon glyphicon-modal-window");
+                                $(this).addClass("glyphicon glyphicon-minus");
+                            }
+                        }));
+            }
 
             return {panel: panel, panelBody: panelBody};
         }

@@ -3,7 +3,8 @@ $(function () {
         options: {
             panelType: "select",
             dropdownId: undefined,
-            buttonContent: undefined
+            buttonContent: undefined,
+            defaultOption: undefined
         },
         _create: function () {
             this._super();
@@ -26,17 +27,20 @@ $(function () {
                 ).appendTo(this.panelBody);
                 var dropdownMenu = $("<ul>", {class: "dropdown-menu", "aria-labelledby": "buttonId"}).appendTo(dropdown);
 
+            if (this.options.defaultOption != undefined) {
+                this.addSelectOption(this.options.defaultOption.toLowerCase().replace(" ", "-"), this.options.defaultOption);
+                this.setButtonContent(this.options.defaultOption);
+            }
+
             var self = this;
             dropdown.on('shown.bs.dropdown', function () {
                 if (dropdownMenu.height() + dropdownMenu.offset().top > self.options.dock.height() + self.options.dock.offset().top) {
-                    console.log("papatzia!");
                     dropdownMenu.css({"position": "fixed", "top": dropdownMenu.offset().top, "left": dropdownMenu.offset().left, "width": dropdownMenu.outerWidth()});
                 }
             });
 
             dropdown.on('hide.bs.dropdown', function () {
                 if (dropdownMenu.height() + dropdownMenu.offset().top > self.options.dock.height() + self.options.dock.offset().top) {
-                    console.log("papatzia off!");
                     dropdownMenu.css({"position": "absolute", "top": "100%", "left": 0, "width": "100%"});
                 }
             });

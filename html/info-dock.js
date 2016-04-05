@@ -5,9 +5,9 @@ $(function () {
             toggleIcon: "images/icons/info(h100).png"
         },
         _create: function () {
-            this._super();
             this.element.addClass("info-dock");
-            this.dockToggle.append(
+            this._super();
+            this.dockToggleIconWrapper.append(
                 $("<img>", {class: "dock-toggle-icon", src: this.options.toggleIcon})
             );
             this.infoPanel = this.addInfoPanel();
