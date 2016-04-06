@@ -7,8 +7,8 @@ $(function () {
             /* Build navbar */
             $("#service-navbar").navbar({
                 serviceLogo: "images/logos/planet_server_logo.png",
-                serviceLogoUrl: "http://access.planetserver.eu",
-                homeUrl: "http://access.planetserver.eu"
+                serviceLogoUrl: "http://planetserver.eu",
+                homeUrl: "http://planetserver.eu"
             });
 
             /* main dock (required) */

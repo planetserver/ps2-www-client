@@ -1,265 +1,73 @@
 <!DOCTYPE html>
-<html>
-    <head>
-  <title>Planet Server 2</title>
-
-  <meta charset="utf-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-
-  <!--D3 library for chart implementation-->
-  <script type="text/javascript" src="../thirdparty/d3.v3.min.js"></script>
-
-  <!--C3 library for easier chart implementation-->
-  <script type="text/javascript" src="../thirdparty/c3/c3.js"></script>
-
-  <!--jQuery-->
-  <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
-
-  <!-- Bootstrap-->
-  <link href="css/bootstrap.min.css" rel="stylesheet">
-  <script src="js/bootstrap.min.js"></script>
-
-  <!-- JavaScript-->
-  <script type="text/javascript" src="js/script.js"></script>
-
-  <!-- Style-->
-  <link rel="stylesheet" type="text/css" href="css/styles.css"></link>
-  <!-- Styles for the chart-->
-  <link rel="stylesheet" type="text/css" href="../thirdparty/c3/c3.css"></link>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>PlanetServer-2</title>
 
 
-  <!--scripts that were used for the canvas-->
-  <script data-main="landing" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.17/require.min.js"></script>
+    <!--D3 library for chart implementation-->
+    <script type="text/javascript" src="../thirdparty/d3.v3.min.js"></script>
+
+    <script src="https://code.jquery.com/jquery-2.2.1.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.11.4/jquery-ui.min.js"></script>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"
+            integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS"
+            crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="service-template.css"/>
+    <link rel="stylesheet" href="graph.css"/>
+
+    <script src="libs/malihu-custom-scrollbar-plugin/jquery.mousewheel.js"></script>
+
+    <link rel="stylesheet" href="libs/malihu-custom-scrollbar-plugin/jquery.mCustomScrollbar.css"/>
+    <script src="libs/malihu-custom-scrollbar-plugin/jquery.mCustomScrollbar.js"></script>
+
+
+    <script src="libs/codemirror/codemirror.js"></script>
+    <link rel="stylesheet" href="libs/codemirror/codemirror.css"/>
+    <!--<script src="libs/codemirror/codemirror-compressed.js"></script>-->
+    <!--<link rel="stylesheet" href="libs/codemirror/simplescrollbars.css"/>-->
+
+    <script src="libs/codemirror/scroll/simplescrollbars.js"></script>
+    <link rel="stylesheet" href="libs/codemirror/scroll/simplescrollbars.css"/>
+    <script src="libs/codemirror/display/placeholder.js"></script>
+    <script src="libs/codemirror/selection/active-line.js"></script>
+
+    <script data-main="landing"
+      src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.17/require.min.js"></script>
+    <!--<script data-main="www/landing"
+            src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.17/require.min.js"></script>-->
+
+    <script src="service.js"></script>
+    <script src="selection-names.js"></script>
+    <script src="navbar.js"></script>
+    <script src="dock-bar.js"></script>
+    <script src="main-dock.js"></script>
+    <script src="secondary-dock.js"></script>
+    <script src="info-dock.js"></script>
+    <script src="plot-dock.js"></script>
+    <script src="dock-panel.js"></script>
+    <script src="tab-panel.js"></script>
+    <script src="select-panel.js"></script>
+    <script src="query-terminal-panel.js"></script>
+    <script src="code-area.js"></script>
+    <script src="gis-toolbar.js"></script>
+    <script src="coordinate-overlay.js"></script>
+    <script src="code-area.js"></script>
+    <script src="checked-coverages-panel.js"></script>
+    <!--<script src="www/landing.js"></script>-->
 </head>
-
-    <body>
-
-        <nav id="service-navbar" class="navbar navbar-default navbar-fixed-top service-navbar">
-            <div class="navbar-shadow"></div>
-            <div class="container">
-                <div class="navbar-header">
-                    <a class="navbar-brand" href="http://www.jacobs-university.de">
-                        <img alt="Logo" src="images/logo-jacobs-white.svg">
-                    </a>
-                    <a class="navbar-brand" href="http://earth.user.jacobs-university.de">
-                        <img alt="Logo" src="images/logo-ees.svg">
-                    </a>
-                </div>
-                <div class="collapse navbar-collapse" id="service-navbar-collapse">
-                    <a class="hidden-xs navbar-brand navbar-right" href="http://www.earthserver.eu">
-                        <img src="images/earth_server_logo.png">
-                    </a>
-                </div>
-            </div>
-        </nav>
-
-      	<!--left toggle button-->
-      	<div id="menu-toggle">
-            <img src="images/menu.png" width=20 height=20 alt="Menu" ></img>
-      	</div>
-
-        <!--left toggle menu-->
-        <div id="menu">
-
-           
-	    <div class="row">
-		<div id="Earth" title="Earth" class="col-md-2">
-                    
-                </div>
-		
-                <div id="Moon" title="Moon" class="col-md-2">
-                    <a href="#"><img src="images/moon_logo.png"/></a>
-                </div>
-
-                <div id="Mars" title="Mars" class="col-md-2">
-                    <a href="#"><img src="images/mars70.png"/></a>
-                </div>
-            </div>
-
-    		    <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="false">
-    				    <div class="panel panel-default">
-
-                    <div class="panel-heading" role="tab" id="headingOne">
-                        <h4 class="panel-title"><a aria-expanded="true">Projections</a></h4>
-                    </div>
-
-                    <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="false">
-                        <div class="panel-body">
-                            <form class="form-horizontal">
-                                <div class="form-group">
-                                    <label for="Projections" class="col-sm-1 control-label"></label>
-                                        <div class="col-sm-10">
-                                            <div class="dropdown" id="projectionDropdown">
-                                            </div>
-                                        </div>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="panel panel-default">
-                    <div class="panel-heading" role="tab" id="headingOne">
-                        <h4 class="panel-title">
-                            <a aria-expanded="true">Available Coverages</a>
-                        </h4>
-                    </div>
-
-                    <div class="panel panel-default" aria-labelledby="headingOne">
-                        <div class="panel-body">
-                            <form class="form-horizontal">
-                                <div class="form-group">
-                                    <label for="dataset" class="col-sm-2 control-label">Dataset</label>
-                                    <div class="col-sm-10">
-                                        <select id="dataset" class="col-sm-8 form-control">
-                                            <option>DTM_integer_latlon</option>
-                                            <option>global_image</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div style="margin-top: 40px;">
-                                    <button type="button" class="btn btn-info" id="retrieve">Retrieve</button>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="panel panel-default">
-                    <div class="panel-heading" role="tab" id="headingThree">
-                        <h4 class="panel-title">
-                            <a aria-expanded="true">Your own queries</a>
-                        </h4>
-                    </div>
-                    <div class="panel panel-default" aria-labelledby="headingOne">
-                        <div class="panel-body">
-                            <form class="form-horizontal">
-                                <div class="form-group">
-                                    <label for="query" class="col-sm-2 control-label">Query</label>
-                                    <div class="col-sm-10">
-                                        <textarea id="query" class="form-control" rows="3">for c in (test_crism) return encode(c, "png");
-                                        </textarea>
-                                        <span id="helpBlock" class="help-block">You can write your own queries and they will be displayed on the globe</span>
-                                    </div>
-                                </div>
-                                <button id="execute" class="btn btn-info">Run</button>
-                                <button id="clear" class="btn btn-danger">Clear</button>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div id="right-menu-toggle">
-            <img src="images/menu.png" width=20 height=20 alt="Menu" ></img>
-        </div>
-
-        <div id="right-menu">
-            <div class="panel-group" id="accordion">
-
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <h4 class="panel-title">
-                            <a data-toggle="collapse" data-parent="#accordion" href="#collapse1">
-                                About
-                            </a>
-                        </h4>
-                    </div>
-                    <div id="collapse1" class="panel-collapse collapse in">
-                      <div class="panel-body">
-                          should change
-                      </div>
-                    </div>
-                </div>
-
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                      <h4 class="panel-title">
-                        <a data-toggle="collapse" data-parent="#accordion" href="#collapse2">
-                            Tour
-                        </a>
-                      </h4>
-                    </div>
-                    <div id="collapse2" class="panel-collapse collapse">
-                        <div class="panel-body">Under construction
-                        </div>
-                    </div>
-                </div>
-
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <h4 class="panel-title">
-                          <a data-toggle="collapse" data-parent="#accordion" href="#collapse3">
-                              Contact
-                          </a>
-                        </h4>
-                    </div>
-                    <div id="collapse3" class="panel-collapse collapse">
-                        <div class="panel-body">
-				<p>Project Manager - <a href=mailto:an.rossi@jacobs-university.de>Dr.Angelo Pio Rossi</a></p>
-				<p>Lead Developer - <a href=mailto:r.marcofiguera@jacobs-univesity.de>Ramiro Marco Figuera</a></p>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <h4 class="panel-title">
-                            <a data-toggle="collapse" data-parent="#accordion" href="#collapse4">
-                                System Requirements
-                            </a>
-                        </h4>
-                    </div>
-                    <div id="collapse4" class="panel-collapse collapse">
-                        <div class="panel-body">Under construction
-                        </div>
-                    </div>
-                </div>
-
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <h4 class="panel-title">
-                            <a data-toggle="collapse" data-parent="#accordion" href="#collapse5">
-                              Links
-                            </a>
-                        </h4>
-                    </div>
-                    <div id="collapse5" class="panel-collapse collapse">
-                        <div class="panel-body">
-				<p><a href="http://access.planetserver.eu" target="_blank">PlanetServer Landing page</a></p>
-				<p><a href="http://www.earthserver.eu" target="_blank">EarthServer Landing page</a></p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-
-         <!--right toggle button-->
-        <div id="right-layer-menu-toggle">
-            <img src="images/close.png" width=20 height=20 alt="Menu" ></img>
-        </div>
-
-        <!--right toggle menu-->
-        <div id="right-layer-menu">
-            <p style="color: white;">Layer information</p>
-        </div>
-        	<div class="jumbotron">
-                <div id="coordinateOverlay">
-                    <span id="terrainLatitude"></span>
-                    <span id="terrainLongitude"></span>
-                    <span id="terrainElevation"></span>
-                    <span id="eyeAltitudeLabel">Eye</span>
-                    <span id="eyeAltitude"></span>
-                </div>
-
-          	    <canvas id="canvasOne">
-          		      Your browser does not support HTML5 Canvas.
-        		</canvas>
-      	   </div>
-      	
-
-    </body>
+<body>
+    <nav id="service-navbar"></nav>
+    <div id="service-container">
+        <canvas id="canvasOne"></canvas>
+    </div>
+<script type="application/javascript">
+    $(function () {
+        $("#service-container").service();
+    });
+</script>
+</body>
 </html>
