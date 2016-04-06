@@ -140,22 +140,40 @@ requirejs(['./config/config',
         and it loads the image accordingly to checked footprints
         */
         window.accessCheckedFootPrintsArray = function() {
+
             for (i = 0; i < checkedFootPrintsArray.length; i++) {
                 var coverageID = checkedFootPrintsArray[i].coverageID.toLowerCase();
-
+                var maxlong;
+                var minlong;
                 //  console.log("Checked Footprint: " + i + " ");
+                console.log("east lat1: " + checkedFootPrintsArray[i].Easternmost_longitude);
+                console.log("west lat1: " + checkedFootPrintsArray[i].Westernmost_longitude);
+                if(checkedFootPrintsArray[i].Easternmost_longitude > 180){
+                   maxlong = checkedFootPrintsArray[i].Easternmost_longitude - 360;
+                   console.log("max lon: " + maxlong);
+                 }if (checkedFootPrintsArray[i].Westernmost_longitude > 180){
+                   minlong = checkedFootPrintsArray[i].Westernmost_longitude - 360;
+                   console.log("min lon: " + minlong);
+                 } else{
+                  maxlong = checkedFootPrintsArray[i].Easternmost_longitude;
+                  minlong = checkedFootPrintsArray[i].Westernmost_longitude;
+                }
                 var WCPSLoadImage = "http://access.planetserver.eu:8080/rasdaman/ows?query=for%20data%20in%20(%20" + coverageID + "%20)%20return%20encode(%20{%20red:%20(int)(255%20/%20(max((data.band_233%20!=%2065535)%20*%20data.band_233)%20-%20min(data.band_233)))%20*%20(data.band_233%20-%20min(data.band_233));%20green:%20(int)(255%20/%20(max((data.band_78%20!=%2065535)%20*%20data.band_78)%20-%20min(data.band_78)))%20*%20(data.band_78%20-%20min(data.band_78));%20blue:(int)(255%20/%20(max((data.band_13%20!=%2065535)%20*%20data.band_13)%20-%20min(data.band_13)))%20*%20(data.band_13%20-%20min(data.band_13));%20alpha:%20(data.band_100%20!=%2065535)%20*%20255%20},%20%22png%22,%20%22nodata=null%22)";
-                surfaceImage[i] = new WorldWind.SurfaceImage(new WorldWind.Sector(checkedFootPrintsArray[i].Minimum_latitude, checkedFootPrintsArray[i].Maximum_latitude, checkedFootPrintsArray[i].Westernmost_longitude, checkedFootPrintsArray[i].Easternmost_longitude), WCPSLoadImage);
+                surfaceImage[i] = new WorldWind.SurfaceImage(new WorldWind.Sector(checkedFootPrintsArray[i].Minimum_latitude, checkedFootPrintsArray[i].Maximum_latitude, minlong, maxlong), WCPSLoadImage);
                 //  console.log("pute: " + surfaceImage[i]);
                   console.log("WCPS query: "  + WCPSLoadImage);
-                //  console.log("max lat: " + checkedFootPrintsArray[i].Maximum_latitude);
-                //  console.log("min lat: " + checkedFootPrintsArray[i].Minimum_latitude);
-                //  console.log("west lon: " + checkedFootPrintsArray[i].Westernmost_longitude);
-                //  console.log("east lon: " + checkedFootPrintsArray[i].Easternmost_longitude);
+                 console.log("max lat: " + checkedFootPrintsArray[i].Maximum_latitude);
+                 console.log("min lat: " + checkedFootPrintsArray[i].Minimum_latitude);
+                 console.log("east lat: " + checkedFootPrintsArray[i].Easternmost_longitude);
+                 console.log("west lat: " + checkedFootPrintsArray[i].Westernmost_longitude);
+
+
+
                 renderLayer[i] = new WorldWind.RenderableLayer();
                 renderLayer[i].addRenderable(surfaceImage[i]);
                 wwd.addLayer(renderLayer[i]);
                 shapesLayer.addRenderable(renderLayer[i]);
+
             }
         }
 
@@ -319,7 +337,7 @@ requirejs(['./config/config',
                 .attr("transform", "rotate(-90)")
                 .attr("y", (-margin.left) + 10)
                 .attr("x", -height / 2)
-                .text('Axis Label');
+                .text('Reflectance');
 
             svg.append("clipPath")
                 .attr("id", "clip")
