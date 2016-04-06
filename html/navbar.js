@@ -11,7 +11,7 @@ $(function () {
                 .append($("<div>", {class: "container-fluid"})
                     .append($("<div>", {class: "navbar-header pull-left"})
                         .append($("<a>", {class: "navbar-brand earthserver-logo", href: "http://www.earthserver.eu"})
-                            .append($("<img>", {class: "img-responsive", src: "images/logos/earthserver_logo.png", alt: "EarthServer Logo"}))
+                            .append($("<img>", {class: "img-responsive", src: "html/images/logos/earthserver_logo.png", alt: "EarthServer Logo"}))
                         ).append($("<a>", {class: "navbar-brand service-logo"})
                             .append($("<img>", {class: "img-responsive", alt: "Service Logo"}))
                         )

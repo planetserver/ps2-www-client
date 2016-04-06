@@ -6,7 +6,7 @@ $(function () {
 
             /* Build navbar */
             $("#service-navbar").navbar({
-                serviceLogo: "images/logos/planet_server_logo.png",
+                serviceLogo: "html/images/logos/planet_server_logo.png",
                 serviceLogoUrl: "http://planetserver.eu",
                 homeUrl: "http://planetserver.eu"
             });
