@@ -146,16 +146,18 @@ requirejs(['./config/config',
                 var maxlong;
                 var minlong;
                 //  console.log("Checked Footprint: " + i + " ");
-                // console.log("east lat1: " + checkedFootPrintsArray[i].Easternmost_longitude);
+                //  console.log("east lat1: " + checkedFootPrintsArray[i].Easternmost_longitude);
                 // console.log("west lat1: " + checkedFootPrintsArray[i].Westernmost_longitude);
-                if(checkedFootPrintsArray[i].Easternmost_longitude > 180){
+                maxlong = checkedFootPrintsArray[i].Easternmost_longitude; //assign maxlong from the checked footprint
+                minlong = checkedFootPrintsArray[i].Westernmost_longitude; //assign minlong from the checked footprint
+                if(checkedFootPrintsArray[i].Easternmost_longitude > 180){ //long in www spans from -180 to 180, if its bigger than 180 = -360
                    maxlong = checkedFootPrintsArray[i].Easternmost_longitude - 360;
                   //  console.log("max lon: " + maxlong);
                  }if (checkedFootPrintsArray[i].Westernmost_longitude > 180){
                    minlong = checkedFootPrintsArray[i].Westernmost_longitude - 360;
                   //  console.log("min lon: " + minlong);
                  } else{
-                  maxlong = checkedFootPrintsArray[i].Easternmost_longitude;
+                  maxlong = checkedFootPrintsArray[i].Easternmost_longitude; //if long is in between -180/180 then assgin the original longs
                   minlong = checkedFootPrintsArray[i].Westernmost_longitude;
                 }
                 var WCPSLoadImage = "http://access.planetserver.eu:8080/rasdaman/ows?query=for%20data%20in%20(%20" + coverageID + "%20)%20return%20encode(%20{%20red:%20(int)(255%20/%20(max((data.band_233%20!=%2065535)%20*%20data.band_233)%20-%20min(data.band_233)))%20*%20(data.band_233%20-%20min(data.band_233));%20green:%20(int)(255%20/%20(max((data.band_78%20!=%2065535)%20*%20data.band_78)%20-%20min(data.band_78)))%20*%20(data.band_78%20-%20min(data.band_78));%20blue:(int)(255%20/%20(max((data.band_13%20!=%2065535)%20*%20data.band_13)%20-%20min(data.band_13)))%20*%20(data.band_13%20-%20min(data.band_13));%20alpha:%20(data.band_100%20!=%2065535)%20*%20255%20},%20%22png%22,%20%22nodata=null%22)";
