@@ -161,7 +161,7 @@ requirejs(['./config/config',
                 var WCPSLoadImage = "http://access.planetserver.eu:8080/rasdaman/ows?query=for%20data%20in%20(%20" + coverageID + "%20)%20return%20encode(%20{%20red:%20(int)(255%20/%20(max((data.band_233%20!=%2065535)%20*%20data.band_233)%20-%20min(data.band_233)))%20*%20(data.band_233%20-%20min(data.band_233));%20green:%20(int)(255%20/%20(max((data.band_78%20!=%2065535)%20*%20data.band_78)%20-%20min(data.band_78)))%20*%20(data.band_78%20-%20min(data.band_78));%20blue:(int)(255%20/%20(max((data.band_13%20!=%2065535)%20*%20data.band_13)%20-%20min(data.band_13)))%20*%20(data.band_13%20-%20min(data.band_13));%20alpha:%20(data.band_100%20!=%2065535)%20*%20255%20},%20%22png%22,%20%22nodata=null%22)";
                 surfaceImage[i] = new WorldWind.SurfaceImage(new WorldWind.Sector(checkedFootPrintsArray[i].Minimum_latitude, checkedFootPrintsArray[i].Maximum_latitude, minlong, maxlong), WCPSLoadImage);
                 //  console.log("pute: " + surfaceImage[i]);
-                //   console.log("WCPS query: "  + WCPSLoadImage);
+                //  console.log("WCPS query: "  + WCPSLoadImage);
                 //  console.log("max lat: " + checkedFootPrintsArray[i].Maximum_latitude);
                 //  console.log("min lat: " + checkedFootPrintsArray[i].Minimum_latitude);
                 //  console.log("east lat: " + checkedFootPrintsArray[i].Easternmost_longitude);
@@ -278,7 +278,7 @@ requirejs(['./config/config',
                     left: 50
                 },
                 width = 620 - margin.left - margin.right,
-                height = 500 - margin.top - margin.bottom;
+                height = 300 - margin.top - margin.bottom;
 
             var innerwidth = width - margin.left - margin.right,
                 innerheight = height - margin.top - margin.bottom;
@@ -338,6 +338,15 @@ requirejs(['./config/config',
                 .attr("y", (-margin.left) + 10)
                 .attr("x", -height / 2)
                 .text('Reflectance');
+
+            svg.append("g")
+                .attr("class", "x axis")
+                .append("text")
+                .attr("class", "axis-label")
+                // .attr("transform", "rotate(-90)")
+                .attr("y", (-margin.bottom) - 10)
+                .attr("x", -height / 2)
+                .text('Wavelength');
 
             svg.append("clipPath")
                 .attr("id", "clip")
