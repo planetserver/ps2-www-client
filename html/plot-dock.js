@@ -16,6 +16,7 @@ $(function () {
                 }));
             this.dockToggleIconWrapper.append(
                 $("<img>", {class: "dock-toggle-icon", src: this.options.toggleIcon})
+
             );
             this.addEmptyPanel();
         }

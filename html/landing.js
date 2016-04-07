@@ -35,14 +35,16 @@ requirejs(['./config/config',
         './CoordinateController',
         './LayerManager',
         '../src/navigate/Navigator',
-        './footprints'
+        './footprints',
+        './tour'
     ],
     function(config,
         ww,
         CoordinateController,
         LayerManager,
         Navigator,
-        Footprints) {
+        Footprints,
+        tour) {
         "use strict";
 
         WorldWind.Logger.setLoggingLevel(WorldWind.Logger.LEVEL_WARNING);

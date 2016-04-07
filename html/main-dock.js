@@ -13,7 +13,7 @@ $(function () {
             this._super();
             this.dockToggleIconWrapper
                 .append(
-                    $("<span>", {class: this.options.toggleIcon + " dock-toggle-icon"})
+                    $("<span>", {class: this.options.toggleIcon + " dock-toggle-icon"})//, "data-step":"1", "data-intro":"bububububu"
                 );
             if(this.options.projections) {
                 this.addProjectionSelectPanel();

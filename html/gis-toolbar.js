@@ -15,6 +15,7 @@ $(function () {
                         "title": "Zoom In"
                     }).append(
                         $("<img>", {class: "gis-icon", src: "html/images/icons/zoom_in(h100).png"})
+
                     )
                 ).append(
                 $("<div>", {
