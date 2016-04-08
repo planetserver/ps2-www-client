@@ -22,7 +22,7 @@ $(function () {
                                       "<ul class='dropdown-menu scrollable-menu ' role='menu' aria-labelledby='dropdownMenu' id='dropDownWCPSBands' data-toggle='dropdown'>"+
                                       "</ul>"+
                                    "</div>"+
-                                   "<form class='form-horizontal' role='form' style='margin-top:150px;'>"+
+                                   "<form class='form-horizontal' role='form' style='margin-top:10px;'>"+
                                       "<div class='form-group'>"+
                                          "<span class='badge' style='background-color:red;'>Red Band</span>"+
                                          "<table>"+
