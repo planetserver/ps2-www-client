@@ -31,7 +31,7 @@ var startTour = function(){
         position:'right'
       },
       {
-        element: '#checked-coverages > div.panel-heading > h3',
+        element: '#checked-coverages > div.panel-heading',
         intro: 'This table will show the selected coverages. When clicking on a footprint the coverage will be added here.',
         position:'right'
       },
@@ -58,8 +58,9 @@ var startTour = function(){
   });
 
 
+
   //open menus
-  intro.onchange(function(targetElement){
+  intro.onbeforechange(function(targetElement){
     if (targetElement.id === 'ui-id-2'){
       $(".info-dock").infoDock("close");
       $(".left-dock").mainDock("open");
@@ -69,14 +70,14 @@ var startTour = function(){
     }
   });
 
+  intro.onafterchange(function(targetElement){
+      if (targetElement.id === 'mCSB_1_container'){
+      $(".left-dock").mainDock("close");
+    }
+  });
 
-  // intro.onchange(function(targetElement){
-  //   switch($(targetElement).attr("steps")){
-  //     case "1":
-  //     $(".info-dock").infoDock("close");
-  //     $(".left-dock").mainDock("open");
-  //   }
-  // });
-  //function to start the tour
-  intro.start();
+
+  //start the tour
+   intro.start();
+
 };
