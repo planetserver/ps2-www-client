@@ -15,6 +15,14 @@ shapesLayer = "" ; // layer contains all footprints shapes
 
 renderLayer = [];
 
+// this function is loaded in rgb_combinations.js for RGB Bands
+loadDropDownRGBBands = "";
+
+// this function is loaded in rgb_combinations.js for WCPS Bands
+loadDropDownWCPSBands = "";
+
+
+
 // Global variable web world wind
 wwd = null;
 
@@ -44,7 +52,7 @@ requirejs(['./config/config',
         '../src/navigate/Navigator',
         './footprints',
         './tour',
-        './js/rgb_combination/rgb_combination'
+        './rgb_combination'
     ],
     function(config,
         ww,
@@ -195,11 +203,24 @@ requirejs(['./config/config',
       		WCPSLoadImage = "http://access.planetserver.eu:8080/rasdaman/ows?query=" + WCPSLoadImage;
 
       		for(i = 0; i < checkedFootPrintsArray.length; i++) {
-
+            var maxlong;
+            var minlong;
       			// only load RGB Combinations to the selected footprint from selected comboBox
       			if(checkedFootPrintsArray[i].coverageID.toLowerCase() === coverageID) {
+              maxlong = checkedFootPrintsArray[i].Easternmost_longitude; //assign maxlong from the checked footprint
+                          minlong = checkedFootPrintsArray[i].Westernmost_longitude; //assign minlong from the checked footprint
+                          if(checkedFootPrintsArray[i].Easternmost_longitude > 180){ //long in www spans from -180 to 180, if its bigger than 180 = -360
+                             maxlong = checkedFootPrintsArray[i].Easternmost_longitude - 360;
+                            //  console.log("max lon: " + maxlong);
+                           }if (checkedFootPrintsArray[i].Westernmost_longitude > 180){
+                             minlong = checkedFootPrintsArray[i].Westernmost_longitude - 360;
+                            //  console.log("min lon: " + minlong);
+                           } else{
+                            maxlong = checkedFootPrintsArray[i].Easternmost_longitude; //if long is in between -180/180 then assgin the original longs
+                            minlong = checkedFootPrintsArray[i].Westernmost_longitude;
+                          }
 
-      				var rgbcombinationSurfaceImage = new WorldWind.SurfaceImage(new WorldWind.Sector(checkedFootPrintsArray[i].Minimum_latitude, checkedFootPrintsArray[i].Maximum_latitude, checkedFootPrintsArray[i].Westernmost_longitude, checkedFootPrintsArray[i].Easternmost_longitude), WCPSLoadImage);
+      				var rgbcombinationSurfaceImage = new WorldWind.SurfaceImage(new WorldWind.Sector(checkedFootPrintsArray[i].Minimum_latitude, checkedFootPrintsArray[i].Maximum_latitude, minlong, maxlong), WCPSLoadImage);
 
       				// clear the old loaded image first
       				renderLayer[i].removeAllRenderables();
@@ -212,6 +233,15 @@ requirejs(['./config/config',
       			}
       		}
           }
+
+          $(document).ready(function() {
+
+           // load rgb bands to rgbDropDown from rgb_combination.js
+           loadDropDownRGBBands();
+
+             // load WCPS custom query to wcpsDropDown from rgb_combinations.js
+             loadDropDownWCPSBands();
+          });
 
         /* This function will go to the footprint coordinates from checked footprints table */
         window.viewCheckedFootPrintRow = function(viewObj) {

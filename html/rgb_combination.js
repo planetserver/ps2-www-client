@@ -1,7 +1,7 @@
 
 
 
-$(document).ready(function() {
+// $(document).ready(function() {
 
 
 // This will remove checked table and selected drop down in footprints.js
@@ -98,7 +98,6 @@ loadDropDownRGBBands = function () {
     $("#dropDownRGBBands").html(dropDownContent);
 
 }
-
 
 // This function will generate the menu items and menu subitems for dropDownWCPSBands in service-template.html
 loadDropDownWCPSBands = function () {
@@ -590,6 +589,7 @@ loadDropDownWCPSBands = function () {
 
 
 
+
      /*var elem = '<div class="well">for c in (mr) return encode(c, "png")</div>' +
          '<button id="close-popover" data-toggle="clickover" class="btn btn-small btn-primary pull-right" onclick="$(&quot;#meddelanden&quot;).popover(&quot;hide&quot;);">Close</button> <br/>';
 
@@ -597,19 +597,5 @@ loadDropDownWCPSBands = function () {
 
      $('#meddelanden').popover({animation:true, content:elem, html:true}); */
 
-            // this function is loaded in rgb_combinations.js for RGB Bands
-           loadDropDownRGBBands = "";
 
-            // this function is loaded in rgb_combinations.js for WCPS Bands
-            loadDropDownWCPSBands = "";
-
-           $(document).ready(function() {
-
-             // load rgb bands to rgbDropDown from rgb_combination.js
-             loadDropDownRGBBands();
-
-               // load WCPS custom query to wcpsDropDown from rgb_combinations.js
-               loadDropDownWCPSBands();
-           });
-
- });
+ // });
