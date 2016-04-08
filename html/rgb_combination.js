@@ -6,7 +6,7 @@
 
 // This will remove checked table and selected drop down in footprints.js
 $("#btnClearAllSelectedFootPrints").on('click', function() {
-    var r = confirm("Are you sure to unselect all checked footprints?");
+    var r = confirm("Are you sure you want to unselect all checked footprints?");
     if (r == true) {
         removeAllSelectedFootPrints();
     }

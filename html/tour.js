@@ -6,6 +6,11 @@ var startTour = function(){
   intro.setOptions({
     steps: [
       {
+        element: 'mCSB_1_container', // '#ui-id-2'
+        intro: 'Welcome to PlanetServer-2! This tour will guide you through the basics of PS-2. Press "next" to start the tour.',
+        position:'left'
+      },
+      {
         element: '#ui-id-2', // '#ui-id-2'
         intro: 'This is the main menu. Here you will find the Projections, Available coverages, WCPS console, Selected coverages and the RGB combinator',
         position:'right'
@@ -33,6 +38,11 @@ var startTour = function(){
       {
         element: '#checked-coverages > div.panel-heading',
         intro: 'This table will show the selected coverages. When clicking on a footprint the coverage will be added here.',
+        position:'right'
+      },
+      {
+        element: '#rgb-combinator > div.panel-heading',
+        intro: 'Here you find RGB combinator. Select one coverage, select the bands you want in each channel and press submit.',
         position:'right'
       },
       {
@@ -70,11 +80,11 @@ var startTour = function(){
     }
   });
 
-  intro.onafterchange(function(targetElement){
-      if (targetElement.id === 'mCSB_1_container'){
-      $(".left-dock").mainDock("close");
-    }
-  });
+  // intro.onafterchange(function(targetElement){
+  //     if (targetElement.id === 'mCSB_1_container'){
+  //     $(".left-dock").mainDock("close");
+  //   }
+  // });
 
 
   //start the tour

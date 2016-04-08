@@ -234,14 +234,6 @@ requirejs(['./config/config',
       		}
           }
 
-          $(document).ready(function() {
-
-           // load rgb bands to rgbDropDown from rgb_combination.js
-           loadDropDownRGBBands();
-
-             // load WCPS custom query to wcpsDropDown from rgb_combinations.js
-             loadDropDownWCPSBands();
-          });
 
         /* This function will go to the footprint coordinates from checked footprints table */
         window.viewCheckedFootPrintRow = function(viewObj) {
@@ -273,6 +265,15 @@ requirejs(['./config/config',
             getQueryResponseAndSetChart(query);
 
         };
+
+        $(document).ready(function() {
+
+         // load rgb bands to rgbDropDown from rgb_combination.js
+         loadDropDownRGBBands();
+
+           // load WCPS custom query to wcpsDropDown from rgb_combinations.js
+           loadDropDownWCPSBands();
+        });
 
         function getQueryResponseAndSetChart(query) {
             var rawFile = new XMLHttpRequest();
@@ -337,10 +338,10 @@ requirejs(['./config/config',
             // Create Margins and Axis and hook our zoom function
             //************************************************************
             var margin = {
-                    top: 20,
+                    top: 0,
                     right: 30,
                     bottom: 30,
-                    left: 50
+                    left: 60
                 },
                 width = 620 - margin.left - margin.right,
                 height = 300 - margin.top - margin.bottom;
@@ -365,8 +366,8 @@ requirejs(['./config/config',
 
             var yAxis = d3.svg.axis()
                 .scale(y)
-                .tickPadding(10)
                 .tickSize(-width)
+                .tickPadding(10)
                 .tickSubdivide(true)
                 .orient("left");
 
@@ -393,6 +394,7 @@ requirejs(['./config/config',
 
             svg.append("g")
                 .attr("class", "y axis")
+                // .attr("transform", "translate(0," + width + ")")
                 .call(yAxis);
 
             svg.append("g")
@@ -409,8 +411,8 @@ requirejs(['./config/config',
                 .append("text")
                 .attr("class", "axis-label")
                 // .attr("transform", "rotate(-90)")
-                .attr("y", (-margin.bottom) - 10)
-                .attr("x", -height / 2)
+                .attr("y", 290)
+                .attr("x", 235)
                 .text('Wavelength');
 
             svg.append("clipPath")
