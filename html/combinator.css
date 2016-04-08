@@ -1,0 +1,29 @@
+/* need to make the sub drop down menu appear on the right */
+.dropdown-menu {
+  top: 0%;
+  min-width: 170px;
+  width:170px;
+}
+
+
+/*  rgb bands dropdown submenu */
+.dropdown-menu .scrollable-sub-menu {
+  margin-left: 160px;
+  width: 240px;
+  min-width: 240px;
+
+  /* scroll bar vertical */
+  max-height: 350px;
+  overflow-y: scroll;
+}
+
+/* wcps bands dropdown submenu  ID and class is on same then no space between*/
+#dropDownWCPSBands.dropdown-menu .scrollable-sub-menu {
+  margin-left: 160px;
+  width: 340px;
+  min-width: 240px;
+
+  /* scroll bar vertical */
+  max-height: 350px;
+  overflow-y: scroll;
+}

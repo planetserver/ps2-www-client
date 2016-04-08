@@ -11,6 +11,13 @@
 checkedFootPrintsArray = []; // array of footprints that user choosed
 lastCovID = ""; // last footprint which contains clicked point (it does not need to be the last index of checkedFootPrintArray)
 
+shapesLayer = "" ; // layer contains all footprints shapes
+
+renderLayer = [];
+
+// Global variable web world wind
+wwd = null;
+
 function getQueryVariable(variable) {
     var query = window.location.search.substring(1);
     var vars = query.split("&");
@@ -36,7 +43,8 @@ requirejs(['./config/config',
         './LayerManager',
         '../src/navigate/Navigator',
         './footprints',
-        './tour'
+        './tour',
+        './js/rgb_combination/rgb_combination'
     ],
     function(config,
         ww,
@@ -44,13 +52,13 @@ requirejs(['./config/config',
         LayerManager,
         Navigator,
         Footprints,
-        tour) {
+        tour,
+        rgb_combination) {
         "use strict";
 
         WorldWind.Logger.setLoggingLevel(WorldWind.Logger.LEVEL_WARNING);
 
-        var wwd = new WorldWind.WorldWindow("canvasOne");
-
+        wwd = new WorldWind.WorldWindow("canvasOne");
 
         var layers = [{
             layer: new WorldWind.BMNGLayer("moon_wgs84"),
@@ -67,7 +75,7 @@ requirejs(['./config/config',
         wwd.redraw();
 
         // Create a layer to hold the surface shapes.
-        var shapesLayer = new WorldWind.RenderableLayer("");
+        shapesLayer = new WorldWind.RenderableLayer("");
         wwd.addLayer(shapesLayer);
 
         // Create and set attributes for it. The shapes below except the surface polyline use this same attributes
@@ -136,7 +144,7 @@ requirejs(['./config/config',
         var surfaceImage = []; // array for images
 
         //var renderLayer = new WorldWind.RenderableLayer();
-        var renderLayer = [];
+        //var renderLayer = [];
 
         /* This function is called from landing.js after all checked footprints are updated to checkedFootPrintsArray
         and it loads the image accordingly to checked footprints
@@ -181,6 +189,29 @@ requirejs(['./config/config',
             }
         }
 
+        // this function will load a RGB combination image from rgbcombination.js to selected footprint from selected comboBox
+      	window.loadRGBCombinations = function(WCPSLoadImage, coverageID) {
+      		//alert(WCPSLoadImage);
+      		WCPSLoadImage = "http://access.planetserver.eu:8080/rasdaman/ows?query=" + WCPSLoadImage;
+
+      		for(i = 0; i < checkedFootPrintsArray.length; i++) {
+
+      			// only load RGB Combinations to the selected footprint from selected comboBox
+      			if(checkedFootPrintsArray[i].coverageID.toLowerCase() === coverageID) {
+
+      				var rgbcombinationSurfaceImage = new WorldWind.SurfaceImage(new WorldWind.Sector(checkedFootPrintsArray[i].Minimum_latitude, checkedFootPrintsArray[i].Maximum_latitude, checkedFootPrintsArray[i].Westernmost_longitude, checkedFootPrintsArray[i].Easternmost_longitude), WCPSLoadImage);
+
+      				// clear the old loaded image first
+      				renderLayer[i].removeAllRenderables();
+
+      				// then load the RGBCombinations to this footprint shapesLayer
+      				renderLayer[i].addRenderable(rgbcombinationSurfaceImage);
+
+                      console.log("Load new RGB Combinations on selected footprint.");
+      				break;
+      			}
+      		}
+          }
 
         /* This function will go to the footprint coordinates from checked footprints table */
         window.viewCheckedFootPrintRow = function(viewObj) {

@@ -26,6 +26,7 @@ $(function () {
             /* main dock (required) */
             var leftDock = $("<div>").mainDock().mainDock("instance");
             leftDock.addCheckedCoveragesPanel();
+            leftDock.addRgbCombinatorPanel();
 
             /*plot dock */
             var plotDock = $("<div>").plotDock().plotDock("instance");

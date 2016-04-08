@@ -82,6 +82,15 @@ $(function () {
           }).checkedCoveragesPanel("instance");
 
           return this;
-      }
+      },
+      addRgbCombinatorPanel: function() {
+        this.rgbCombinatorPanel = $("<div>").rgbCombinatorPanel({
+            dock: this.dock,
+            panelId: "rgb-combinator",
+            panelTitle: "rgb combinator"
+        }).checkedCoveragesPanel("instance");
+
+        return this;
+    }
     })
 });

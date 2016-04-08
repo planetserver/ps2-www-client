@@ -3,6 +3,9 @@ var allFootPrintsArray = []; // array of all footprints
 var MAXIMUM_CHECKED_FOOTPRINTS = 10;
 var lastCovID;
 
+var shapes = []; // footprints shape
+var attributes = ""; // attirbutes for footprints shape
+
 
     // Create constructor for dataset object
     function DataSetConstructor(coverageID, Easternmost_longitude, Maximum_latitude, Minimum_latitude, Westernmost_longitude, latList, longList) {
@@ -27,7 +30,7 @@ var lastCovID;
         // store for view to this footprint where user clicked coordinate
         this.latClickedPoint = latClickedPoint;
         this.longClickedPoint = longClickedPoint;
-    }    
+    }
 
     // when page loads then load all footprints
     $.ajax({
@@ -46,8 +49,17 @@ var lastCovID;
     });
 
     // get footprints containing clicked point
-    function getFootPrintsContainingPoint(shapes, attributes, checkedAttributes, latitude, longitude) {
+    function getFootPrintsContainingPoint(shapesArray, attributesObj, checkedAttributes, latitude, longitude) {
+        // store shapes for check/uncheck
+        shapes = shapesArray;
+
+        // store attributes of shapes
+        attributes = attributesObj;
+
         //alert(shapes.length);
+        // only load images when click on footprints (and when click to select new footprints)
+        var isUpdateCheckedFootPrintsArray = false;
+
         $.ajax({
             type: "get",
             url: config.serverHost + "dataset",
@@ -73,6 +85,7 @@ var lastCovID;
                         for (i = 0; i < checkedFootPrintsArray.length; i++) {
                             if (checkedFootPrintsArray[i].coverageID === val.coverageID) {
                                 isChecked = true;
+
                                 // var r = confirm("Uncheck this footprint: " + val.coverageID + " ?");
                                 // if (r == true) {
                                 // remove coverageID from checkedFootPrintsArray and change attribute to unchecked
@@ -84,6 +97,10 @@ var lastCovID;
 
                         // if user has not clicked this footprint then push to checkedFootPrintArray
                         if (isChecked === false) {
+
+                            // user has selected new footprints then need to draw image on it.
+                            isUpdateCheckedFootPrintsArray = true;
+
                             checkedFootPrintsArray.push(dataSetFootPrint);
                             console.log("New checked footprint: " + val.coverageID);
 
@@ -99,6 +116,9 @@ var lastCovID;
                         // update checkedFootPrintsTable in service-template.html
                         updateCheckedFootPrintsTable();
 
+                        // update the content of checked comboBox in service-template.html
+                        updateCheckedFootPrintsComboBox();
+
                     } else {
                         alert("A maximum of " + MAXIMUM_CHECKED_FOOTPRINTS + " footprints has been choosen. Please uncheck some before choosing more.");
 
@@ -106,9 +126,12 @@ var lastCovID;
                 });
 
                 // This function is called in landing.js after checkedFootPrintsArray has been updated.
-                accessCheckedFootPrintsArray();
+                if(isUpdateCheckedFootPrintsArray) {
+                    accessCheckedFootPrintsArray();
+                }
             }
         });
+    }
 
 
         // in checked footprints table, user uncheck row then remove this row and uncheck the footprint also
@@ -124,6 +147,9 @@ var lastCovID;
 
                 // update the content of checked table
                 updateCheckedFootPrintsTable();
+
+                // update the content of checked comboBox
+                updateCheckedFootPrintsComboBox();
             }
         }
 
@@ -183,5 +209,50 @@ var lastCovID;
             // finally, update checkedFootPrintsTable content with tableContent
             $("#checkedFootPrintsTable").html(tableContent);
         }
-    }
 
+        // This function will update the selected drop down box in service-template.html
+        function updateCheckedFootPrintsComboBox() {
+            var templateRow = "<option value='$COVERAGE_ID'>$COVERAGE_ID</option>";
+            var comboBoxContent = "<option value=''>Selected Footprints</option>";
+
+            for (i = 0; i < checkedFootPrintsArray.length; i++) { //add if to not update the cov if already exist
+                var tmp = replaceAll(templateRow, "$COVERAGE_ID", checkedFootPrintsArray[i].coverageID);
+
+                // add to comboBoxContent
+                comboBoxContent = comboBoxContent + tmp;
+            }
+
+            $("#comboBoxSelectedFootPrints").html(comboBoxContent);
+        }
+
+
+        // This function will remove selectedFootPrints and comboBoxSelectedFootPrints
+        function removeAllSelectedFootPrints() {
+
+            // remove the blue color first
+            for (i = 0; i < checkedFootPrintsArray.length; i++) {
+
+                //clear the old loaded image first ( does not work)
+                renderLayer[i].removeAllRenderables();
+
+                //alert(renderLayer[i]);
+
+                // Change footprint to unchecked footprint
+                for (j = 0; j < shapes.length; j++) {
+                    if (shapes[j]._displayName === checkedFootPrintsArray[i].coverageID) {
+
+                        // uncheck footprints by setting to blue color
+                        shapes[j].attributes = attributes;
+                    }
+                }
+            }
+
+            // then clear array
+            checkedFootPrintsArray = [];
+
+            // clear the selected footprints
+            updateCheckedFootPrintsTable();
+
+            // clear the combo box
+            updateCheckedFootPrintsComboBox();
+        }
