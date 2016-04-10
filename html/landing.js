@@ -303,12 +303,12 @@ requirejs(['./config/config',
             var data = [];
             var i = 0,
                 j = 0;
-            var xDist = (4.0 - 1.0) / floatsArray.length; // Value for setting the equidistance Band wavelength which should be between 1 and 4
+            var xDist = 3.0 / floatsArray.length; // Value for setting the equidistance Band wavelength which should be between 1 and 4
             var xPrev = 1.0; // Value used for storing the Band wavelength of the previous Band
             var Ymin = Infinity,
                 Ymax = -Infinity; // Values for getting the minimum and maximum out of the array
-            /*Adjusting the data so that every single point is with point has a format {'x':__,'y':__}*/
-            /*splitting the datasets when 65535 is occured so that points with values 65535 are not ploted*/
+            /* Adjusting the data so that every single point has a format {'x':__,'y':__} */
+            /* Splitting the datasets when 65535 is occured so that points with values 65535 are not ploted*/
             while (i < floatsArray.length) {
                 if (floatsArray[i] != 65535) {
                     data.push([]);
@@ -332,7 +332,10 @@ requirejs(['./config/config',
             }
 
             /*Different collors for plotting the distinct datasets formed in the above while loop*/
-            var colors = ['white']
+            var colors = ['white'];
+
+            var formatValue = d3.format(",.4f"); // Function to approximate a value
+            var bisectXval = d3.bisector(function(d) { return d.x; }).left;
 
             //************************************************************
             // Create Margins and Axis and hook our zoom function
@@ -404,6 +407,7 @@ requirejs(['./config/config',
                 .attr("transform", "rotate(-90)")
                 .attr("y", (-margin.left) + 10)
                 .attr("x", -height / 2)
+                .style("text-anchor", "end")
                 .text('Reflectance');
 
             svg.append("g")
@@ -420,6 +424,7 @@ requirejs(['./config/config',
                 .append("rect")
                 .attr("width", width)
                 .attr("height", height);
+
 
             //************************************************************
             // Create D3 line object and draw data on our SVG object
@@ -443,6 +448,25 @@ requirejs(['./config/config',
                     return colors[i % colors.length];
                 })
                 .attr("d", line);
+
+            var focus = svg.append("g")
+                .attr("class", "focus")
+                .style("display", "none");
+
+            focus.append("circle")
+                .attr("r", 4.5);
+
+            focus.append("text")
+                .attr("x", 9)
+                .attr("dy", ".35em");
+
+            svg.append("rect")
+                .attr("class", "overlay")
+                .attr("width", width)
+                .attr("height", height)
+                .on("mouseover", function() { focus.style("display", null); })
+                .on("mouseout", function() { focus.style("display", "none"); })
+                .on("mousemove", mousemove);
 
             //************************************************************
             // Draw points on SVG object based on the data given
@@ -486,6 +510,20 @@ requirejs(['./config/config',
                 points.selectAll('circle').attr("transform", function(d) {
                     return "translate(" + x(d.point.x) + "," + y(d.point.y) + ")";
                 });
+            }
+
+            function mousemove() {
+                var x0 = x.invert(d3.mouse(this)[0]),
+                    i = bisectXval(data[0], x0, 1),
+                    d0 = data[i - 1],
+                    d1 = data[i];
+
+                var y0 = y.invert(d3.mouse(this)[0]);
+                var d0 = data[0][i - 1];
+                var d1 = data[0][i];
+                var d = x0 - d0.x > d1.x - x0 ? d1 : d0;
+                focus.attr("transform", "translate(" + x(d.x) + "," + y(d.y) + ")");
+                focus.select("text").text("x: " + formatValue(x0) + " y: " + formatValue(y0));
             }
         }
 

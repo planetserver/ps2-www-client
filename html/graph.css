@@ -21,3 +21,13 @@
   fill: none;
   stroke-width: 2.5px;
 }
+
+.overlay {
+  fill: none;
+  pointer-events: all;
+}
+
+.focus circle {
+  fill: none;
+  stroke: red;
+}
