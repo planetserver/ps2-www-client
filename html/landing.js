@@ -513,17 +513,17 @@ requirejs(['./config/config',
             }
 
             function mousemove() {
-                var x0 = x.invert(d3.mouse(this)[0]),
-                    i = bisectXval(data[0], x0, 1),
-                    d0 = data[i - 1],
-                    d1 = data[i];
-
-                var y0 = y.invert(d3.mouse(this)[0]);
-                var d0 = data[0][i - 1];
-                var d1 = data[0][i];
-                var d = x0 - d0.x > d1.x - x0 ? d1 : d0;
-                focus.attr("transform", "translate(" + x(d.x) + "," + y(d.y) + ")");
-                focus.select("text").text("x: " + formatValue(x0) + " y: " + formatValue(y0));
+                var x0 = x.invert(d3.mouse(this)[0]);  // The X value of the exact location of the mouse
+                for (var j = 0; j < data.length; j++){ // Iterating over all datasets to locate in which one is x0
+                    if (x0 >= data[j][0].x && x0 <= data[j][(data[j].length) - 1].x) {
+                        var i = bisectXval(data[j], x0, 1); // index for locating point with X value close to the mouse location
+                        var d0 = data[j][i - 1];
+                        var d1 = data[j][i];
+                        var d = x0 - d0.x > d1.x - x0 ? d1 : d0;  // d is a point to be shown on the graph
+                        focus.attr("transform", "translate(" + x(d.x) + "," + y(d.y) + ")");
+                        focus.select("text").text("x: " + formatValue(d.x) + " y: " + formatValue(d.y));
+                    }
+                }
             }
         }
 
