@@ -35,9 +35,11 @@ var attributes = ""; // attirbutes for footprints shape
     // when page loads then load all footprints
     $.ajax({
         type: "get",
-        url: config.serverHost + "dataset",
+        url: "http://access.planetserver.eu:8080/ps2/" + "dataset",
         data: "request=getAllCoverages",
         dataType: 'json',
+        cache: false,
+        async:false, // this needs time to query all footprints from database and load to WWW then the problem with cache is done.
         success: function(data) {
             $.each(data, function(key, val) {
                 var dataSetFootPrint = new DataSetConstructor(val.coverageID, val.Easternmost_longitude, val.Maximum_latitude, val.Minimum_latitude, val.Westernmost_longitude, val.latList, val.longList);
@@ -59,12 +61,12 @@ var attributes = ""; // attirbutes for footprints shape
         //alert(shapes.length);
         // only load images when click on footprints (and when click to select new footprints)
         var isUpdateCheckedFootPrintsArray = false;
-
         $.ajax({
             type: "get",
-            url: config.serverHost + "dataset",
+            url: "http://access.planetserver.eu:8080/ps2/" + "dataset",
             data: "request=getCoveragesContainingPoint&latPoint=" + latitude + "&longPoint=" + longitude,
             dataType: 'json',
+            cache: false,
             async:false,
             success: function(data) {
                 console.log("Get footprints containing point:" + " request=getCoveragesContainingPoint&latPoint=" + latitude + "&longPoint=" + longitude);
@@ -113,11 +115,8 @@ var attributes = ""; // attirbutes for footprints shape
                             }
                         }
 
-                        // update checkedFootPrintsTable in service-template.html
-                        updateCheckedFootPrintsTable();
-
-                        // update the content of checked comboBox in service-template.html
-                        updateCheckedFootPrintsComboBox();
+                        // update the content of dropdown Box
+                        updateCheckedFootPrintsDropdownBox();
 
                     } else {
                         alert("A maximum of " + MAXIMUM_CHECKED_FOOTPRINTS + " footprints has been choosen. Please uncheck some before choosing more.");
@@ -145,11 +144,8 @@ var attributes = ""; // attirbutes for footprints shape
                 // remove this coverageID from checkedFootPrintsArray
                 removeCheckedFootPrint(coverageID);
 
-                // update the content of checked table
-                updateCheckedFootPrintsTable();
-
-                // update the content of checked comboBox
-                updateCheckedFootPrintsComboBox();
+                // update the content of selected dropdown box
+                updateCheckedFootPrintsDropdownBox();
             }
         }
 
@@ -177,56 +173,41 @@ var attributes = ""; // attirbutes for footprints shape
             return template.split(target).join(replacement);
         };
 
-        // update the content of checked foot prints table if user uncheck, add footprints
-        function updateCheckedFootPrintsTable() {
-            // Template row:
-            /*<tr>
-            	<td>1</td>
-            	<td>HRL00004839_07_IF182L_TRR3</td>
-            	<td>
-            		<input type="checkbox" id="checkedFootPrintsTable_checked_1" value="HRL00004839_07_IF182L_TRR3" onclick="removeCheckedFootPrintRow(this);" checked>
-            	</td>
-            	<td>
-            		<button type="button" class="btn btn-info" id="checkedFootPrintsTable_view_1" data-content="10_39" onclick="viewCheckedFootPrintRow(this);">
-            		      <span class="glyphicon glyphicon-search"></span> View
-            		</button>
-            	</td>
-             </tr>*/
-            var tableContent = "";
-            var templateRow = "<tr>" + "<td>$COVERAGE_ID</td>" + "<td>" + " <input type='checkbox' id='checkedFootPrintsTable_checked_$rowNumber' value='$COVERAGE_ID' onclick='removeCheckedFootPrintRow(this);' checked>" + "</td>" + "<td>" + " <button type='button' class='btn btn-info' id='checkedFootPrintsTable_view_$rowNumber' data-content='$LAT_CLICKED_POINT_$LONG_CLICKED_POINT' onclick='viewCheckedFootPrintRow(this);'>" + " <span class='glyphicon glyphicon-search'></span> View" + "</button>" + "</td>" + "</tr>";
-
-            for (i = 0; i < checkedFootPrintsArray.length; i++) { //add if to not update the cov if already exist
-
-                var tmp = templateRow.replace("$rowNumber", i + 1);
-                tmp = replaceAll(tmp, "$COVERAGE_ID", checkedFootPrintsArray[i].coverageID);
-                tmp = replaceAll(tmp, "$LAT_CLICKED_POINT", checkedFootPrintsArray[i].latClickedPoint);
-                tmp = replaceAll(tmp, "$LONG_CLICKED_POINT", checkedFootPrintsArray[i].longClickedPoint);
-
-                // add to tableContent
-                tableContent = tableContent + tmp;
-            }
-
-            // finally, update checkedFootPrintsTable content with tableContent
-            $("#checkedFootPrintsTable").html(tableContent);
-        }
 
         // This function will update the selected drop down box in service-template.html
-        function updateCheckedFootPrintsComboBox() {
-            var templateRow = "<option value='$COVERAGE_ID'>$COVERAGE_ID</option>";
-            var comboBoxContent = "<option value=''>Selected Footprints</option>";
+        function updateCheckedFootPrintsDropdownBox() {
+            /* Select all selected footprints */
+            /*
+                <li> <input type='checkbox' class='checkBoxSelectedFootPrints' data='0' id='checkBoxSelectedFootPrints_0' name='type' value='4' style='margin-left: 10px;'/><a class='menuItem' style='display: inline-block;' href='#' data='0' id='linkSelectedFootPrints_0'><b>***All Selected Footprints***</b></a><li role='separator' class='divider' id='checkBoxSelectedFootPrints_Divider_0'></li>
+            */
+
+            /*
+            Template for 1 menu item
+             <li>
+                <input type='checkbox' class='checkBoxSelectedFootPrints' data='1' id='checkBoxSelectedFootPrints_1' name='type' value='4' style='margin-left: 10px;' /><a class='menuItem' style='display: inline-block;' href='#' data='1' id='linkSelectedFootPrints_1' value='$COVERAGE_ID'>$COVERAGE_ID</a>
+                <a class='removeMenuItem' style='display: inline-block;  margin-left:-26px;' data='1' href='#'><span class='glyphicon glyphicon-remove-circle'></span></a>
+            </li>
+            <li role='separator' class='divider' id='checkBoxSelectedFootPrints_Divider_1'></li>
+            */
+
+            var dropDownContent = "<li> <input type='checkbox' class='checkBoxSelectedFootPrints' data='0' id='checkBoxSelectedFootPrints_0' name='type' value='4' style='margin-left: 10px;'/><a class='menuItem' style='display: inline-block;' href='#' data='0' id='linkSelectedFootPrints_0'><b>***All Selected Footprints To Combine***</b></a> <a class='removeMenuItemAll' style='display: inline-block;  float:right;' data='0' href='#'><span class='glyphicon glyphicon-remove'></span></a> <li role='separator' class='divider' id='checkBoxSelectedFootPrints_Divider_0'></li>";
+
+            var templateRow = "<li> <input type='checkbox' class='checkBoxSelectedFootPrints' data='$MENU_ITEM_INDEX' id='checkBoxSelectedFootPrints_$MENU_ITEM_INDEX' name='type' value='4' style='margin-left: 10px;'/><a class='menuItem' style='display: inline-block;' href='#' data='$MENU_ITEM_INDEX' id='linkSelectedFootPrints_$MENU_ITEM_INDEX' value='$COVERAGE_ID'>$COVERAGE_ID</a> <a class='removeMenuItem' style='display: inline-block; float:right;' data='$MENU_ITEM_INDEX' href='#'><span class='glyphicon glyphicon-remove-circle'></span></a> </li><li role='separator' class='divider' id='checkBoxSelectedFootPrints_Divider_$MENU_ITEM_INDEX'></li>";
 
             for (i = 0; i < checkedFootPrintsArray.length; i++) { //add if to not update the cov if already exist
                 var tmp = replaceAll(templateRow, "$COVERAGE_ID", checkedFootPrintsArray[i].coverageID);
+                tmp = replaceAll(tmp, "$MENU_ITEM_INDEX", (i + 1));
 
-                // add to comboBoxContent
-                comboBoxContent = comboBoxContent + tmp;
+                // add to dropDownBoxContent
+                dropDownContent = dropDownContent + tmp;
             }
 
-            $("#comboBoxSelectedFootPrints").html(comboBoxContent);
+
+            $("#dropDownSelectedFootPrints").html(dropDownContent);
         }
 
 
-        // This function will remove selectedFootPrints and comboBoxSelectedFootPrints
+        // This function will remove selectedFootPrints and dropDownSelectedFootPrints
         function removeAllSelectedFootPrints() {
 
             // remove the blue color first
@@ -250,9 +231,6 @@ var attributes = ""; // attirbutes for footprints shape
             // then clear array
             checkedFootPrintsArray = [];
 
-            // clear the selected footprints
-            updateCheckedFootPrintsTable();
-
-            // clear the combo box
-            updateCheckedFootPrintsComboBox();
+            // clear the dropdown box
+            updateCheckedFootPrintsDropdownBox();
         }

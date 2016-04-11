@@ -131,21 +131,23 @@ requirejs(['./config/config',
             //console.log("The coordinates are: " + x + " " + y);
             var pickList = wwd.pick(wwd.canvasCoordinates(x, y));
 
-            // Get the clicked point (if it clicks on the globe then use object[0] or click on loaded image then use object[1])
-            var clickedLatitude  = pickList.objects[0].position != null ? pickList.objects[0].position.latitude  : pickList.objects[1].position.latitude;
-            var clickedLongitude = pickList.objects[0].position != null ? pickList.objects[0].position.longitude : pickList.objects[1].position.longitude;
+            if(pickList.objects[0] != null) {
+                // Get the clicked point (if it clicks on the globe then use object[0] or click on loaded image then use object[1])
+                var clickedLatitude  = pickList.objects[0].position != null ? pickList.objects[0].position.latitude  : pickList.objects[1].position.latitude;
+                var clickedLongitude = pickList.objects[0].position != null ? pickList.objects[0].position.longitude : pickList.objects[1].position.longitude;
 
-            // get last footprint which contains the new clicked point (load image by synchronous)
-            $.when(getFootPrintsContainingPoint(shapes, attributes, checkedAttributes, clickedLatitude, clickedLongitude)).then(function() {
-                console.log("Found containing footprints now check to draw chart.");
-                // if click on loaded image then draw chart
-                if(pickList.objects[1] != null) {
-                    console.log("Draw chart on coverageID: " + lastCovID);
-                    // then it will load the array of values for all the bands which contains the clicked point and draw the chart
-                    queryBuilder(clickedLatitude, clickedLongitude, lastCovID);
-                }
+                // get last footprint which contains the new clicked point (load image by synchronous)
+                $.when(getFootPrintsContainingPoint(shapes, attributes, checkedAttributes, clickedLatitude, clickedLongitude)).then(function() {
+                    console.log("Found containing footprints now check to draw chart.");
+                    // if click on loaded image then draw chart
+                    if(pickList.objects[1] != null) {
+                        console.log("Draw chart on coverageID: " + lastCovID);
+                        // then it will load the array of values for all the bands which contains the clicked point and draw the chart
+                        queryBuilder(clickedLatitude, clickedLongitude, lastCovID);
+                    }
 
-            });
+                });
+            }
         };
 
         // This function is called in Footprints.js of getFootPrintsContainingPoint() to get access to the checkedFootPrintsArray.
@@ -178,7 +180,8 @@ requirejs(['./config/config',
                   maxlong = checkedFootPrintsArray[i].Easternmost_longitude; //if long is in between -180/180 then assgin the original longs
                   minlong = checkedFootPrintsArray[i].Westernmost_longitude;
                 }
-                var WCPSLoadImage = "http://access.planetserver.eu:8080/rasdaman/ows?query=for%20data%20in%20(%20" + coverageID + "%20)%20return%20encode(%20{%20red:%20(int)(255%20/%20(max((data.band_233%20!=%2065535)%20*%20data.band_233)%20-%20min(data.band_233)))%20*%20(data.band_233%20-%20min(data.band_233));%20green:%20(int)(255%20/%20(max((data.band_78%20!=%2065535)%20*%20data.band_78)%20-%20min(data.band_78)))%20*%20(data.band_78%20-%20min(data.band_78));%20blue:(int)(255%20/%20(max((data.band_13%20!=%2065535)%20*%20data.band_13)%20-%20min(data.band_13)))%20*%20(data.band_13%20-%20min(data.band_13));%20alpha:%20(data.band_100%20!=%2065535)%20*%20255%20},%20%22png%22,%20%22nodata=null%22)";
+                // If just use http://access.planetserver.eu:8080/rasdaman/ows?query it will have error NULL
+                var WCPSLoadImage = "http://access.planetserver.eu:8080/rasdaman/ows?service=WCS&version=2.0.1&request=ProcessCoverages&query=for%20data%20in%20(%20" + coverageID + "%20)%20return%20encode(%20{%20red:%20(int)(255%20/%20(max((data.band_233%20!=%2065535)%20*%20data.band_233)%20-%20min(data.band_233)))%20*%20(data.band_233%20-%20min(data.band_233));%20green:%20(int)(255%20/%20(max((data.band_78%20!=%2065535)%20*%20data.band_78)%20-%20min(data.band_78)))%20*%20(data.band_78%20-%20min(data.band_78));%20blue:(int)(255%20/%20(max((data.band_13%20!=%2065535)%20*%20data.band_13)%20-%20min(data.band_13)))%20*%20(data.band_13%20-%20min(data.band_13));%20alpha:%20(data.band_100%20!=%2065535)%20*%20255%20},%20%22png%22,%20%22nodata=null%22)";
                 surfaceImage[i] = new WorldWind.SurfaceImage(new WorldWind.Sector(checkedFootPrintsArray[i].Minimum_latitude, checkedFootPrintsArray[i].Maximum_latitude, minlong, maxlong), WCPSLoadImage);
                 //  console.log("pute: " + surfaceImage[i]);
                 //  console.log("WCPS query: "  + WCPSLoadImage);
@@ -200,7 +203,7 @@ requirejs(['./config/config',
         // this function will load a RGB combination image from rgbcombination.js to selected footprint from selected comboBox
       	window.loadRGBCombinations = function(WCPSLoadImage, coverageID) {
       		//alert(WCPSLoadImage);
-      		WCPSLoadImage = "http://access.planetserver.eu:8080/rasdaman/ows?query=" + WCPSLoadImage;
+      		WCPSLoadImage = "http://access.planetserver.eu:8080/rasdaman/ows?service=WCS&version=2.0.1&request=ProcessCoverages&query=" + WCPSLoadImage;
 
       		for(i = 0; i < checkedFootPrintsArray.length; i++) {
             var maxlong;
@@ -295,240 +298,240 @@ requirejs(['./config/config',
 
 
         //Implementation function of the graph
-        var implementChart = function(floatsArray) {
-            //************************************************************
-            // Data notice the structure
-            //************************************************************
-            d3.select("svg").remove();
-            var data = [];
-            var i = 0,
-                j = 0;
-            var xDist = 3.0 / floatsArray.length; // Value for setting the equidistance Band wavelength which should be between 1 and 4
-            var xPrev = 1.0; // Value used for storing the Band wavelength of the previous Band
-            var Ymin = Infinity,
-                Ymax = -Infinity; // Values for getting the minimum and maximum out of the array
-            /* Adjusting the data so that every single point has a format {'x':__,'y':__} */
-            /* Splitting the datasets when 65535 is occured so that points with values 65535 are not ploted*/
-            while (i < floatsArray.length) {
-                if (floatsArray[i] != 65535) {
-                    data.push([]);
-                    while (floatsArray[i] != 65535) {
-                        data[j].push({
-                            'x': xPrev,
-                            'y': floatsArray[i]
-                        });
-                        if (Ymin > floatsArray[i]) { // Getting the minimum
-                            Ymin = floatsArray[i];
-                        } else if (Ymax < floatsArray[i]) { // Getting up the minimum
-                            Ymax = floatsArray[i];
-                        }
-                        xPrev = xPrev + xDist; // Setting the correct X-axis wavelength of the current Band/point
-                        i++;
-                    }
-                    j++;
-                }
-                xPrev = xPrev + xDist; // Setting the correct X-axis wavelength of the current Band/point
-                i++;
-            }
+          var implementChart = function(floatsArray) {
+              //************************************************************
+              // Data notice the structure
+              //************************************************************
+              d3.select("svg").remove();
+              var data = [];
+              var i = 0,
+                  j = 0;
+              var xDist = 3.0 / floatsArray.length; // Value for setting the equidistance Band wavelength which should be between 1 and 4
+              var xPrev = 1.0; // Value used for storing the Band wavelength of the previous Band
+              var Ymin = Infinity,
+                  Ymax = -Infinity; // Values for getting the minimum and maximum out of the array
+              /* Adjusting the data so that every single point has a format {'x':__,'y':__} */
+              /* Splitting the datasets when 65535 is occured so that points with values 65535 are not ploted*/
+              while (i < floatsArray.length) {
+                  if (floatsArray[i] != 65535) {
+                      data.push([]);
+                      while (floatsArray[i] != 65535) {
+                          data[j].push({
+                              'x': xPrev,
+                              'y': floatsArray[i]
+                          });
+                          if (Ymin > floatsArray[i]) { // Getting the minimum
+                              Ymin = floatsArray[i];
+                          } else if (Ymax < floatsArray[i]) { // Getting up the minimum
+                              Ymax = floatsArray[i];
+                          }
+                          xPrev = xPrev + xDist; // Setting the correct X-axis wavelength of the current Band/point
+                          i++;
+                      }
+                      j++;
+                  }
+                  xPrev = xPrev + xDist; // Setting the correct X-axis wavelength of the current Band/point
+                  i++;
+              }
 
-            /*Different collors for plotting the distinct datasets formed in the above while loop*/
-            var colors = ['white'];
+              /*Different collors for plotting the distinct datasets formed in the above while loop*/
+              var colors = ['white'];
 
-            var formatValue = d3.format(",.4f"); // Function to approximate a value
-            var bisectXval = d3.bisector(function(d) { return d.x; }).left;
+              var formatValue = d3.format(",.4f"); // Function to approximate a value
+              var bisectXval = d3.bisector(function(d) { return d.x; }).left;
 
-            //************************************************************
-            // Create Margins and Axis and hook our zoom function
-            //************************************************************
-            var margin = {
-                    top: 0,
-                    right: 30,
-                    bottom: 30,
-                    left: 60
-                },
-                width = 620 - margin.left - margin.right,
-                height = 300 - margin.top - margin.bottom;
+              //************************************************************
+              // Create Margins and Axis and hook our zoom function
+              //************************************************************
+              var margin = {
+                      top: 0,
+                      right: 20,
+                      bottom: 40,
+                      left: 60
+                  },
+                  width = 620 - margin.left - margin.right,
+                  height = 310 - margin.top - margin.bottom;
 
-            var innerwidth = width - margin.left - margin.right,
-                innerheight = height - margin.top - margin.bottom;
+              var innerwidth = width - margin.left - margin.right,
+                  innerheight = height - margin.top - margin.bottom;
 
-            var x = d3.scale.linear()
-                .domain([1.0, 4.0])
-                .range([0, width]);
+              var x = d3.scale.linear()
+                  .domain([1.0, 4.0])
+                  .range([0, width]);
 
-            var y = d3.scale.linear()
-                .domain([Ymin, Ymax])
-                .range([height, 0]);
+              var y = d3.scale.linear()
+                  .domain([Ymin, Ymax])
+                  .range([height, 0]);
 
-            var xAxis = d3.svg.axis()
-                .scale(x)
-                .tickSize(-height)
-                .tickPadding(10)
-                .tickSubdivide(true)
-                .orient("bottom");
+              var xAxis = d3.svg.axis()
+                  .scale(x)
+                  .tickSize(-height)
+                  .tickPadding(10)
+                  .tickSubdivide(true)
+                  .orient("bottom");
 
-            var yAxis = d3.svg.axis()
-                .scale(y)
-                .tickSize(-width)
-                .tickPadding(10)
-                .tickSubdivide(true)
-                .orient("left");
+              var yAxis = d3.svg.axis()
+                  .scale(y)
+                  .tickSize(-width)
+                  .tickPadding(10)
+                  .tickSubdivide(true)
+                  .orient("left");
 
-            var zoom = d3.behavior.zoom()
-                .x(x)
-                .y(y)
-                .scaleExtent([0.5, (floatsArray.length / 4)]) // 1st value is for zooming out; 2nd is for zooming in
-                .on("zoom", zoomed);
+              var zoom = d3.behavior.zoom()
+                  .x(x)
+                  .y(y)
+                  .scaleExtent([0.5, (floatsArray.length / 4)]) // 1st value is for zooming out; 2nd is for zooming in
+                  .on("zoom", zoomed);
 
-            //************************************************************
-            // Generate our SVG object
-            //************************************************************
-            var svg = d3.select(".right-dock.open").append("svg")
-                .call(zoom)
-                .attr("width", width + margin.left + margin.right)
-                .attr("height", height + margin.top + margin.bottom)
-                .append("g")
-                .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+              //************************************************************
+              // Generate our SVG object
+              //************************************************************
+              var svg = d3.select(".right-dock.open").append("svg")
+                  .call(zoom)
+                  .attr("width", width + margin.left + margin.right)
+                  .attr("height", height + margin.top + margin.bottom)
+                  .append("g")
+                  .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-            svg.append("g")
-                .attr("class", "x axis")
-                .attr("transform", "translate(0," + height + ")")
-                .call(xAxis);
+              svg.append("g")
+                  .attr("class", "x axis")
+                  .attr("transform", "translate(0," + height + ")")
+                  .call(xAxis);
 
-            svg.append("g")
-                .attr("class", "y axis")
-                // .attr("transform", "translate(0," + width + ")")
-                .call(yAxis);
+              svg.append("g")
+                  .attr("class", "y axis")
+                  // .attr("transform", "translate(0," + width + ")")
+                  .call(yAxis);
 
-            svg.append("g")
-                .attr("class", "y axis")
-                .append("text")
-                .attr("class", "axis-label")
-                .attr("transform", "rotate(-90)")
-                .attr("y", (-margin.left) + 10)
-                .attr("x", -height / 2)
-                .style("text-anchor", "end")
-                .text('Reflectance');
+              svg.append("g")
+                  .attr("class", "y axis")
+                  .append("text")
+                  .attr("class", "axis-label")
+                  .attr("transform", "rotate(-90)")
+                  .attr("y", (-margin.left) + 10)
+                  .attr("x", -height / 2)
+                  .style("text-anchor", "end")
+                  .text('Reflectance');
 
-            svg.append("g")
-                .attr("class", "x axis")
-                .append("text")
-                .attr("class", "axis-label")
-                // .attr("transform", "rotate(-90)")
-                .attr("y", 290)
-                .attr("x", 235)
-                .text('Wavelength');
+              svg.append("g")
+                  .attr("class", "x axis")
+                  .append("text")
+                  .attr("class", "axis-label")
+                  // .attr("transform", "rotate(-90)")
+                  .attr("y", 305)
+                  .attr("x", 235)
+                  .text('Wavelength');
 
-            svg.append("clipPath")
-                .attr("id", "clip")
-                .append("rect")
-                .attr("width", width)
-                .attr("height", height);
+              svg.append("clipPath")
+                  .attr("id", "clip")
+                  .append("rect")
+                  .attr("width", width)
+                  .attr("height", height);
 
 
-            //************************************************************
-            // Create D3 line object and draw data on our SVG object
-            //************************************************************
-            var line = d3.svg.line()
-                .interpolate("linear")
-                .x(function(d) {
-                    return x(d.x);
-                })
-                .y(function(d) {
-                    return y(d.y);
-                });
+              //************************************************************
+              // Create D3 line object and draw data on our SVG object
+              //************************************************************
+              var line = d3.svg.line()
+                  .interpolate("linear")
+                  .x(function(d) {
+                      return x(d.x);
+                  })
+                  .y(function(d) {
+                      return y(d.y);
+                  });
 
-            svg.selectAll('.line')
-                .data(data)
-                .enter()
-                .append("path")
-                .attr("class", "line")
-                .attr("clip-path", "url(#clip)")
-                .attr('stroke', function(d, i) {
-                    return colors[i % colors.length];
-                })
-                .attr("d", line);
+              svg.selectAll('.line')
+                  .data(data)
+                  .enter()
+                  .append("path")
+                  .attr("class", "line")
+                  .attr("clip-path", "url(#clip)")
+                  .attr('stroke', function(d, i) {
+                      return colors[i % colors.length];
+                  })
+                  .attr("d", line);
 
-            var focus = svg.append("g")
-                .attr("class", "focus")
-                .style("display", "none");
+              var focus = svg.append("g")
+                  .attr("class", "focus")
+                  .style("display", "none");
 
-            focus.append("circle")
-                .attr("r", 4.5);
+              focus.append("circle")
+                  .attr("r", 4.5);
 
-            focus.append("text")
-                .attr("x", 9)
-                .attr("dy", ".35em");
+              focus.append("text")
+                  .attr("x", 20)
+                  .attr("dy", ".35em");
 
-            svg.append("rect")
-                .attr("class", "overlay")
-                .attr("width", width)
-                .attr("height", height)
-                .on("mouseover", function() { focus.style("display", null); })
-                .on("mouseout", function() { focus.style("display", "none"); })
-                .on("mousemove", mousemove);
+              svg.append("rect")
+                  .attr("class", "overlay")
+                  .attr("width", width)
+                  .attr("height", height)
+                  .on("mouseover", function() { focus.style("display", null); })
+                  .on("mouseout", function() { focus.style("display", "none"); })
+                  .on("mousemove", mousemove);
 
-            //************************************************************
-            // Draw points on SVG object based on the data given
-            //************************************************************
-            var points = svg.selectAll('.dots')
-                .data(data)
-                .enter()
-                .append("g")
-                .attr("class", "dots")
-                .attr("clip-path", "url(#clip)");
+              //************************************************************
+              // Draw points on SVG object based on the data given
+              //************************************************************
+              var points = svg.selectAll('.dots')
+                  .data(data)
+                  .enter()
+                  .append("g")
+                  .attr("class", "dots")
+                  .attr("clip-path", "url(#clip)");
 
-            points.selectAll('.dot')
-                .data(function(d, index) {
-                    var a = [];
-                    d.forEach(function(point, i) {
-                        a.push({
-                            'index': index,
-                            'point': point
-                        });
-                    });
-                })
-                .enter()
-                .append('circle')
-                .attr('class', 'dot')
-                .attr("r", 2.5)
-                .attr('fill', function(d, i) {
-                    return colors[d.index % colors.length];
-                })
-                .attr("transform", function(d) {
-                    return "translate(" + x(d.point.x) + "," + y(d.point.y) + ")";
-                });
+              points.selectAll('.dot')
+                  .data(function(d, index) {
+                      var a = [];
+                      d.forEach(function(point, i) {
+                          a.push({
+                              'index': index,
+                              'point': point
+                          });
+                      });
+                  })
+                  .enter()
+                  .append('circle')
+                  .attr('class', 'dot')
+                  .attr("r", 2.5)
+                  .attr('fill', function(d, i) {
+                      return colors[d.index % colors.length];
+                  })
+                  .attr("transform", function(d) {
+                      return "translate(" + x(d.point.x) + "," + y(d.point.y) + ")";
+                  });
 
-            //************************************************************
-            // Zoom specific updates
-            //************************************************************
-            function zoomed() {
-                svg.select(".x.axis").call(xAxis);
-                svg.select(".y.axis").call(yAxis);
-                svg.selectAll('path.line').attr('d', line);
+              //************************************************************
+              // Zoom specific updates
+              //************************************************************
+              function zoomed() {
+                  svg.select(".x.axis").call(xAxis);
+                  svg.select(".y.axis").call(yAxis);
+                  svg.selectAll('path.line').attr('d', line);
 
-                points.selectAll('circle').attr("transform", function(d) {
-                    return "translate(" + x(d.point.x) + "," + y(d.point.y) + ")";
-                });
-            }
+                  points.selectAll('circle').attr("transform", function(d) {
+                      return "translate(" + x(d.point.x) + "," + y(d.point.y) + ")";
+                  });
+              }
 
-            function mousemove() {
-                var x0 = x.invert(d3.mouse(this)[0]);  // The X value of the exact location of the mouse
-                for (var j = 0; j < data.length; j++){ // Iterating over all datasets to locate in which one is x0
-                    if (x0 >= data[j][0].x && x0 <= data[j][(data[j].length) - 1].x) {
-                        var i = bisectXval(data[j], x0, 1); // index for locating point with X value close to the mouse location
-                        var d0 = data[j][i - 1];
-                        var d1 = data[j][i];
-                        var d = x0 - d0.x > d1.x - x0 ? d1 : d0;  // d is a point to be shown on the graph
-                        focus.attr("transform", "translate(" + x(d.x) + "," + y(d.y) + ")");
-                        focus.select("text").text("x: " + formatValue(d.x) + " y: " + formatValue(d.y));
-                    }
-                }
-            }
-        }
+              function mousemove() {
+                  var x0 = x.invert(d3.mouse(this)[0]);  // The X value of the exact location of the mouse
+                  for (var j = 0; j < data.length; j++){ // Iterating over all datasets to locate in which one is x0
+                      if (x0 >= data[j][0].x && x0 <= data[j][(data[j].length) - 1].x) {
+                          var i = bisectXval(data[j], x0, 1); // index for locating point with X value close to the mouse location
+                          var d0 = data[j][i - 1];
+                          var d1 = data[j][i];
+                          var d = x0 - d0.x > d1.x - x0 ? d1 : d0;  // d is a point to be shown on the graph
+                          focus.attr("transform", "translate(" + x(d.x) + "," + y(d.y) + ")");
+                          focus.select("text").text("x: " + formatValue(d.x) + " y: " + formatValue(d.y));
+                      }
+                  }
+              }
+          }
 
-        // function for loading the graph library //d3js.org/d3.v3.min.js located in the index.html
-        var serverResponse = " ";
+          // function for loading the graph library //d3js.org/d3.v3.min.js located in the index.html
+          var serverResponse = " ";
 
         function loadScriptAndCall(url, callback) {
             // Adding the script tag to the head as suggested before

@@ -1,0 +1,34 @@
+{
+  "wcps_queries": [
+    {
+      "name": "Ice",
+      "array": [
+        {
+          "name": "BD1435",
+          "query": "(int)(255 / (1 - (1.395 / ((1 - ((data.band_61 - data.band_57)/(data.band_72 - data.band_57))) * 1.370 + ((data.band_61 - data.band_57)/(data.band_72 - data.band_57)) * 1.470))));"
+        },
+        {
+          "name": "BD1500_2",
+          "query": "(int)(255 / (1 - (1.525 / ((1 - ((data.band_80 - data.band_57)/(data.band_124 - data.band_57))) * 1.367 + ((data.band_80 - data.band_57)/(data.band_124 - data.band_57)) * 1.808)))); "
+        },
+        {
+          "name": "BD1900_2",
+          "query": "(int)(255 / (1 - (1.525 / ((1 - ((data.band_80 - data.band_57)/(data.band_124 - data.band_57))) * 1.367 + ((data.band_80 - data.band_57)/(data.band_124 - data.band_57)) * 1.808)))); "
+        }
+      ]
+    },
+    {
+      "name": "Temperature",
+      "array": [
+        {
+          "name": "Reserve 1",
+          "query": ""
+        },
+        {
+          "name": "Reserve 2",
+          "query": ""
+        }
+      ]
+    }
+  ]
+}

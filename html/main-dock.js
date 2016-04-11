@@ -75,13 +75,13 @@ $(function () {
             return this;
         },
         addCheckedCoveragesPanel: function() {
-          this.checkedCoveragesPanel = $("<div>").checkedCoveragesPanel({
-              dock: this.dock,
-              panelId: "checked-coverages",
-              panelTitle: "selected coverages"
-          }).checkedCoveragesPanel("instance");
-
-          return this;
+          // this.checkedCoveragesPanel = $("<div>").checkedCoveragesPanel({
+          //     dock: this.dock,
+          //     panelId: "checked-coverages",
+          //     panelTitle: "selected coverages"
+          // }).checkedCoveragesPanel("instance");
+          //
+          // return this;
       },
       addRgbCombinatorPanel: function() {
         this.rgbCombinatorPanel = $("<div>").rgbCombinatorPanel({
