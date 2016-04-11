@@ -342,12 +342,12 @@ requirejs(['./config/config',
             //************************************************************
             var margin = {
                     top: 0,
-                    right: 30,
-                    bottom: 30,
+                    right: 20,
+                    bottom: 40,
                     left: 60
                 },
                 width = 620 - margin.left - margin.right,
-                height = 300 - margin.top - margin.bottom;
+                height = 310 - margin.top - margin.bottom;
 
             var innerwidth = width - margin.left - margin.right,
                 innerheight = height - margin.top - margin.bottom;
@@ -415,7 +415,7 @@ requirejs(['./config/config',
                 .append("text")
                 .attr("class", "axis-label")
                 // .attr("transform", "rotate(-90)")
-                .attr("y", 290)
+                .attr("y", 305)
                 .attr("x", 235)
                 .text('Wavelength');
 
@@ -457,7 +457,7 @@ requirejs(['./config/config',
                 .attr("r", 4.5);
 
             focus.append("text")
-                .attr("x", 9)
+                .attr("x", 20)
                 .attr("dy", ".35em");
 
             svg.append("rect")
