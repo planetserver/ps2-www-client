@@ -93,7 +93,7 @@ function loadWCPSQueriesJSON() {
 
     $.ajax({
         type: "GET",
-        url: "http://localhost:8080/html/data/wcps_queries.json",
+        url: "http://localhost:8000/html/data/wcps_queries.json",
         data: "{dataset: 'CRISM'}", // it will query later on database with dataset
         cache: false,
         async: false,
@@ -163,7 +163,7 @@ loadDropDownWCPSBands = function() {
         '<a href="#">' +
         '$WCPS_BAND_NAME' +
         '<div class="wcps_menu btn-group btn-group-xs" id="wcps_band_$MENU_ITEM_INDEX_$MENU_SUBITEM_INDEX" data-content="$WCPS_BAND_NAME">' +
-        '<button type="button" class="btn btn-danger btn-xs" id="wcps_band_$MENU_ITEM_INDEX_$MENU_SUBITEM_INDEX_red" style="margin-left:20px;">Red</button>' +
+        '<button type="button" class="btn btn-danger btn-xs" id="wcps_band_$MENU_ITEM_INDEX_$MENU_SUBITEM_INDEX_red" style="margin-left:10px;">Red</button>' +
         '<button type="button" class="btn btn-success btn-xs" id="wcps_band_$MENU_ITEM_INDEX_$MENU_SUBITEM_INDEX_green">Green</button>' +
         '<button type="button" class="btn btn-primary btn-xs" id="wcps_band_$MENU_ITEM_INDEX_$MENU_SUBITEM_INDEX_blue">Blue</button>' +
         '<button type="button" style="margin-left:10px;" id="wcps_band_$MENU_ITEM_INDEX_$MENU_SUBITEM_INDEX_view_query" class="rgb_wcps_view_query btn btn-info btn-xs" data-title="WCPS query content" data-toggle="clickover" data-content="$WCPS_QUERY" data-placement="right" data-container="body"><span class="glyphicon glyphicon-info-sign"></span>WCPS</button>' +
@@ -850,7 +850,7 @@ $(document).ready(function() {
 
         if (r === true) {
 
-            var dropDownContent = "<li> <input type='checkbox' class='checkBoxSelectedFootPrints' data='0' id='checkBoxSelectedFootPrints_0' name='type' value='4' style='margin-left: 10px;'/><a class='menuItem' style='display: inline-block;' href='#' data='0' id='linkSelectedFootPrints_0'><b>***All Selected Footprints***</b></a> <a class='removeMenuItemAll' style='display: inline-block;  float: right;' data='0' href='#'><span class='glyphicon glyphicon-remove'></span></a> <li role='separator' class='divider' id='checkBoxSelectedFootPrints_Divider_0'></li>";
+            var dropDownContent = "<li> <input type='checkbox' class='checkBoxSelectedFootPrints' data='0' id='checkBoxSelectedFootPrints_0' name='type' value='4' style='margin-left: 10px;'/><a class='menuItem' style='display: inline-block;' href='#' data='0' id='linkSelectedFootPrints_0'><b>***All Selected Footprints***</b></a> <a class='removeMenuItemAll' style='display: inline-block;  margin-left:15px;' data='0' href='#'><span class='glyphicon glyphicon-remove'></span></a> <li role='separator' class='divider' id='checkBoxSelectedFootPrints_Divider_0'></li>";
 
             // remove after check all menu Item
             $("#dropDownSelectedFootPrints").html(dropDownContent);

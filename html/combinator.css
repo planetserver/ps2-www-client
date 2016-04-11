@@ -4,6 +4,10 @@
     max-width: 800px; /* Max Width of the popover */
 }
 
+#rgbcombinatordiv button {
+   font-size: 100%;
+}
+
 
 /* this is for auto complete with type WCPS band */
 .ui-autocomplete {
@@ -24,7 +28,12 @@
    position:absolute;
   font-size: 90%;
   margin-left: -20px;
+  font-size: 75%;
 }
+
+.dropdown-menu>li>a {
+  margin-left: -10px;
+}  
 
 /* RGB combination dropdown */
 #dropDownSelectedFootPrintsMenu .dropdown-menu {
@@ -35,15 +44,23 @@
 
   position: relative;
   vertical-align: middle;
+  font-size: 75%;
 
 }
 
+.dropdown-menu>li>a:focus {
+  background-color: transparent;
+}
+
+.dropdown-menu>li>a:hover {
+  opacity: 0.2;
+  background-color: transparent;
+}
 
 /*  rgb bands dropdown submenu */
 #dropDownRGBBands.dropdown-menu .scrollable-sub-menu {
   margin-left: 110px;
   width: 240px;
-  min-width: 240px;
 
   /* scroll bar vertical */
   max-height: 350px;
@@ -52,11 +69,18 @@
   z-index: 1000;
 
   position:absolute;
+  font-size: 85%;
+}
+
+/* submenu items */
+#dropDownRGBBands.dropdown-menu .scrollable-sub-menu{
+  width: 60px;
+  margin-left: 70px;
 }
 
 /* wcps bands dropdown submenu  ID and class is on same then no space between*/
 #dropDownWCPSBands.dropdown-menu .scrollable-sub-menu {
-  margin-left: 110px;
+  margin-left: 40px;
   width: 340px;
   min-width: 240px;
 
@@ -65,4 +89,5 @@
   overflow-y: scroll;
 
   z-index: 1000;
+  font-size: 85%;
 }

@@ -113,9 +113,6 @@ requirejs(['./config/config',
             shapes[i] = new WorldWind.SurfacePolygon(boundaries[i], attributes);
             shapes[i]._displayName = allFootPrintsArray[i].coverageID; // setting the exact name of the polygon into _displayName
 
-
-            shapes[i].highlightAttributes = checkedAttributes;
-
             shapesLayer.addRenderable(shapes[i]);
         }
 
@@ -144,8 +141,7 @@ requirejs(['./config/config',
                         console.log("Draw chart on coverageID: " + lastCovID);
                         // then it will load the array of values for all the bands which contains the clicked point and draw the chart
                         queryBuilder(clickedLatitude, clickedLongitude, lastCovID);
-                    }
-
+                    }                                     
                 });
             }
         };
@@ -180,23 +176,26 @@ requirejs(['./config/config',
                   maxlong = checkedFootPrintsArray[i].Easternmost_longitude; //if long is in between -180/180 then assgin the original longs
                   minlong = checkedFootPrintsArray[i].Westernmost_longitude;
                 }
-                // If just use http://access.planetserver.eu:8080/rasdaman/ows?query it will have error NULL
-                var WCPSLoadImage = "http://access.planetserver.eu:8080/rasdaman/ows?service=WCS&version=2.0.1&request=ProcessCoverages&query=for%20data%20in%20(%20" + coverageID + "%20)%20return%20encode(%20{%20red:%20(int)(255%20/%20(max((data.band_233%20!=%2065535)%20*%20data.band_233)%20-%20min(data.band_233)))%20*%20(data.band_233%20-%20min(data.band_233));%20green:%20(int)(255%20/%20(max((data.band_78%20!=%2065535)%20*%20data.band_78)%20-%20min(data.band_78)))%20*%20(data.band_78%20-%20min(data.band_78));%20blue:(int)(255%20/%20(max((data.band_13%20!=%2065535)%20*%20data.band_13)%20-%20min(data.band_13)))%20*%20(data.band_13%20-%20min(data.band_13));%20alpha:%20(data.band_100%20!=%2065535)%20*%20255%20},%20%22png%22,%20%22nodata=null%22)";
-                surfaceImage[i] = new WorldWind.SurfaceImage(new WorldWind.Sector(checkedFootPrintsArray[i].Minimum_latitude, checkedFootPrintsArray[i].Maximum_latitude, minlong, maxlong), WCPSLoadImage);
-                //  console.log("pute: " + surfaceImage[i]);
-                //  console.log("WCPS query: "  + WCPSLoadImage);
-                //  console.log("max lat: " + checkedFootPrintsArray[i].Maximum_latitude);
-                //  console.log("min lat: " + checkedFootPrintsArray[i].Minimum_latitude);
-                //  console.log("east lat: " + checkedFootPrintsArray[i].Easternmost_longitude);
-                //  console.log("west lat: " + checkedFootPrintsArray[i].Westernmost_longitude);
 
+                // Only add a image on footprint which is not loaded
+                if(checkedFootPrintsArray[i].isLoadedImage === false) {
 
+                    checkedFootPrintsArray[i].isLoadedImage = true;
+                    // If just use http://access.planetserver.eu:8080/rasdaman/ows?query it will have error NULL
+                    var WCPSLoadImage = "http://access.planetserver.eu:8080/rasdaman/ows?service=WCS&version=2.0.1&request=ProcessCoverages&query=for%20data%20in%20(%20" + coverageID + "%20)%20return%20encode(%20{%20red:%20(int)(255%20/%20(max((data.band_233%20!=%2065535)%20*%20data.band_233)%20-%20min(data.band_233)))%20*%20(data.band_233%20-%20min(data.band_233));%20green:%20(int)(255%20/%20(max((data.band_78%20!=%2065535)%20*%20data.band_78)%20-%20min(data.band_78)))%20*%20(data.band_78%20-%20min(data.band_78));%20blue:(int)(255%20/%20(max((data.band_13%20!=%2065535)%20*%20data.band_13)%20-%20min(data.band_13)))%20*%20(data.band_13%20-%20min(data.band_13));%20alpha:%20(data.band_100%20!=%2065535)%20*%20255%20},%20%22png%22,%20%22nodata=null%22)";
+                    surfaceImage[i] = new WorldWind.SurfaceImage(new WorldWind.Sector(checkedFootPrintsArray[i].Minimum_latitude, checkedFootPrintsArray[i].Maximum_latitude, minlong, maxlong), WCPSLoadImage);
+                    //  console.log("pute: " + surfaceImage[i]);
+                    //  console.log("WCPS query: "  + WCPSLoadImage);
+                    //  console.log("max lat: " + checkedFootPrintsArray[i].Maximum_latitude);
+                    //  console.log("min lat: " + checkedFootPrintsArray[i].Minimum_latitude);
+                    //  console.log("east lat: " + checkedFootPrintsArray[i].Easternmost_longitude);
+                    //  console.log("west lat: " + checkedFootPrintsArray[i].Westernmost_longitude);
 
-                renderLayer[i] = new WorldWind.RenderableLayer();
-                renderLayer[i].addRenderable(surfaceImage[i]);
-                wwd.addLayer(renderLayer[i]);
-                shapesLayer.addRenderable(renderLayer[i]);
-
+                    renderLayer[i] = new WorldWind.RenderableLayer();
+                    renderLayer[i].addRenderable(surfaceImage[i]);
+                    wwd.addLayer(renderLayer[i]);
+                    shapesLayer.addRenderable(renderLayer[i]);
+                }
             }
         }
 
@@ -238,18 +237,6 @@ requirejs(['./config/config',
           }
 
 
-        /* This function will go to the footprint coordinates from checked footprints table */
-        window.viewCheckedFootPrintRow = function(viewObj) {
-            // view to clicked position of this checked coverage
-            var lat_long = viewObj.getAttribute("data-content");
-            var lat = lat_long.split("_")[0];
-            var long = lat_long.split("_")[1];
-            // move to the position
-            //wwd.navigator.range = 5e6; (zoom 5*10^6 meters)
-            wwd.goTo(new WorldWind.Position(lat, long, qsParam.range));
-        }
-
-
         /* This function is used to draw chart when user click in 1 point and get all the values of bands */
         var queryBuilder = function(latitude, longitude, covID) {
             var PI = 3.141516;
@@ -271,12 +258,13 @@ requirejs(['./config/config',
 
         $(document).ready(function() {
 
-         // load rgb bands to rgbDropDown from rgb_combination.js
-         loadDropDownRGBBands();
+           // load rgb bands to rgbDropDown from rgb_combination.js
+           loadDropDownRGBBands();
 
            // load WCPS custom query to wcpsDropDown from rgb_combinations.js
            loadDropDownWCPSBands();
         });
+
 
         function getQueryResponseAndSetChart(query) {
             var rawFile = new XMLHttpRequest();
