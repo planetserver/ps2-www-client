@@ -1,7 +1,7 @@
 {
   "wcps_queries": [
     {
-      "name": "Ice",
+      "name": "ICE",
       "array": [
         {
           "name": "BD1435",
@@ -14,6 +14,40 @@
         {
           "name": "BD1900_2",
           "query": "(int)(255 / (1 - (1.525 / ((1 - ((data.band_80 - data.band_57)/(data.band_124 - data.band_57))) * 1.367 + ((data.band_80 - data.band_57)/(data.band_124 - data.band_57)) * 1.808)))); "
+        }
+      ]
+    },
+    {
+      "name": "HYD",
+      "array": [
+        {
+          "name": "SINDEX2",
+          "query": "(int)(255 / (1-((1-((data.band_197 - data.band_171) / (data.band_213-data.band_171)))*2.120 + ((data.band_197-data.band_171)/(data.band_213-data.band_171))*2.4)/(2.290)));"
+        },
+        {
+          "name": "BD2100_2",
+          "query": "(int)(255 / (1 - (2.132 / ((1 - ((data.band_173 - data.band_142)/(data.band_191 - data.band_142))) * 1.930 + ((data.band_173 - data.band_142)/(data.band_191 - data.band_142)) * 2.250))));"
+        },
+        {
+          "name": "BD1900_2",
+          "query": "(int)(255 / (1 - (1.525 / ((1 - ((data.band_80 - data.band_57)/(data.band_124 - data.band_57))) * 1.367 + ((data.band_80 - data.band_57)/(data.band_124 - data.band_57)) * 1.808)))); "
+        }
+      ]
+    },
+    {
+      "name": "PAL",
+      "array": [
+        {
+          "name": "BD2210_2",
+          "query":"(int)(255 / (1 - (2.210 / ((1 - ((data.band_185 - data.band_178)/(data.band_191 - data.band_178))) * 2.165 + ((data.band_185 - data.band_178)/(data.band_191 - data.band_178)) * 2.250))));"
+        },
+        {
+          "name": "BD2190",
+          "query": "(int)(255 / (1 - (2.185 / ((1 - ((data.band_181 - data.band_171)/(data.band_191 - data.band_171))) * 2.120 + ((data.band_181 - data.band_171)/(data.band_191 - data.band_171)) * 2.250))));"
+        },
+        {
+          "name": "BD2165",
+          "query": "(int)(255 / (1 - (2.165 / ((1 - ((data.band_178 - data.band_171)/(data.band_188 - data.band_171))) * 2.120 + ((data.band_178 - data.band_171)/(data.band_188 - data.band_171)) * 2.230))));"
         }
       ]
     }
