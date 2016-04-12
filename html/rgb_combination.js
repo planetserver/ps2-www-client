@@ -93,7 +93,7 @@ function loadWCPSQueriesJSON() {
 
     $.ajax({
         type: "GET",
-        url: "http://localhost:8080/html/data/wcps_queries.json",
+        url: "http://access.planetserver.eu/html/data/wcps_queries.json",
         data: "{dataset: 'CRISM'}", // it will query later on database with dataset
         cache: false,
         async: false,
