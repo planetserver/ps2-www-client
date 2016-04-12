@@ -14,7 +14,7 @@
 	overflow-x: hidden;
 }
 
-/*.dropdown-menu {
+.dropdown-menu {
   top: 0%;
   min-width: 170px;
   width:170px;
@@ -24,7 +24,7 @@
    position:absolute;
   font-size: 90%;
   margin-left: -20px;
-}*/
+}
 
 /* RGB combination dropdown */
 #dropDownSelectedFootPrintsMenu .dropdown-menu {
