@@ -65,21 +65,21 @@ define([
              * @type {Number}
              * @default 6378137.0 meters
              */
-            this.equatorialRadius = 3396200;
+            this.equatorialRadius = 3396190;//3396200;
 
             /**
              * This globe's polar radius.
              * @type {Number}
              * @default 6356752.3 meters
              */
-            this.polarRadius = 3376200;
+            this.polarRadius = 3396190;//3376200;
 
             /**
              * This globe's eccentricity squared.
              * @type {Number}
              * @default 0.00669437999013
              */
-            this.eccentricitySquared = 0.0117431898;
+            this.eccentricitySquared = 0;//0.0117431898;
 
             /**
              * The tessellator used to create this globe's terrain.
