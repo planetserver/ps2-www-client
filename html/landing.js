@@ -1,17 +1,15 @@
 /*
-* Copyright (C) 2014 United States Government as represented by the Administrator of the
-* National Aeronautics and Space Administration. All Rights Reserved.
-*/
+ * Copyright (C) 2014 United States Government as represented by the Administrator of the
+ * National Aeronautics and Space Administration. All Rights Reserved.
+ */
 /**
-* @version $Id: BasicExample.js 3320 2015-07-15 20:53:05Z dcollins $
-*/
-
+ * @version $Id: BasicExample.js 3320 2015-07-15 20:53:05Z dcollins $
+ */
 /* Global variables */
-
 checkedFootPrintsArray = []; // array of footprints that user choosed
 lastCovID = ""; // last footprint which contains clicked point (it does not need to be the last index of checkedFootPrintArray)
 
-shapesLayer = "" ; // layer contains all footprints shapes
+shapesLayer = ""; // layer contains all footprints shapes
 
 renderLayer = [];
 
@@ -128,27 +126,28 @@ requirejs(['./config/config',
             //console.log("The coordinates are: " + x + " " + y);
             var pickList = wwd.pick(wwd.canvasCoordinates(x, y));
 
-            if(pickList.objects[0] != null) {
+            if (pickList.objects[0] != null) {
                 // Get the clicked point (if it clicks on the globe then use object[0] or click on loaded image then use object[1])
-                var clickedLatitude  = pickList.objects[0].position != null ? pickList.objects[0].position.latitude  : pickList.objects[1].position.latitude;
+                var clickedLatitude = pickList.objects[0].position != null ? pickList.objects[0].position.latitude : pickList.objects[1].position.latitude;
                 var clickedLongitude = pickList.objects[0].position != null ? pickList.objects[0].position.longitude : pickList.objects[1].position.longitude;
 
                 // get last footprint which contains the new clicked point (load image by synchronous)
                 $.when(getFootPrintsContainingPoint(shapes, attributes, checkedAttributes, clickedLatitude, clickedLongitude)).then(function() {
                     console.log("Found containing footprints now check to draw chart.");
                     // if click on loaded image then draw chart
-                    if(pickList.objects[1] != null) {
+                    if (pickList.objects[1] != null) {
                         console.log("Draw chart on coverageID: " + lastCovID);
                         // then it will load the array of values for all the bands which contains the clicked point and draw the chart
-                      var index = 0;
-                      for (i = 0; i < checkedFootPrintsArray.length; i++) {
-                         if(checkedFootPrintsArray[i].coverageID === lastCovID) {
-                             index = i;
-                             break;
-                         }
-                      }
+                        var index = 0;
+                        for (i = 0; i < checkedFootPrintsArray.length; i++) {
+                            if (checkedFootPrintsArray[i].coverageID === lastCovID) {
+                                index = i;
+                                break;
+                            }
+                        }
 
-                      queryBuilder(clickedLatitude, clickedLongitude, lastCovID, checkedFootPrintsArray[index].Easternmost_longitude, checkedFootPrintsArray[index].Westernmost_longitude);                    }
+                        queryBuilder(clickedLatitude, clickedLongitude, lastCovID, checkedFootPrintsArray[index].Easternmost_longitude, checkedFootPrintsArray[index].Westernmost_longitude);
+                    }
                 });
             }
         };
@@ -173,19 +172,20 @@ requirejs(['./config/config',
                 // console.log("west lat1: " + checkedFootPrintsArray[i].Westernmost_longitude);
                 maxlong = checkedFootPrintsArray[i].Easternmost_longitude; //assign maxlong from the checked footprint
                 minlong = checkedFootPrintsArray[i].Westernmost_longitude; //assign minlong from the checked footprint
-                if(checkedFootPrintsArray[i].Easternmost_longitude > 180){ //long in www spans from -180 to 180, if its bigger than 180 = -360
-                   maxlong = checkedFootPrintsArray[i].Easternmost_longitude - 360;
-                  //  console.log("max lon: " + maxlong);
-                 }if (checkedFootPrintsArray[i].Westernmost_longitude > 180){
-                   minlong = checkedFootPrintsArray[i].Westernmost_longitude - 360;
-                  //  console.log("min lon: " + minlong);
-                 } else{
-                  maxlong = checkedFootPrintsArray[i].Easternmost_longitude; //if long is in between -180/180 then assgin the original longs
-                  minlong = checkedFootPrintsArray[i].Westernmost_longitude;
+                if (checkedFootPrintsArray[i].Easternmost_longitude > 180) { //long in www spans from -180 to 180, if its bigger than 180 = -360
+                    maxlong = checkedFootPrintsArray[i].Easternmost_longitude - 360;
+                    //  console.log("max lon: " + maxlong);
+                }
+                if (checkedFootPrintsArray[i].Westernmost_longitude > 180) {
+                    minlong = checkedFootPrintsArray[i].Westernmost_longitude - 360;
+                    //  console.log("min lon: " + minlong);
+                } else {
+                    maxlong = checkedFootPrintsArray[i].Easternmost_longitude; //if long is in between -180/180 then assgin the original longs
+                    minlong = checkedFootPrintsArray[i].Westernmost_longitude;
                 }
 
                 // Only add a image on footprint which is not loaded
-                if(checkedFootPrintsArray[i].isLoadedImage === false) {
+                if (checkedFootPrintsArray[i].isLoadedImage === false) {
 
                     checkedFootPrintsArray[i].isLoadedImage = true;
                     // If just use http://access.planetserver.eu:8080/rasdaman/ows?query it will have error NULL
@@ -195,8 +195,8 @@ requirejs(['./config/config',
                     //  console.log("WCPS query: "  + WCPSLoadImage);
                     //  console.log("max lat: " + checkedFootPrintsArray[i].Maximum_latitude);
                     //  console.log("min lat: " + checkedFootPrintsArray[i].Minimum_latitude);
-                      // console.log("east lat: " + checkedFootPrintsArray[i].Easternmost_longitude);
-                      // console.log("west lat: " + checkedFootPrintsArray[i].Westernmost_longitude);
+                    // console.log("east lat: " + checkedFootPrintsArray[i].Easternmost_longitude);
+                    // console.log("west lat: " + checkedFootPrintsArray[i].Westernmost_longitude);
 
                     renderLayer[i] = new WorldWind.RenderableLayer();
                     renderLayer[i].addRenderable(surfaceImage[i]);
@@ -207,58 +207,65 @@ requirejs(['./config/config',
         }
 
         // this function will load a RGB combination image from rgbcombination.js to selected footprint from selected comboBox
-      	window.loadRGBCombinations = function(WCPSLoadImage, coverageID) {
-      		//alert(WCPSLoadImage);
-      		WCPSLoadImage = "http://access.planetserver.eu:8080/rasdaman/ows?service=WCS&version=2.0.1&request=ProcessCoverages&query=" + WCPSLoadImage;
+        window.loadRGBCombinations = function(WCPSLoadImage, coverageID) {
+            //alert(WCPSLoadImage);
+            WCPSLoadImage = "http://access.planetserver.eu:8080/rasdaman/ows?service=WCS&version=2.0.1&request=ProcessCoverages&query=" + WCPSLoadImage;
 
-      		for(i = 0; i < checkedFootPrintsArray.length; i++) {
-            var maxlong;
-            var minlong;
-      			// only load RGB Combinations to the selected footprint from selected comboBox
-      			if(checkedFootPrintsArray[i].coverageID.toLowerCase() === coverageID) {
-              maxlong = checkedFootPrintsArray[i].Easternmost_longitude; //assign maxlong from the checked footprint
-                          minlong = checkedFootPrintsArray[i].Westernmost_longitude; //assign minlong from the checked footprint
-                          if(checkedFootPrintsArray[i].Easternmost_longitude > 180){ //long in www spans from -180 to 180, if its bigger than 180 = -360
-                             maxlong = checkedFootPrintsArray[i].Easternmost_longitude - 360;
-                            //  console.log("max lon: " + maxlong);
-                           }if (checkedFootPrintsArray[i].Westernmost_longitude > 180){
-                             minlong = checkedFootPrintsArray[i].Westernmost_longitude - 360;
-                            //  console.log("min lon: " + minlong);
-                           } else{
-                            maxlong = checkedFootPrintsArray[i].Easternmost_longitude; //if long is in between -180/180 then assgin the original longs
-                            minlong = checkedFootPrintsArray[i].Westernmost_longitude;
-                          }
+            for (i = 0; i < checkedFootPrintsArray.length; i++) {
+                var maxlong;
+                var minlong;
+                // only load RGB Combinations to the selected footprint from selected comboBox
+                if (checkedFootPrintsArray[i].coverageID.toLowerCase() === coverageID) {
+                    maxlong = checkedFootPrintsArray[i].Easternmost_longitude; //assign maxlong from the checked footprint
+                    minlong = checkedFootPrintsArray[i].Westernmost_longitude; //assign minlong from the checked footprint
+                    if (checkedFootPrintsArray[i].Easternmost_longitude > 180) { //long in www spans from -180 to 180, if its bigger than 180 = -360
+                        maxlong = checkedFootPrintsArray[i].Easternmost_longitude - 360;
+                        //  console.log("max lon: " + maxlong);
+                    }
+                    if (checkedFootPrintsArray[i].Westernmost_longitude > 180) {
+                        minlong = checkedFootPrintsArray[i].Westernmost_longitude - 360;
+                        //  console.log("min lon: " + minlong);
+                    } else {
+                        maxlong = checkedFootPrintsArray[i].Easternmost_longitude; //if long is in between -180/180 then assgin the original longs
+                        minlong = checkedFootPrintsArray[i].Westernmost_longitude;
+                    }
 
-      				var rgbcombinationSurfaceImage = new WorldWind.SurfaceImage(new WorldWind.Sector(checkedFootPrintsArray[i].Minimum_latitude, checkedFootPrintsArray[i].Maximum_latitude, minlong, maxlong), WCPSLoadImage);
+                    var rgbcombinationSurfaceImage = new WorldWind.SurfaceImage(new WorldWind.Sector(checkedFootPrintsArray[i].Minimum_latitude, checkedFootPrintsArray[i].Maximum_latitude, minlong, maxlong), WCPSLoadImage);
 
-      				// clear the old loaded image first
-      				renderLayer[i].removeAllRenderables();
+                    // clear the old loaded image first
+                    renderLayer[i].removeAllRenderables();
 
-      				// then load the RGBCombinations to this footprint shapesLayer
-      				renderLayer[i].addRenderable(rgbcombinationSurfaceImage);
+                    // then load the RGBCombinations to this footprint shapesLayer
+                    renderLayer[i].addRenderable(rgbcombinationSurfaceImage);
 
-                      console.log("Load new RGB Combinations on selected footprint.");
-      				break;
-      			}
-      		}
-          }
+                    console.log("Load new RGB Combinations on selected footprint.");
+                    break;
+                }
+            }
+        }
 
 
         /* This function is used to draw chart when user click in 1 point and get all the values of bands */
-        var placemarkLayer = new WorldWind.RenderableLayer("Placemarks");
+        var placemarkLayer = null; 
         var queryBuilder = function(latitude, longitude, covID, east, west) {
 
-          //update the title of the chart with name and lat long
-            $("#service-container .right-dock.plot-dock .panel-title").text("Coverage Name: "+ covID );
+            //update the title of the chart with name and lat long
+            $("#service-container .right-dock.plot-dock .panel-title").text("Coverage Name: " + covID);
             $("#service-container .right-dock.plot-dock .panel-title.panel-subtitle").text("Latitude: " + String(latitude.toFixed(2)) + ", Longitude: " + String(longitude.toFixed(2)));
 
-            // Put placemark NEDD TO ADD REMOVE THE PREVIOUS
-          var placemark = new WorldWind.Placemark(new WorldWind.Position(latitude, longitude, 1e2), true, null);
-          var placemarkAttributes = new WorldWind.PlacemarkAttributes(placemarkAttributes)
-          placemarkAttributes.imageSource = "html/images/close.png";
-          placemark.attributes = placemarkAttributes;
-          placemarkLayer.addRenderable(placemark);
-          wwd.addLayer(placemarkLayer);
+            // Put placemark, remove the last clicked point
+            if(placemarkLayer != null) {
+              wwd.removeLayer(placemarkLayer);
+            }            
+            var placemark = new WorldWind.Placemark(new WorldWind.Position(latitude, longitude, 1e2), true, null);
+            var placemarkAttributes = new WorldWind.PlacemarkAttributes(placemarkAttributes);
+            placemarkAttributes.imageSource = "html/images/clicked.png";
+            placemark.attributes = placemarkAttributes;
+
+            placemarkLayer = new WorldWind.RenderableLayer("Placemarks");
+            placemarkLayer.addRenderable(placemark);
+
+            wwd.addLayer(placemarkLayer);
 
 
             var r = 3396190;
@@ -267,23 +274,23 @@ requirejs(['./config/config',
             var N = latitude * r * rho;
             var E = longitude * cosOf0 * r * rho;
 
-            if(latitude >= 65.0){ // coverages above 65° are stored in polar stereographic with the centerlongitude as the long0.
+            if (latitude >= 65.0) { // coverages above 65° are stored in polar stereographic with the centerlongitude as the long0.
 
-              var lat0 = 90;
-              var lon0 = (west - ((west - east)/2)) -360;
-              var k = 2/(1 + Math.sin(lat0 * rho) * Math.sin(latitude * rho) + Math.cos(lat0 * rho) * Math.cos(latitude*rho) * Math.cos(longitude * rho - lon0* rho));
-              var N = r * k * (Math.cos(lat0 * rho) * Math.sin(latitude * rho) - Math.sin(lat0 * rho) * Math.cos(latitude * rho) * Math.cos(longitude * rho - lon0* rho));
-              var E = r * k * Math.cos(latitude * rho) * Math.sin(longitude * rho - lon0* rho);
+                var lat0 = 90;
+                var lon0 = (west - ((west - east) / 2)) - 360;
+                var k = 2 / (1 + Math.sin(lat0 * rho) * Math.sin(latitude * rho) + Math.cos(lat0 * rho) * Math.cos(latitude * rho) * Math.cos(longitude * rho - lon0 * rho));
+                var N = r * k * (Math.cos(lat0 * rho) * Math.sin(latitude * rho) - Math.sin(lat0 * rho) * Math.cos(latitude * rho) * Math.cos(longitude * rho - lon0 * rho));
+                var E = r * k * Math.cos(latitude * rho) * Math.sin(longitude * rho - lon0 * rho);
 
 
             }
-            if(latitude <= -65.0){// coverages below -65° are stored in polar stereographic with the centerlongitude as the long0.
+            if (latitude <= -65.0) { // coverages below -65° are stored in polar stereographic with the centerlongitude as the long0.
 
-              var lat0 = -90;
-              var lon0 = (west - ((west - east)/2)) -360;
-              var k = 2/(1 + Math.sin(lat0 * rho) * Math.sin(latitude * rho) + Math.cos(lat0 * rho) * Math.cos(latitude*rho) * Math.cos(longitude * rho - lon0* rho));
-              var N = r * k * (Math.cos(lat0 * rho) * Math.sin(latitude * rho) - Math.sin(lat0 * rho) * Math.cos(latitude * rho) * Math.cos(longitude * rho - lon0* rho));
-              var E = r * k * Math.cos(latitude * rho) * Math.sin(longitude * rho - lon0* rho);
+                var lat0 = -90;
+                var lon0 = (west - ((west - east) / 2)) - 360;
+                var k = 2 / (1 + Math.sin(lat0 * rho) * Math.sin(latitude * rho) + Math.cos(lat0 * rho) * Math.cos(latitude * rho) * Math.cos(longitude * rho - lon0 * rho));
+                var N = r * k * (Math.cos(lat0 * rho) * Math.sin(latitude * rho) - Math.sin(lat0 * rho) * Math.cos(latitude * rho) * Math.cos(longitude * rho - lon0 * rho));
+                var E = r * k * Math.cos(latitude * rho) * Math.sin(longitude * rho - lon0 * rho);
 
 
             }
@@ -302,11 +309,11 @@ requirejs(['./config/config',
 
         $(document).ready(function() {
 
-           // load rgb bands to rgbDropDown from rgb_combination.js
-           loadDropDownRGBBands();
+            // load rgb bands to rgbDropDown from rgb_combination.js
+            loadDropDownRGBBands();
 
-           // load WCPS custom query to wcpsDropDown from rgb_combinations.js
-           loadDropDownWCPSBands();
+            // load WCPS custom query to wcpsDropDown from rgb_combinations.js
+            loadDropDownWCPSBands();
         });
 
 
@@ -330,242 +337,248 @@ requirejs(['./config/config',
 
 
         //Implementation function of the graph
-          var implementChart = function(floatsArray) {
+        var implementChart = function(floatsArray) {
 
-              //************************************************************
-              // Data notice the structure
-              //************************************************************
-              d3.select("svg").remove();
-              var data = [];
-              var i = 0,
-                  j = 0;
-              var xDist = 3.0 / floatsArray.length; // Value for setting the equidistance Band wavelength which should be between 1 and 4
-              var xPrev = 1.0; // Value used for storing the Band wavelength of the previous Band
-              var Ymin = Infinity,
-                  Ymax = -Infinity; // Values for getting the minimum and maximum out of the array
-              /* Adjusting the data so that every single point has a format {'x':__,'y':__} */
-              /* Splitting the datasets when 65535 is occured so that points with values 65535 are not ploted*/
-              while (i < floatsArray.length) {
-                  if (floatsArray[i] != 65535) {
-                      data.push([]);
-                      while (floatsArray[i] != 65535) {
-                          data[j].push({
-                              'x': xPrev,
-                              'y': floatsArray[i]
-                          });
-                          if (Ymin > floatsArray[i]) { // Getting the minimum
-                              Ymin = floatsArray[i];
-                          } else if (Ymax < floatsArray[i]) { // Getting up the minimum
-                              Ymax = floatsArray[i];
-                          }
-                          xPrev = xPrev + xDist; // Setting the correct X-axis wavelength of the current Band/point
-                          i++;
-                      }
-                      j++;
-                  }
-                  xPrev = xPrev + xDist; // Setting the correct X-axis wavelength of the current Band/point
-                  i++;
-              }
+            //************************************************************
+            // Data notice the structure
+            //************************************************************
+            d3.select("svg").remove();
+            var data = [];
+            var i = 0,
+                j = 0;
+            var xDist = 3.0 / floatsArray.length; // Value for setting the equidistance Band wavelength which should be between 1 and 4
+            var xPrev = 1.0; // Value used for storing the Band wavelength of the previous Band
+            var Ymin = Infinity,
+                Ymax = -Infinity; // Values for getting the minimum and maximum out of the array
+            /* Adjusting the data so that every single point has a format {'x':__,'y':__} */
+            /* Splitting the datasets when 65535 is occured so that points with values 65535 are not ploted*/
+            while (i < floatsArray.length) {
+                if (floatsArray[i] != 65535) {
+                    data.push([]);
+                    while (floatsArray[i] != 65535) {
+                        data[j].push({
+                            'x': xPrev,
+                            'y': floatsArray[i]
+                        });
+                        if (Ymin > floatsArray[i]) { // Getting the minimum
+                            Ymin = floatsArray[i];
+                        } else if (Ymax < floatsArray[i]) { // Getting up the minimum
+                            Ymax = floatsArray[i];
+                        }
+                        xPrev = xPrev + xDist; // Setting the correct X-axis wavelength of the current Band/point
+                        i++;
+                    }
+                    j++;
+                }
+                xPrev = xPrev + xDist; // Setting the correct X-axis wavelength of the current Band/point
+                i++;
+            }
 
-              /*Different collors for plotting the distinct datasets formed in the above while loop*/
-              var colors = ['white'];
+            /*Different collors for plotting the distinct datasets formed in the above while loop*/
+            var colors = ['white'];
 
-              var formatValue = d3.format(",.4f"); // Function to approximate a value
-              var bisectXval = d3.bisector(function(d) { return d.x; }).left;
+            var formatValue = d3.format(",.4f"); // Function to approximate a value
+            var bisectXval = d3.bisector(function(d) {
+                return d.x;
+            }).left;
 
-              //************************************************************
-              // Create Margins and Axis and hook our zoom function
-              //************************************************************
-              var margin = {
-                      top: 0,
-                      right: 20,
-                      bottom: 40,
-                      left: 60
-                  },
-                  width = 620 - margin.left - margin.right,
-                  height = 310 - margin.top - margin.bottom;
+            //************************************************************
+            // Create Margins and Axis and hook our zoom function
+            //************************************************************
+            var margin = {
+                    top: 0,
+                    right: 20,
+                    bottom: 40,
+                    left: 60
+                },
+                width = 620 - margin.left - margin.right,
+                height = 310 - margin.top - margin.bottom;
 
-              var innerwidth = width - margin.left - margin.right,
-                  innerheight = height - margin.top - margin.bottom;
+            var innerwidth = width - margin.left - margin.right,
+                innerheight = height - margin.top - margin.bottom;
 
-              var x = d3.scale.linear()
-                  .domain([1.0, 4.0])
-                  .range([0, width]);
+            var x = d3.scale.linear()
+                .domain([1.0, 4.0])
+                .range([0, width]);
 
-              var y = d3.scale.linear()
-                  .domain([Ymin, Ymax])
-                  .range([height, 0]);
+            var y = d3.scale.linear()
+                .domain([Ymin, Ymax])
+                .range([height, 0]);
 
-              var xAxis = d3.svg.axis()
-                  .scale(x)
-                  .tickSize(-height)
-                  .tickPadding(10)
-                  .tickSubdivide(true)
-                  .orient("bottom");
+            var xAxis = d3.svg.axis()
+                .scale(x)
+                .tickSize(-height)
+                .tickPadding(10)
+                .tickSubdivide(true)
+                .orient("bottom");
 
-              var yAxis = d3.svg.axis()
-                  .scale(y)
-                  .tickSize(-width)
-                  .tickPadding(10)
-                  .tickSubdivide(true)
-                  .orient("left");
+            var yAxis = d3.svg.axis()
+                .scale(y)
+                .tickSize(-width)
+                .tickPadding(10)
+                .tickSubdivide(true)
+                .orient("left");
 
-              var zoom = d3.behavior.zoom()
-                  .x(x)
-                  .y(y)
-                  .scaleExtent([0.5, (floatsArray.length / 4)]) // 1st value is for zooming out; 2nd is for zooming in
-                  .on("zoom", zoomed);
+            var zoom = d3.behavior.zoom()
+                .x(x)
+                .y(y)
+                .scaleExtent([0.5, (floatsArray.length / 4)]) // 1st value is for zooming out; 2nd is for zooming in
+                .on("zoom", zoomed);
 
-              //************************************************************
-              // Generate our SVG object
-              //************************************************************
-              // $('<img>', {id: "ts_image"}).appendTo("#mCSB_3_container")
-              var svg = d3.select("#mCSB_3_container").append("svg")
-                  .call(zoom)
-                  .attr("width", width + margin.left + margin.right)
-                  .attr("height", height + margin.top + margin.bottom)
-                  .append("g")
-                  .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+            //************************************************************
+            // Generate our SVG object
+            //************************************************************
+            // $('<img>', {id: "ts_image"}).appendTo("#mCSB_3_container")
+            var svg = d3.select("#mCSB_3_container").append("svg")
+                .call(zoom)
+                .attr("width", width + margin.left + margin.right)
+                .attr("height", height + margin.top + margin.bottom)
+                .append("g")
+                .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-              svg.append("g")
-                  .attr("class", "x axis")
-                  .attr("transform", "translate(0," + height + ")")
-                  .call(xAxis);
+            svg.append("g")
+                .attr("class", "x axis")
+                .attr("transform", "translate(0," + height + ")")
+                .call(xAxis);
 
-              svg.append("g")
-                  .attr("class", "y axis")
-                  // .attr("transform", "translate(0," + width + ")")
-                  .call(yAxis);
+            svg.append("g")
+                .attr("class", "y axis")
+                // .attr("transform", "translate(0," + width + ")")
+                .call(yAxis);
 
-              svg.append("g")
-                  .attr("class", "y axis")
-                  .append("text")
-                  .attr("class", "axis-label")
-                  .attr("transform", "rotate(-90)")
-                  .attr("y", (-margin.left) + 10)
-                  .attr("x", -height / 2)
-                  .style("text-anchor", "end")
-                  .text('Reflectance');
+            svg.append("g")
+                .attr("class", "y axis")
+                .append("text")
+                .attr("class", "axis-label")
+                .attr("transform", "rotate(-90)")
+                .attr("y", (-margin.left) + 10)
+                .attr("x", -height / 2)
+                .style("text-anchor", "end")
+                .text('Reflectance');
 
-              svg.append("g")
-                  .attr("class", "x axis")
-                  .append("text")
-                  .attr("class", "axis-label")
-                  // .attr("transform", "rotate(-90)")
-                  .attr("y", 305)
-                  .attr("x", 235)
-                  .text('Wavelength');
+            svg.append("g")
+                .attr("class", "x axis")
+                .append("text")
+                .attr("class", "axis-label")
+                // .attr("transform", "rotate(-90)")
+                .attr("y", 305)
+                .attr("x", 235)
+                .text('Wavelength');
 
-              svg.append("clipPath")
-                  .attr("id", "clip")
-                  .append("rect")
-                  .attr("width", width)
-                  .attr("height", height);
+            svg.append("clipPath")
+                .attr("id", "clip")
+                .append("rect")
+                .attr("width", width)
+                .attr("height", height);
 
 
-              //************************************************************
-              // Create D3 line object and draw data on our SVG object
-              //************************************************************
-              var line = d3.svg.line()
-                  .interpolate("linear")
-                  .x(function(d) {
-                      return x(d.x);
-                  })
-                  .y(function(d) {
-                      return y(d.y);
-                  });
+            //************************************************************
+            // Create D3 line object and draw data on our SVG object
+            //************************************************************
+            var line = d3.svg.line()
+                .interpolate("linear")
+                .x(function(d) {
+                    return x(d.x);
+                })
+                .y(function(d) {
+                    return y(d.y);
+                });
 
-              svg.selectAll('.line')
-                  .data(data)
-                  .enter()
-                  .append("path")
-                  .attr("class", "line")
-                  .attr("clip-path", "url(#clip)")
-                  .attr('stroke', function(d, i) {
-                      return colors[i % colors.length];
-                  })
-                  .attr("d", line);
+            svg.selectAll('.line')
+                .data(data)
+                .enter()
+                .append("path")
+                .attr("class", "line")
+                .attr("clip-path", "url(#clip)")
+                .attr('stroke', function(d, i) {
+                    return colors[i % colors.length];
+                })
+                .attr("d", line);
 
-              var focus = svg.append("g")
-                  .attr("class", "focus")
-                  .style("display", "none");
+            var focus = svg.append("g")
+                .attr("class", "focus")
+                .style("display", "none");
 
-              focus.append("circle")
-                  .attr("r", 4.5);
+            focus.append("circle")
+                .attr("r", 4.5);
 
-              focus.append("text")
-                  .attr("x", 20)
-                  .attr("dy", ".35em");
+            focus.append("text")
+                .attr("x", 20)
+                .attr("dy", ".35em");
 
-              svg.append("rect")
-                  .attr("class", "overlay")
-                  .attr("width", width)
-                  .attr("height", height)
-                  .on("mouseover", function() { focus.style("display", null); })
-                  .on("mouseout", function() { focus.style("display", "none"); })
-                  .on("mousemove", mousemove);
+            svg.append("rect")
+                .attr("class", "overlay")
+                .attr("width", width)
+                .attr("height", height)
+                .on("mouseover", function() {
+                    focus.style("display", null);
+                })
+                .on("mouseout", function() {
+                    focus.style("display", "none");
+                })
+                .on("mousemove", mousemove);
 
-              //************************************************************
-              // Draw points on SVG object based on the data given
-              //************************************************************
-              var points = svg.selectAll('.dots')
-                  .data(data)
-                  .enter()
-                  .append("g")
-                  .attr("class", "dots")
-                  .attr("clip-path", "url(#clip)");
+            //************************************************************
+            // Draw points on SVG object based on the data given
+            //************************************************************
+            var points = svg.selectAll('.dots')
+                .data(data)
+                .enter()
+                .append("g")
+                .attr("class", "dots")
+                .attr("clip-path", "url(#clip)");
 
-              points.selectAll('.dot')
-                  .data(function(d, index) {
-                      var a = [];
-                      d.forEach(function(point, i) {
-                          a.push({
-                              'index': index,
-                              'point': point
-                          });
-                      });
-                  })
-                  .enter()
-                  .append('circle')
-                  .attr('class', 'dot')
-                  .attr("r", 2.5)
-                  .attr('fill', function(d, i) {
-                      return colors[d.index % colors.length];
-                  })
-                  .attr("transform", function(d) {
-                      return "translate(" + x(d.point.x) + "," + y(d.point.y) + ")";
-                  });
+            points.selectAll('.dot')
+                .data(function(d, index) {
+                    var a = [];
+                    d.forEach(function(point, i) {
+                        a.push({
+                            'index': index,
+                            'point': point
+                        });
+                    });
+                })
+                .enter()
+                .append('circle')
+                .attr('class', 'dot')
+                .attr("r", 2.5)
+                .attr('fill', function(d, i) {
+                    return colors[d.index % colors.length];
+                })
+                .attr("transform", function(d) {
+                    return "translate(" + x(d.point.x) + "," + y(d.point.y) + ")";
+                });
 
-              //************************************************************
-              // Zoom specific updates
-              //************************************************************
-              function zoomed() {
-                  svg.select(".x.axis").call(xAxis);
-                  svg.select(".y.axis").call(yAxis);
-                  svg.selectAll('path.line').attr('d', line);
+            //************************************************************
+            // Zoom specific updates
+            //************************************************************
+            function zoomed() {
+                svg.select(".x.axis").call(xAxis);
+                svg.select(".y.axis").call(yAxis);
+                svg.selectAll('path.line').attr('d', line);
 
-                  points.selectAll('circle').attr("transform", function(d) {
-                      return "translate(" + x(d.point.x) + "," + y(d.point.y) + ")";
-                  });
-              }
+                points.selectAll('circle').attr("transform", function(d) {
+                    return "translate(" + x(d.point.x) + "," + y(d.point.y) + ")";
+                });
+            }
 
-              function mousemove() {
-                  var x0 = x.invert(d3.mouse(this)[0]);  // The X value of the exact location of the mouse
-                  for (var j = 0; j < data.length; j++){ // Iterating over all datasets to locate in which one is x0
-                      if (x0 >= data[j][0].x && x0 <= data[j][(data[j].length) - 1].x) {
-                          var i = bisectXval(data[j], x0, 1); // index for locating point with X value close to the mouse location
-                          var d0 = data[j][i - 1];
-                          var d1 = data[j][i];
-                          var d = x0 - d0.x > d1.x - x0 ? d1 : d0;  // d is a point to be shown on the graph
-                          focus.attr("transform", "translate(" + x(d.x) + "," + y(d.y) + ")");
-                          focus.select("text").text("Wavelength: " + formatValue(d.x) + " Reflectance: " + formatValue(d.y));
-                      }
-                  }
-              }
-          }
+            function mousemove() {
+                var x0 = x.invert(d3.mouse(this)[0]); // The X value of the exact location of the mouse
+                for (var j = 0; j < data.length; j++) { // Iterating over all datasets to locate in which one is x0
+                    if (x0 >= data[j][0].x && x0 <= data[j][(data[j].length) - 1].x) {
+                        var i = bisectXval(data[j], x0, 1); // index for locating point with X value close to the mouse location
+                        var d0 = data[j][i - 1];
+                        var d1 = data[j][i];
+                        var d = x0 - d0.x > d1.x - x0 ? d1 : d0; // d is a point to be shown on the graph
+                        focus.attr("transform", "translate(" + x(d.x) + "," + y(d.y) + ")");
+                        focus.select("text").text("Wavelength: " + formatValue(d.x) + " Reflectance: " + formatValue(d.y));
+                    }
+                }
+            }
+        }
 
-          // function for loading the graph library //d3js.org/d3.v3.min.js located in the index.html
-          var serverResponse = " ";
+        // function for loading the graph library //d3js.org/d3.v3.min.js located in the index.html
+        var serverResponse = " ";
 
         function loadScriptAndCall(url, callback) {
             // Adding the script tag to the head as suggested before
