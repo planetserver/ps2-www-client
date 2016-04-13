@@ -248,7 +248,9 @@ var rgb_blue = {
 var changeClickIndex = ""; // to know which change button has been clicked
 
 // stop click on dropdown-menu
-+$('#rgbcombinatordiv .dropdown-menu ').click(function(e) {
+
+$('#rgbcombinatordiv .dropdown-menu ').click(function(e) {
+
     e.stopPropagation();
 });
 
