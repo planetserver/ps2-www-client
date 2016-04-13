@@ -245,13 +245,21 @@ requirejs(['./config/config',
 
 
         /* This function is used to draw chart when user click in 1 point and get all the values of bands */
+        var placemarkLayer = new WorldWind.RenderableLayer("Placemarks");
         var queryBuilder = function(latitude, longitude, covID, east, west) {
 
           //update the title of the chart with name and lat long
             $("#service-container .right-dock.plot-dock .panel-title").text("Coverage Name: "+ covID );
             $("#service-container .right-dock.plot-dock .panel-title.panel-subtitle").text("Latitude: " + String(latitude.toFixed(2)) + ", Longitude: " + String(longitude.toFixed(2)));
 
-            // var pinlibrary =
+            // Put placemark NEDD TO ADD REMOVE THE PREVIOUS
+          var placemark = new WorldWind.Placemark(new WorldWind.Position(latitude, longitude, 1e2), true, null);
+          var placemarkAttributes = new WorldWind.PlacemarkAttributes(placemarkAttributes)
+          placemarkAttributes.imageSource = "html/images/close.png";
+          placemark.attributes = placemarkAttributes;
+          placemarkLayer.addRenderable(placemark);
+          wwd.addLayer(placemarkLayer);
+
 
             var r = 3396190;
             var cosOf0 = 1;
