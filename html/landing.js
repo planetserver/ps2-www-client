@@ -246,8 +246,13 @@ requirejs(['./config/config',
 
         /* This function is used to draw chart when user click in 1 point and get all the values of bands */
         var queryBuilder = function(latitude, longitude, covID, east, west) {
+
+          //update the title of the chart with name and lat long
             $("#service-container .right-dock.plot-dock .panel-title").text("Coverage Name: "+ covID );
             $("#service-container .right-dock.plot-dock .panel-title.panel-subtitle").text("Latitude: " + String(latitude.toFixed(2)) + ", Longitude: " + String(longitude.toFixed(2)));
+
+            // var pinlibrary =
+
             var r = 3396190;
             var cosOf0 = 1;
             var rho = (Math.PI / 180);
@@ -318,6 +323,7 @@ requirejs(['./config/config',
 
         //Implementation function of the graph
           var implementChart = function(floatsArray) {
+
               //************************************************************
               // Data notice the structure
               //************************************************************
@@ -405,7 +411,8 @@ requirejs(['./config/config',
               //************************************************************
               // Generate our SVG object
               //************************************************************
-              var svg = d3.select(".right-dock.open").append("svg")
+              // $('<img>', {id: "ts_image"}).appendTo("#mCSB_3_container")
+              var svg = d3.select("#mCSB_3_container").append("svg")
                   .call(zoom)
                   .attr("width", width + margin.left + margin.right)
                   .attr("height", height + margin.top + margin.bottom)
