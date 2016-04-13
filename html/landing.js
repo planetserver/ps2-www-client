@@ -246,7 +246,8 @@ requirejs(['./config/config',
 
         /* This function is used to draw chart when user click in 1 point and get all the values of bands */
         var queryBuilder = function(latitude, longitude, covID, east, west) {
-
+            $("#service-container .right-dock.plot-dock .panel-title").text("Coverage Name: "+ covID );
+            $("#service-container .right-dock.plot-dock .panel-title.panel-subtitle").text("Latitude: " + String(latitude.toFixed(2)) + ", Longitude: " + String(longitude.toFixed(2)));
             var r = 3396190;
             var cosOf0 = 1;
             var rho = (Math.PI / 180);
@@ -542,7 +543,7 @@ requirejs(['./config/config',
                           var d1 = data[j][i];
                           var d = x0 - d0.x > d1.x - x0 ? d1 : d0;  // d is a point to be shown on the graph
                           focus.attr("transform", "translate(" + x(d.x) + "," + y(d.y) + ")");
-                          focus.select("text").text("x: " + formatValue(d.x) + " y: " + formatValue(d.y));
+                          focus.select("text").text("Wavelength: " + formatValue(d.x) + " Reflectance: " + formatValue(d.y));
                       }
                   }
               }
