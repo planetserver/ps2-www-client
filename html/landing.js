@@ -140,8 +140,15 @@ requirejs(['./config/config',
                     if(pickList.objects[1] != null) {
                         console.log("Draw chart on coverageID: " + lastCovID);
                         // then it will load the array of values for all the bands which contains the clicked point and draw the chart
-                        queryBuilder(clickedLatitude, clickedLongitude, lastCovID);
-                    }                                     
+                      var index = 0;
+                      for (i = 0; i < checkedFootPrintsArray.length; i++) {
+                         if(checkedFootPrintsArray[i].coverageID === lastCovID) {
+                             index = i;
+                             break;
+                         }
+                      }
+
+                      queryBuilder(clickedLatitude, clickedLongitude, lastCovID, checkedFootPrintsArray[index].Easternmost_longitude, checkedFootPrintsArray[index].Westernmost_longitude);                    }
                 });
             }
         };
@@ -188,8 +195,8 @@ requirejs(['./config/config',
                     //  console.log("WCPS query: "  + WCPSLoadImage);
                     //  console.log("max lat: " + checkedFootPrintsArray[i].Maximum_latitude);
                     //  console.log("min lat: " + checkedFootPrintsArray[i].Minimum_latitude);
-                    //  console.log("east lat: " + checkedFootPrintsArray[i].Easternmost_longitude);
-                    //  console.log("west lat: " + checkedFootPrintsArray[i].Westernmost_longitude);
+                      // console.log("east lat: " + checkedFootPrintsArray[i].Easternmost_longitude);
+                      // console.log("west lat: " + checkedFootPrintsArray[i].Westernmost_longitude);
 
                     renderLayer[i] = new WorldWind.RenderableLayer();
                     renderLayer[i].addRenderable(surfaceImage[i]);
@@ -238,15 +245,38 @@ requirejs(['./config/config',
 
 
         /* This function is used to draw chart when user click in 1 point and get all the values of bands */
-        var queryBuilder = function(latitude, longitude, covID) {
-            var PI = 3.141516;
-            var r = 3396200;
+        var queryBuilder = function(latitude, longitude, covID, east, west) {
+
+            var r = 3396190;
             var cosOf0 = 1;
-            var N = latitude * r * (PI / 180);
-            var E = longitude * cosOf0 * r * (PI / 180);
-            console.log("cov name: " + covID);
-            console.log("N: " + N);
-            console.log("E: " + E);
+            var rho = (Math.PI / 180);
+            var N = latitude * r * rho;
+            var E = longitude * cosOf0 * r * rho;
+
+            if(latitude >= 65.0){
+
+              var lat0 = 90;
+              var lon0 = (west - ((west - east)/2)) -360;
+              var k = 2/(1 + Math.sin(lat0 * rho) * Math.sin(latitude * rho) + Math.cos(lat0 * rho) * Math.cos(latitude*rho) * Math.cos(longitude * rho - lon0* rho));
+              var N = r * k * (Math.cos(lat0 * rho) * Math.sin(latitude * rho) - Math.sin(lat0 * rho) * Math.cos(latitude * rho) * Math.cos(longitude * rho - lon0* rho));
+              var E = r * k * Math.cos(latitude * rho) * Math.sin(longitude * rho - lon0* rho);
+
+
+            }
+            if(latitude <= -65.0){
+
+              var lat0 = -90;
+              var lon0 = (west - ((west - east)/2)) -360;
+              var k = 2/(1 + Math.sin(lat0 * rho) * Math.sin(latitude * rho) + Math.cos(lat0 * rho) * Math.cos(latitude*rho) * Math.cos(longitude * rho - lon0* rho));
+              var N = r * k * (Math.cos(lat0 * rho) * Math.sin(latitude * rho) - Math.sin(lat0 * rho) * Math.cos(latitude * rho) * Math.cos(longitude * rho - lon0* rho));
+              var E = r * k * Math.cos(latitude * rho) * Math.sin(longitude * rho - lon0* rho);
+
+
+            }
+
+            // console.log("cov name: " + covID);
+            // console.log("N: " + N);
+            // console.log("E: " + E);
 
             var query = "http://access.planetserver.eu:8080/rasdaman/ows?query=for%20c%20in%20(" + covID.toLowerCase() + ")%20return%20encode(c[%20N(" +
                 N + ":" + N + "),%20E(" + E + ":" + E + ")%20],%20%22csv%22)";
