@@ -6,7 +6,7 @@ var startTour = function(){
   intro.setOptions({
     steps: [
       {
-        element: 'mCSB_1_container', // '#ui-id-2'
+        element: '#mCSB_1_container', // '#ui-id-2'
         intro: 'Welcome to PlanetServer-2! This tour will guide you through the basics of PS-2. Press "next" to start the tour.',
         position:'left'
       },
@@ -33,11 +33,6 @@ var startTour = function(){
       {
         element: '#ui-id-3 > div.CodeMirror.cm-s-default.CodeMirror-wrap.CodeMirror-simplescroll.CodeMirror-empty',
         intro: 'In the console you can write your own WCPS queries',
-        position:'right'
-      },
-      {
-        element: '#checked-coverages > div.panel-heading',
-        intro: 'This table will show the selected coverages. When clicking on a footprint the coverage will be added here.',
         position:'right'
       },
       {
@@ -71,13 +66,13 @@ var startTour = function(){
 
   //open menus
   intro.onbeforechange(function(targetElement){
-    if (targetElement.id === 'ui-id-2'){
+    if (targetElement.id === 'mCSB_1_container'){
       $(".info-dock").infoDock("close");
       $(".left-dock").mainDock("open");
     }
-    if (targetElement.id === 'mCSB_1_container'){
-      $(".left-dock").mainDock("close");
-    }
+    // if (targetElement.id === 'mCSB_1_container'){
+    //   $(".left-dock").mainDock("close");
+    // }
   });
 
   // intro.onafterchange(function(targetElement){

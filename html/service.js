@@ -33,10 +33,10 @@ $(function () {
 
 
             /* gis toolbar (required) */
-            var gisToolbar = $("<div>").gisToolbar().gisToolbar("instance");
-            gisToolbar.addClickHandler("#zoom-in-tool", function() {
-                console.log("Zoom in.")
-            });
+            // var gisToolbar = $("<div>").gisToolbar().gisToolbar("instance");
+            // gisToolbar.addClickHandler("#zoom-in-tool", function() {
+            //     console.log("Zoom in.")
+            // });
             /* coordinates overlay (required) */
             var coordinates = $("<div>").coordinateOverlay().coordinateOverlay("instance");
         }

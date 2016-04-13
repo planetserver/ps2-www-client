@@ -253,7 +253,7 @@ requirejs(['./config/config',
             var N = latitude * r * rho;
             var E = longitude * cosOf0 * r * rho;
 
-            if(latitude >= 65.0){
+            if(latitude >= 65.0){ // coverages above 65° are stored in polar stereographic with the centerlongitude as the long0.
 
               var lat0 = 90;
               var lon0 = (west - ((west - east)/2)) -360;
@@ -263,7 +263,7 @@ requirejs(['./config/config',
 
 
             }
-            if(latitude <= -65.0){
+            if(latitude <= -65.0){// coverages below -65° are stored in polar stereographic with the centerlongitude as the long0.
 
               var lat0 = -90;
               var lon0 = (west - ((west - east)/2)) -360;
