@@ -49,9 +49,9 @@ $(function () {
             this.coverageSelectPanel = $("<div>").selectPanel({
                 dock: this.dock,
                 panelId: "coverage-selector",
-                panelTitle: "available coverages",
+                panelTitle: "available Base maps",
                 buttonId: "coverageDropdown",
-                defaultOption: "Select coverage"
+                defaultOption: "Select Base Map"
             }).selectPanel("instance");
 
             var self = this;

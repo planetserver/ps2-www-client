@@ -80,6 +80,44 @@ requirejs(['./config/config',
         }
         wwd.redraw();
 
+
+        //======================WMS layer selector======
+        var onRetrieve = function() {
+          $('#retrieve-coverage').on('click', function (e) {
+            var parameter = $('#coverage-selector > div.panel-body > div.dropdown.selector > button > span > span.selector-btn-content').text();
+
+            switch (parameter) {
+              case parameter = 'MOLA Colorshaded':
+                  layers =[{
+                    layer: new WorldWind.BMNGLayer("mola_wgs84"),
+                    enabled:true
+                  }];
+                  for (var l = 0; l < layers.length; l++) {
+                      layers[l].layer.enabled = layers[l].enabled;
+                      wwd.addLayer(layers[l].layer);
+                  }
+                  wwd.redraw();
+                break;
+
+                case parameter = 'Viking Mosaic':
+                layers =[{
+                  layer: new WorldWind.BMNGLayer("mars_wgs84"),
+                  enabled:true
+                }];
+                for (var l = 0; l < layers.length; l++) {
+                    layers[l].layer.enabled = layers[l].enabled;
+                    wwd.addLayer(layers[l].layer);
+                }
+                wwd.redraw();
+              break;
+              default:
+
+            }
+
+
+            })
+        };
+
         // Create a layer to hold the surface shapes.
         shapesLayer = new WorldWind.RenderableLayer("");
         wwd.addLayer(shapesLayer);
@@ -621,7 +659,7 @@ requirejs(['./config/config',
 
         // Listen for Mouse clicks and regognize layers
         wwd.addEventListener("click", layerRecognizer);
-
+        onRetrieve();
         ////////////////
 
         // Create a layer manager for controlling layer visibility.

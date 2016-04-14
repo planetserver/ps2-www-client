@@ -11,12 +11,8 @@ projectionNames = [
 ];
 
 coverageNames = [
-    "coverage1",
-    "coverage2",
-    "coverage3",
-    "coverage4",
-    "coverage5",
-    "coverage6"
+    "MOLA Colorshaded",
+    "Viking Mosaic"
 ];
 
 customWCPSQueries = [
