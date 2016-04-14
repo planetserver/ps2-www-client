@@ -10,9 +10,9 @@ projectionNames = [
     "South Gnomonic"
 ];
 
-coverageNames = [
-    "MOLA Colorshaded",
-    "Viking Mosaic"
+baseMapNames = [
+   "Viking Mosaic",
+    "MOLA Colorshaded"
 ];
 
 customWCPSQueries = [

@@ -4,7 +4,7 @@ $(function () {
             position: "left",
             toggleIcon: "glyphicon glyphicon-menu-hamburger",
             projections: true,
-            coverages: true,
+            baseMaps: true,
             queryTerminal: true
         },
         /* Initializes the main dock and by default creates
@@ -18,13 +18,15 @@ $(function () {
             if(this.options.projections) {
                 this.addProjectionSelectPanel();
             }
-            if(this.options.coverages) {
-                this.addAvailableCoveragesPanel();
+            if(this.options.baseMaps) {
+                this.addAvailableBaseMapsPanel();
             }
             if(this.options.queryTerminal) {
                 this.addQueryTerminalPanel();
             }
         },
+
+	// Projections Panel
         addProjectionSelectPanel: function () {
             this.projectionSelectPanel = $("<div>").selectPanel({
                 dock: this.dock,
@@ -42,28 +44,27 @@ $(function () {
             });
             return this;
         },
-        getProjectionSelectPanel: function() {
+        /*getProjectionSelectPanel: function() {
             return this.projectionSelectPanel;
-        },
-        addAvailableCoveragesPanel: function() {
-            this.coverageSelectPanel = $("<div>").selectPanel({
+        },*/
+
+	// Base Maps Panel
+        addAvailableBaseMapsPanel: function() {
+            this.baseMapsSelectPanel = $("<div>").selectPanel({
                 dock: this.dock,
-                panelId: "coverage-selector",
+                panelId: "basemaps-selector",
                 panelTitle: "available Base maps",
-                buttonId: "coverageDropdown",
-                defaultOption: "Select Base Map"
+                dropdownId: "basemapsDropdown"
             }).selectPanel("instance");
 
             var self = this;
-            $.each(coverageNames, function (index, coverage) {
-                self.coverageSelectPanel.addSelectOption(coverage.replace(/ /g, '').toLowerCase(), coverage);
+            $.each(baseMapNames, function (index, basemap) {
+		if (index == 0) {
+                     self.baseMapsSelectPanel.setButtonContent(basemap);
+                }
+                self.baseMapsSelectPanel.addSelectOption(basemap.replace(/ /g, '').toLowerCase(), basemap);
             });
-            this.coverageSelectPanel.addButton("retrieve-coverage", "Retrieve");
-
             return this;
-        },
-        getAvailableCoveragesPanel: function() {
-            return this.coverageSelectPanel;
         },
         addQueryTerminalPanel: function() {
             this.queryTerminalPanel = $("<div>").queryTerminalPanel({
@@ -83,6 +84,8 @@ $(function () {
           //
           // return this;
       },
+
+      // RGB Panels
       addRgbCombinatorPanel: function() {
         this.rgbCombinatorPanel = $("<div>").rgbCombinatorPanel({
             dock: this.dock,

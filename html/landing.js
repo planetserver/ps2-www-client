@@ -67,59 +67,59 @@ requirejs(['./config/config',
         wwd = new WorldWind.WorldWindow("canvasOne");
 
         var layers = [{
-            layer: new WorldWind.BMNGLayer("moon_wgs84"),
+            // this is colorful base map
+            layer: new WorldWind.BMNGLayer("mola_wgs84"),
             enabled: false
         }, {
+            // this is dark base map
             layer: new WorldWind.BMNGLayer("mars_wgs84"),
             enabled: true
         }];
 
-        for (var l = 0; l < layers.length; l++) {
-            layers[l].layer.enabled = layers[l].enabled;
-            wwd.addLayer(layers[l].layer);
-        }
-        wwd.redraw();
+        // Only load 1 base map at start
+        var baseMapLayer = layers[1].layer;
+        var baseMapName = "Viking Mosaic";
+
+        var baseMapIndex = 0;
+
+        wwd.insertLayer(0, baseMapLayer);
 
         //======================WMS layer selector======
-        var onRetrieve = function() {
-          $('#retrieve-coverage').on('click', function (e) {
-            var parameter = $('#coverage-selector > div.panel-body > div.dropdown.selector > button > span > span.selector-btn-content').text();
-
-            switch (parameter) {
-              case parameter = 'MOLA Colorshaded':
-                  layers =[{
-                    layer: new WorldWind.BMNGLayer("mola_wgs84"),
-                    enabled:true
-                  }];
-                  for (var l = 0; l < layers.length; l++) {
-                      layers[l].layer.enabled = layers[l].enabled;
-                      wwd.addLayer(layers[l].layer);
-                  }
-                  // wwd.redraw();
-                break;
-
-                case parameter = 'Viking Mosaic':
-                layers =[{
-                  layer: new WorldWind.BMNGLayer("mars_wgs84"),
-                  enabled:true
-                }];
-                for (var l = 0; l < layers.length; l++) {
-                    layers[l].layer.enabled = layers[l].enabled;
-                    wwd.addLayer(layers[l].layer);
+         $("#basemapsDropdown").find(" li").on("click", function (e) {
+            var index = -1;
+            var selectedBaseMapName = $(this).children().html();    
+            var isLoadedBaseMap = true;
+            
+            // colorful base map
+            if (selectedBaseMapName === "MOLA Colorshaded") {
+                if(baseMapName !== selectedBaseMapName){
+                    index = 0; 
+                    baseMapName = "MOLA Colorshaded";
+                    isLoadedBaseMap = false;
                 }
-                // wwd.redraw();
-              break;
-              default:
+            } else if (selectedBaseMapName === "Viking Mosaic") {
+                if(baseMapName !== selectedBaseMapName){
+                    index = 1;
+                    baseMapName = "Viking Mosaic";
+                    isLoadedBaseMap = false;
+                }
 
             }
 
+            // no load the same base map again
+            if(!isLoadedBaseMap) {
+                
+                // remove old layer and insert a new one
+               wwd.removeLayer(baseMapLayer);
 
-            })
-        };
-        onRetrieve();
+                // load the new base map layer
+               baseMapLayer = layers[index].layer;
+               wwd.insertLayer(--baseMapIndex, baseMapLayer);
+            }
+        }); 
+
         // Create a layer to hold the surface shapes.
         shapesLayer = new WorldWind.RenderableLayer("");
-        wwd.addLayer(shapesLayer);
 
         // Create and set attributes for it. The shapes below except the surface polyline use this same attributes
         // object. Real apps typically create new attributes objects for each shape unless they know the attributes
@@ -136,10 +136,8 @@ requirejs(['./config/config',
 
         //Adding allFootPrintsArray
         var boundaries = []; // array for boundary locations of the footprints
-        var shapes = []; // array for shape SurfacePolygon objects with corresponding boundaries and attributes
         for (var i = 0; i < allFootPrintsArray.length; i++) {
             boundaries.push([]); // new array for the boundaries of a single footprint
-            shapes.push([]);
             for (var j = 0; j < allFootPrintsArray[i].latList.length; j++) {
                 // adding all the boundaries of a single polygon into boundaries[i]
                 boundaries[i].push(new WorldWind.Location(allFootPrintsArray[i].latList[j], allFootPrintsArray[i].longList[j]));
@@ -150,6 +148,9 @@ requirejs(['./config/config',
 
             shapesLayer.addRenderable(shapes[i]);
         }
+
+        // this is all footprints
+        wwd.insertLayer(2, shapesLayer);
 
 
         /* This function will check if user click on globe or click on loaded image for footprint:
@@ -189,16 +190,16 @@ requirejs(['./config/config',
             }
         };
 
-        // This function is called in Footprints.js of getFootPrintsContainingPoint() to get access to the checkedFootPrintsArray.
-        var surfaceImage = []; // array for images
-
-        //var renderLayer = new WorldWind.RenderableLayer();
-        //var renderLayer = [];
-
         /* This function is called from landing.js after all checked footprints are updated to checkedFootPrintsArray
         and it loads the image accordingly to checked footprints
         */
+        var imagesLayer = "";
+
         window.accessCheckedFootPrintsArray = function() {
+
+            // Remove the old layers first
+            wwd.removeLayer(imagesLayer);            
+            imagesLayer = new WorldWind.RenderableLayer("");
 
             for (i = 0; i < checkedFootPrintsArray.length; i++) {
                 var coverageID = checkedFootPrintsArray[i].coverageID.toLowerCase();
@@ -221,26 +222,21 @@ requirejs(['./config/config',
                     minlong = checkedFootPrintsArray[i].Westernmost_longitude;
                 }
 
-                // Only add a image on footprint which is not loaded
-                if (checkedFootPrintsArray[i].isLoadedImage === false) {
+                checkedFootPrintsArray[i].isLoadedImage = true;
+                // If just use http://access.planetserver.eu:8080/rasdaman/ows?query it will have error NULL
+                var WCPSLoadImage = "http://access.planetserver.eu:8080/rasdaman/ows?service=WCS&version=2.0.1&request=ProcessCoverages&query=for%20data%20in%20(%20" + coverageID + "%20)%20return%20encode(%20{%20red:%20(int)(255%20/%20(max((data.band_233%20!=%2065535)%20*%20data.band_233)%20-%20min(data.band_233)))%20*%20(data.band_233%20-%20min(data.band_233));%20green:%20(int)(255%20/%20(max((data.band_78%20!=%2065535)%20*%20data.band_78)%20-%20min(data.band_78)))%20*%20(data.band_78%20-%20min(data.band_78));%20blue:(int)(255%20/%20(max((data.band_13%20!=%2065535)%20*%20data.band_13)%20-%20min(data.band_13)))%20*%20(data.band_13%20-%20min(data.band_13));%20alpha:%20(data.band_100%20!=%2065535)%20*%20255%20},%20%22png%22,%20%22nodata=null%22)";
+                var surfaceImage = new WorldWind.SurfaceImage(new WorldWind.Sector(checkedFootPrintsArray[i].Minimum_latitude, checkedFootPrintsArray[i].Maximum_latitude, minlong, maxlong), WCPSLoadImage);
 
-                    checkedFootPrintsArray[i].isLoadedImage = true;
-                    // If just use http://access.planetserver.eu:8080/rasdaman/ows?query it will have error NULL
-                    var WCPSLoadImage = "http://access.planetserver.eu:8080/rasdaman/ows?service=WCS&version=2.0.1&request=ProcessCoverages&query=for%20data%20in%20(%20" + coverageID + "%20)%20return%20encode(%20{%20red:%20(int)(255%20/%20(max((data.band_233%20!=%2065535)%20*%20data.band_233)%20-%20min(data.band_233)))%20*%20(data.band_233%20-%20min(data.band_233));%20green:%20(int)(255%20/%20(max((data.band_78%20!=%2065535)%20*%20data.band_78)%20-%20min(data.band_78)))%20*%20(data.band_78%20-%20min(data.band_78));%20blue:(int)(255%20/%20(max((data.band_13%20!=%2065535)%20*%20data.band_13)%20-%20min(data.band_13)))%20*%20(data.band_13%20-%20min(data.band_13));%20alpha:%20(data.band_100%20!=%2065535)%20*%20255%20},%20%22png%22,%20%22nodata=null%22)";
-                    surfaceImage[i] = new WorldWind.SurfaceImage(new WorldWind.Sector(checkedFootPrintsArray[i].Minimum_latitude, checkedFootPrintsArray[i].Maximum_latitude, minlong, maxlong), WCPSLoadImage);
-                    //  console.log("pute: " + surfaceImage[i]);
-                    //  console.log("WCPS query: "  + WCPSLoadImage);
-                    //  console.log("max lat: " + checkedFootPrintsArray[i].Maximum_latitude);
-                    //  console.log("min lat: " + checkedFootPrintsArray[i].Minimum_latitude);
-                    // console.log("east lat: " + checkedFootPrintsArray[i].Easternmost_longitude);
-                    // console.log("west lat: " + checkedFootPrintsArray[i].Westernmost_longitude);
+                renderLayer[i] = new WorldWind.RenderableLayer("");
+                renderLayer[i].addRenderable(surfaceImage);
 
-                    renderLayer[i] = new WorldWind.RenderableLayer();
-                    renderLayer[i].addRenderable(surfaceImage[i]);
-                    wwd.addLayer(renderLayer[i]);
-                    shapesLayer.addRenderable(renderLayer[i]);
-                }
+                // Add the loaded image in images layer
+                imagesLayer.addRenderable(renderLayer[i]);
+                
             }
+
+            // Add the new one
+            wwd.insertLayer(3, imagesLayer);
         }
 
         // this function will load a RGB combination image from rgbcombination.js to selected footprint from selected comboBox
@@ -298,8 +294,8 @@ requirejs(['./config/config',
             // }
 
             // Put placemark, remove the last clicked point
-            if(placemarkLayer != null) {
-              wwd.removeLayer(placemarkLayer);
+            if (placemarkLayer != null) {
+                wwd.removeLayer(placemarkLayer);
             }
             var placemark = new WorldWind.Placemark(new WorldWind.Position(latitude, longitude, 1e2), true, null);
             var placemarkAttributes = new WorldWind.PlacemarkAttributes(placemarkAttributes);
@@ -309,7 +305,11 @@ requirejs(['./config/config',
             placemarkLayer = new WorldWind.RenderableLayer("Placemarks");
             placemarkLayer.addRenderable(placemark);
 
-            wwd.addLayer(placemarkLayer);
+            // Marker layer
+            wwd.insertLayer(4, placemarkLayer);
+
+            // open the chart dock
+            $("#ui-id-4").addClass('open');
 
 
             var r = 3396190;
@@ -336,12 +336,7 @@ requirejs(['./config/config',
                 var N = r * k * (Math.cos(lat0 * rho) * Math.sin(latitude * rho) - Math.sin(lat0 * rho) * Math.cos(latitude * rho) * Math.cos(longitude * rho - lon0 * rho));
                 var E = r * k * Math.cos(latitude * rho) * Math.sin(longitude * rho - lon0 * rho);
 
-
             }
-
-            // console.log("cov name: " + covID);
-            // console.log("N: " + N);
-            // console.log("E: " + E);
 
             var query = "http://access.planetserver.eu:8080/rasdaman/ows?query=for%20c%20in%20(" + covID.toLowerCase() + ")%20return%20encode(c[%20N(" +
                 N + ":" + N + "),%20E(" + E + ":" + E + ")%20],%20%22csv%22)";

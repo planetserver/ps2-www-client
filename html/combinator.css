@@ -55,8 +55,8 @@
 }
 
 /* wcps bands dropdown submenu  ID and class is on same then no space between*/
-#dropDownWCPSBands.dropdown-menu .scrollable-sub-menu {
-  margin-left: 110px;
+#dropDownWCPSBands .scrollable-sub-menu {
+  margin-left: 40px;
   width: 340px;
   min-width: 240px;
 
@@ -66,3 +66,4 @@
 
   z-index: 1000;
 }
+
