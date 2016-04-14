@@ -3,6 +3,9 @@ var wcpsQueriesJSON = ""; // array to store wcpsQueries from server
 // Now, set to default 400 bands (TO-DO: store all of these things to dataset metdata in database and get this number from database)
 var DEFAULT_BANDS = 438;
 var SUBMENU_BANDS = 73;
+var redshow;
+var greenshow;
+var blueshow;
 
 var availableWCPSQueries = []; // store all the WCPS queries from JSON
 
@@ -600,6 +603,10 @@ $("#btnSubmitRGBCombination").click(function(e) {
         var red_band = $("#txt_rgb_red").val().trim();
         var green_band = $("#txt_rgb_green").val().trim();
         var blue_band = $("#txt_rgb_blue").val().trim();
+
+        redshow = red_band;
+        greenshow = green_band;
+        blueshow = blue_band;
 
         var rgbCombination = "";
 
