@@ -80,7 +80,6 @@ requirejs(['./config/config',
         }
         wwd.redraw();
 
-
         //======================WMS layer selector======
         var onRetrieve = function() {
           $('#retrieve-coverage').on('click', function (e) {
@@ -96,7 +95,7 @@ requirejs(['./config/config',
                       layers[l].layer.enabled = layers[l].enabled;
                       wwd.addLayer(layers[l].layer);
                   }
-                  wwd.redraw();
+                  // wwd.redraw();
                 break;
 
                 case parameter = 'Viking Mosaic':
@@ -108,7 +107,7 @@ requirejs(['./config/config',
                     layers[l].layer.enabled = layers[l].enabled;
                     wwd.addLayer(layers[l].layer);
                 }
-                wwd.redraw();
+                // wwd.redraw();
               break;
               default:
 
@@ -117,7 +116,7 @@ requirejs(['./config/config',
 
             })
         };
-
+        onRetrieve();
         // Create a layer to hold the surface shapes.
         shapesLayer = new WorldWind.RenderableLayer("");
         wwd.addLayer(shapesLayer);
@@ -659,7 +658,7 @@ requirejs(['./config/config',
 
         // Listen for Mouse clicks and regognize layers
         wwd.addEventListener("click", layerRecognizer);
-        onRetrieve();
+
         ////////////////
 
         // Create a layer manager for controlling layer visibility.
