@@ -308,8 +308,8 @@ requirejs(['./config/config',
             // Marker layer
             wwd.insertLayer(4, placemarkLayer);
 
-            // open the chart dock
-            $("#ui-id-4").addClass('open');
+            // open the chart dock #ui-id-3
+            $("#ui-id-3").addClass('open');
 
 
             var r = 3396190;

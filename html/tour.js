@@ -21,20 +21,20 @@ var startTour = function(){
         position:'right'
       },
       {
-        element: '#coverage-selector > div.panel-body > div.dropdown.selector',
+        element: '#basemaps-selector > div.panel-body > div.dropdown.selector',
         intro: 'Here you can select the available datasets',
         position:'right'
       },
-      {
-        element: '#custom-query-selector > button',
-        intro: 'Here you can select the preloaded WCPS queries',
-        position:'right'
-      },
-      {
-        element: '#ui-id-3 > div.CodeMirror.cm-s-default.CodeMirror-wrap.CodeMirror-simplescroll.CodeMirror-empty',
-        intro: 'In the console you can write your own WCPS queries',
-        position:'right'
-      },
+      // {
+      //   element: '#custom-query-selector > button',
+      //   intro: 'Here you can select the preloaded WCPS queries',
+      //   position:'right'
+      // },
+      // {
+      //   element: '#ui-id-3 > div.CodeMirror.cm-s-default.CodeMirror-wrap.CodeMirror-simplescroll.CodeMirror-empty',
+      //   intro: 'In the console you can write your own WCPS queries',
+      //   position:'right'
+      // },
       {
         element: '#rgb-combinator > div.panel-heading',
         intro: 'Here you find RGB combinator. Select one coverage, select the bands you want in each channel and press submit.',
