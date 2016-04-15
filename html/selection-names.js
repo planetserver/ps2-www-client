@@ -11,8 +11,8 @@ projectionNames = [
 ];
 
 baseMapNames = [
-   "Viking Mosaic"
-    // "MOLA Colorshaded"
+   "Viking Mosaic",
+    "MOLA Colored"
 ];
 
 customWCPSQueries = [

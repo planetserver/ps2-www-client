@@ -67,13 +67,13 @@ $(function () {
             return this;
         },
         addQueryTerminalPanel: function() {
-            this.queryTerminalPanel = $("<div>").queryTerminalPanel({
-                dock: this.dock,
-                panelId: "query-terminal",
-                panelTitle: "wcps query"
-            }).queryTerminalPanel("instance");
-
-            return this;
+            // this.queryTerminalPanel = $("<div>").queryTerminalPanel({
+            //     dock: this.dock,
+            //     panelId: "query-terminal",
+            //     panelTitle: "wcps query"
+            // }).queryTerminalPanel("instance");
+            //
+            // return this;
         },
         addCheckedCoveragesPanel: function() {
           // this.checkedCoveragesPanel = $("<div>").checkedCoveragesPanel({

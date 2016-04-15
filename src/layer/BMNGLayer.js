@@ -35,9 +35,14 @@ define([
 
             this.displayName = "Moon WMS service";
             this.pickEnabled = false;
+            if(layerName === "MOLA_color"){
+              this.urlBuilder = new WmsUrlBuilder("http://planetarymaps.usgs.gov/cgi-bin/mapserv?map=/maps/mars/mars_simp_cyl.map",
+                layerName || "moon_wgs84", "", "1.3.0");
+            } else{
+              this.urlBuilder = new WmsUrlBuilder("http://access.planetserver.eu:8080/rasdaman/ows",
+                layerName || "moon_wgs84", "", "1.3.0");
+            }
 
-            this.urlBuilder = new WmsUrlBuilder("http://access.planetserver.eu:8080/rasdaman/ows",
-              layerName || "moon_wgs84", "", "1.3.0");
 
 
         };

@@ -68,7 +68,7 @@ requirejs(['./config/config',
 
         var layers = [{
             // this is colorful base map
-            layer: new WorldWind.BMNGLayer("mola_wgs84"),
+            layer: new WorldWind.BMNGLayer("MOLA_color"),
             enabled: false
         }, {
             // this is dark base map
@@ -87,14 +87,14 @@ requirejs(['./config/config',
         //======================WMS layer selector======
          $("#basemapsDropdown").find(" li").on("click", function (e) {
             var index = -1;
-            var selectedBaseMapName = $(this).children().html();    
+            var selectedBaseMapName = $(this).children().html();
             var isLoadedBaseMap = true;
-            
+
             // colorful base map
-            if (selectedBaseMapName === "MOLA Colorshaded") {
+            if (selectedBaseMapName === "MOLA Colored") {
                 if(baseMapName !== selectedBaseMapName){
-                    index = 0; 
-                    baseMapName = "MOLA Colorshaded";
+                    index = 0;
+                    baseMapName = "MOLA Colored";
                     isLoadedBaseMap = false;
                 }
             } else if (selectedBaseMapName === "Viking Mosaic") {
@@ -108,7 +108,7 @@ requirejs(['./config/config',
 
             // no load the same base map again
             if(!isLoadedBaseMap) {
-                
+
                 // remove old layer and insert a new one
                wwd.removeLayer(baseMapLayer);
 
@@ -116,7 +116,7 @@ requirejs(['./config/config',
                baseMapLayer = layers[index].layer;
                wwd.insertLayer(--baseMapIndex, baseMapLayer);
             }
-        }); 
+        });
 
         // Create a layer to hold the surface shapes.
         shapesLayer = new WorldWind.RenderableLayer("");
@@ -198,7 +198,7 @@ requirejs(['./config/config',
         window.accessCheckedFootPrintsArray = function() {
 
             // Remove the old layers first
-            wwd.removeLayer(imagesLayer);            
+            wwd.removeLayer(imagesLayer);
             imagesLayer = new WorldWind.RenderableLayer("");
 
             for (i = 0; i < checkedFootPrintsArray.length; i++) {
@@ -232,7 +232,7 @@ requirejs(['./config/config',
 
                 // Add the loaded image in images layer
                 imagesLayer.addRenderable(renderLayer[i]);
-                
+
             }
 
             // Add the new one
