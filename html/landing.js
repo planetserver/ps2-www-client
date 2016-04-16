@@ -7,11 +7,25 @@
  */
 /* Global variables */
 checkedFootPrintsArray = []; // array of footprints that user choosed
+
+containedFootPrintsArray = []; // array of footprints which contain the point which user right click
+
+hightlightedFootPrintsArray = []; // array of footprints which are hightlighted
+
+toppedFootPrintsArray = []; // array of footprints which are topped
+
+
+
+
 lastCovID = ""; // last footprint which contains clicked point (it does not need to be the last index of checkedFootPrintArray)
+
+leftClickFootPrintsArray = []; // store all the footprints when left click (each time click on at least 1 footprint)
 
 shapesLayer = ""; // layer contains all footprints shapes
 
 renderLayer = [];
+
+isInitMenuContext = false;
 
 // this function is loaded in rgb_combinations.js for RGB Bands
 loadDropDownRGBBands = "";
@@ -19,7 +33,14 @@ loadDropDownRGBBands = "";
 // this function is loaded in rgb_combinations.js for WCPS Bands
 loadDropDownWCPSBands = "";
 
+// blue
+checkedAttributes = "";
 
+// hightlight
+hightlightedAttributes = "";
+
+// red
+defaultAttributes = "";
 
 // Global variable web world wind
 wwd = null;
@@ -50,7 +71,8 @@ requirejs(['./config/config',
         '../src/navigate/Navigator',
         './footprints',
         './tour',
-        './rgb_combination'
+        './rgb_combination',
+        './menucontext'
     ],
     function(config,
         ww,
@@ -85,20 +107,20 @@ requirejs(['./config/config',
         wwd.insertLayer(0, baseMapLayer);
 
         //======================WMS layer selector======
-         $("#basemapsDropdown").find(" li").on("click", function (e) {
+        $("#basemapsDropdown").find(" li").on("click", function(e) {
             var index = -1;
             var selectedBaseMapName = $(this).children().html();
             var isLoadedBaseMap = true;
 
             // colorful base map
             if (selectedBaseMapName === "MOLA Colored") {
-                if(baseMapName !== selectedBaseMapName){
+                if (baseMapName !== selectedBaseMapName) {
                     index = 0;
                     baseMapName = "MOLA Colored";
                     isLoadedBaseMap = false;
                 }
             } else if (selectedBaseMapName === "Viking Mosaic") {
-                if(baseMapName !== selectedBaseMapName){
+                if (baseMapName !== selectedBaseMapName) {
                     index = 1;
                     baseMapName = "Viking Mosaic";
                     isLoadedBaseMap = false;
@@ -107,14 +129,14 @@ requirejs(['./config/config',
             }
 
             // no load the same base map again
-            if(!isLoadedBaseMap) {
+            if (!isLoadedBaseMap) {
 
                 // remove old layer and insert a new one
-               wwd.removeLayer(baseMapLayer);
+                wwd.removeLayer(baseMapLayer);
 
                 // load the new base map layer
-               baseMapLayer = layers[index].layer;
-               wwd.insertLayer(--baseMapIndex, baseMapLayer);
+                baseMapLayer = layers[index].layer;
+                wwd.insertLayer(--baseMapIndex, baseMapLayer);
             }
         });
 
@@ -124,15 +146,22 @@ requirejs(['./config/config',
         // Create and set attributes for it. The shapes below except the surface polyline use this same attributes
         // object. Real apps typically create new attributes objects for each shape unless they know the attributes
         // can be shared among shapes.
-        var attributes = new WorldWind.ShapeAttributes(null);
-        attributes.outlineColor = WorldWind.Color.RED;
-        //attributes.interiorColor = new WorldWind.Color(0, 255, 25, 0.00001);
-        attributes.drawInterior = false;
+        defaultAttributes = new WorldWind.ShapeAttributes(null);
+        defaultAttributes.outlineColor = WorldWind.Color.RED;
+        defaultAttributes.drawInterior = false;
 
-        var checkedAttributes = new WorldWind.ShapeAttributes(null);
+        checkedAttributes = new WorldWind.ShapeAttributes(null);
         checkedAttributes.outlineColor = WorldWind.Color.BLUE;
         checkedAttributes.interiorColor = new WorldWind.Color(0, 1, 1, 0.5);
         checkedAttributes.drawInterior = false;
+
+
+        hightlightedAttributes = new WorldWind.ShapeAttributes(null);
+        hightlightedAttributes.outlineColor = WorldWind.Color.GREEN;
+        hightlightedAttributes.outlineWidth = 1.5;
+        hightlightedAttributes.interiorColor = new WorldWind.Color(0, 1, 1, 0.5);
+        hightlightedAttributes.drawInterior = false;
+
 
         //Adding allFootPrintsArray
         var boundaries = []; // array for boundary locations of the footprints
@@ -143,7 +172,7 @@ requirejs(['./config/config',
                 boundaries[i].push(new WorldWind.Location(allFootPrintsArray[i].latList[j], allFootPrintsArray[i].longList[j]));
             }
 
-            shapes[i] = new WorldWind.SurfacePolygon(boundaries[i], attributes);
+            shapes[i] = new WorldWind.SurfacePolygon(boundaries[i], defaultAttributes);
             shapes[i]._displayName = allFootPrintsArray[i].coverageID; // setting the exact name of the polygon into _displayName
 
             shapesLayer.addRenderable(shapes[i]);
@@ -170,14 +199,77 @@ requirejs(['./config/config',
                 var clickedLongitude = pickList.objects[0].position != null ? pickList.objects[0].position.longitude : pickList.objects[1].position.longitude;
 
                 // get last footprint which contains the new clicked point (load image by synchronous)
-                $.when(getFootPrintsContainingPoint(shapes, attributes, checkedAttributes, clickedLatitude, clickedLongitude)).then(function() {
+                $.when(getFootPrintsContainingPointLeftClick(shapes, defaultAttributes, checkedAttributes, clickedLatitude, clickedLongitude)).then(function() {
                     console.log("Found containing footprints now check to draw chart.");
                     // if click on loaded image then draw chart
                     if (pickList.objects[1] != null) {
                         console.log("Draw chart on coverageID: " + lastCovID);
                         // then it will load the array of values for all the bands which contains the clicked point and draw the chart
+
+                        // There are 2 cases here:
+                        // + Click on unhightlighted footprints then it will get the lastCoverage and get values on this footprint
+                        // + Click on unhightlighted footprint intersecting with hightlighted footprint, then it will get values from hightlighted footprints
+                        var isClickOnHightLight = false;
+
+                        // Store all the hightlightedFootprints which are returned from leftClickFootPrintsArray
+                        var hightlightedFootPrintsTmp = [];
+
+                        // the priority is top of hightlightedFootPrintsArray first
+                        for (var i = hightlightedFootPrintsArray.length - 1; i >= 0; i--) {
+                            var hightlightedCoverageID = hightlightedFootPrintsArray[i].coverageID;
+
+                            // check if any hightlighted footprints are in the returning footprints from left click
+                            for (var j = 0; j < leftClickFootPrintsArray.length; j++) {
+                                var coverageID = leftClickFootPrintsArray[j].coverageID;
+
+                                if (hightlightedCoverageID === coverageID) {
+                                    // then the top highlighted footprint is used to get the data
+                                    lastCovID = hightlightedCoverageID;
+                                    isClickOnHightLight = true;
+
+                                    // Add this footprint to hightlightedFootPrintsTmp
+                                    hightlightedFootPrintsTmp.push(coverageID);
+                                }
+                            }
+                        }
+
+                        // If not then just get the last clicked footprint from the left clicked footprints array
+                        if (!isClickOnHightLight) {
+                            lastCovID = leftClickFootPrintsArray[leftClickFootPrintsArray.length - 1].coverageID;
+                        } else {
+                            // Here is all hightlighted coverages which are inside the leftClickFootPrintsArray
+                            // Get the index of these elements inside hightlightedFootPrintsArray
+                            var topIndex = 0;
+
+                            console.log(" Hightlighted Footprints Tmp: ");
+                            console.log(hightlightedFootPrintsTmp);
+
+                            console.log(" Hightlighted Footprins: ");
+                            console.log(hightlightedFootPrintsArray);
+
+
+                            for (var i = 0; i < hightlightedFootPrintsTmp.length; i++) {
+                                var covTmp1 = hightlightedFootPrintsTmp[i];
+
+                                for (var j = 0; j < hightlightedFootPrintsArray.length; j++) {
+
+                                    var covTmp2 = hightlightedFootPrintsArray[j].coverageID;
+                                    if (covTmp1 === covTmp2) {
+                                        // get the index of hightlighted footprint in hightlightedFootPrints
+                                        if (topIndex < j) {
+                                            topIndex = j;
+                                        }
+                                    }
+                                }
+                            }
+
+                            // Then lastCov is the coverage at topIndex
+                            lastCovID = hightlightedFootPrintsArray[topIndex].coverageID;
+                        }
+
+                        // Get the metadata of footprint and make query builder on the correct order footprint
                         var index = 0;
-                        for (i = 0; i < checkedFootPrintsArray.length; i++) {
+                        for (var i = 0; i < checkedFootPrintsArray.length; i++) {
                             if (checkedFootPrintsArray[i].coverageID === lastCovID) {
                                 index = i;
                                 break;
@@ -201,7 +293,7 @@ requirejs(['./config/config',
             wwd.removeLayer(imagesLayer);
             imagesLayer = new WorldWind.RenderableLayer("");
 
-            for (i = 0; i < checkedFootPrintsArray.length; i++) {
+            for (var i = 0; i < checkedFootPrintsArray.length; i++) {
                 var coverageID = checkedFootPrintsArray[i].coverageID.toLowerCase();
                 var maxlong;
                 var minlong;
@@ -244,7 +336,7 @@ requirejs(['./config/config',
             //alert(WCPSLoadImage);
             WCPSLoadImage = "http://access.planetserver.eu:8080/rasdaman/ows?service=WCS&version=2.0.1&request=ProcessCoverages&query=" + WCPSLoadImage;
 
-            for (i = 0; i < checkedFootPrintsArray.length; i++) {
+            for (var i = 0; i < checkedFootPrintsArray.length; i++) {
                 var maxlong;
                 var minlong;
                 // only load RGB Combinations to the selected footprint from selected comboBox
@@ -653,6 +745,28 @@ requirejs(['./config/config',
 
         // Listen for Mouse clicks and regognize layers
         wwd.addEventListener("click", layerRecognizer);
+
+
+        // right click function
+        wwd.addEventListener("contextmenu", function(e) {
+            e.preventDefault();
+            // check if containedFootPrintsArray has at least 1 footprint
+            rightClickMenuContext(e);
+            if (containedFootPrintsArray.length > 0) {
+                //https://api.jqueryui.com/menu/#option-position
+                $("#menuContext").position({
+                    my: "left top",
+                    of: e
+                });
+
+                // Before menu item can be shown, it needs to init first with not close the submenu item
+                // Just don't close the submenu of menucontext                
+                $("#menuContext").show();
+
+            }
+            return false;
+
+        });
 
         ////////////////
 

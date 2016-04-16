@@ -1,12 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>PlanetServer-2</title>
 
     <!--intro.js library  -->
-    <link rel="stylesheet" href="html/js/introjs.css"/>
+    <link rel="stylesheet" href="html/js/introjs.css" />
     <script type="text/javascript" src="html/js/intro.js"></script>
     <!--D3 library for chart implementation-->
     <script type="text/javascript" src="thirdparty/d3.v3.min.js"></script>
@@ -15,36 +16,32 @@
 
     <script src="http://code.jquery.com/jquery-2.2.1.min.js"></script>
     <script src="http://code.jquery.com/ui/1.11.4/jquery-ui.min.js"></script>
-    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet"
-          integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"
-            integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS"
-            crossorigin="anonymous"></script>
-    <link rel="stylesheet" href="html/service-template.css"/>
-    <link rel="stylesheet" href="html/graph.css"/>
-    <link rel="stylesheet" href="html/combinator.css"/>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="html/service-template.css" />
+    <link rel="stylesheet" href="html/graph.css" />
+    <link rel="stylesheet" href="html/combinator.css" />
 
     <script src="html/libs/malihu-custom-scrollbar-plugin/jquery.mousewheel.js"></script>
 
-    <link rel="stylesheet" href="html/libs/malihu-custom-scrollbar-plugin/jquery.mCustomScrollbar.css"/>
+    <link rel="stylesheet" href="html/libs/malihu-custom-scrollbar-plugin/jquery.mCustomScrollbar.css" />
     <script src="html/libs/malihu-custom-scrollbar-plugin/jquery.mCustomScrollbar.js"></script>
     <script src="html/js/angular.min.js"></script>
 
-   <!-- auto complete dropdown -->
-   <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+    <!-- auto complete dropdown -->
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
 
     <script src="html/libs/codemirror/codemirror.js"></script>
-    <link rel="stylesheet" href="html/libs/codemirror/codemirror.css"/>
+    <link rel="stylesheet" href="html/libs/codemirror/codemirror.css" />
     <!--<script src="libs/codemirror/codemirror-compressed.js"></script>-->
     <!--<link rel="stylesheet" href="libs/codemirror/simplescrollbars.css"/>-->
 
     <script src="html/libs/codemirror/scroll/simplescrollbars.js"></script>
-    <link rel="stylesheet" href="html/libs/codemirror/scroll/simplescrollbars.css"/>
+    <link rel="stylesheet" href="html/libs/codemirror/scroll/simplescrollbars.css" />
     <script src="html/libs/codemirror/display/placeholder.js"></script>
     <script src="html/libs/codemirror/selection/active-line.js"></script>
 
-    <script data-main="html/landing"
-      src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.17/require.min.js"></script>
+    <script data-main="html/landing" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.17/require.min.js"></script>
     <!--<script data-main="www/landing"
             src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.17/require.min.js"></script>-->
 
@@ -68,26 +65,60 @@
     <script src="html/rgb-combinator-panel.js"></script>
 
     <script>
-      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+        (function(i, s, o, g, r, a, m) {
+            i['GoogleAnalyticsObject'] = r;
+            i[r] = i[r] || function() {
+                (i[r].q = i[r].q || []).push(arguments)
+            }, i[r].l = 1 * new Date();
+            a = s.createElement(o),
+                m = s.getElementsByTagName(o)[0];
+            a.async = 1;
+            a.src = g;
+            m.parentNode.insertBefore(a, m)
+        })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
 
-      ga('create', 'UA-76414745-1', 'auto');
-      ga('send', 'pageview');
+        ga('create', 'UA-76414745-1', 'auto');
+        ga('send', 'pageview');
 
     </script>
+
+    <style>
+        #menuContext .ui-menuContext {
+            min-width: 280px;
+        }
+
+	#menuContext .ui-menu-item {
+	    min-width: 230px;
+	}
+        
+        #menuContext {
+            position: absolute;
+            display: none;
+	    font-size: 18px;
+        }
+
+	.glyphicon {
+		margin-right: 10px;
+	}
+    </style>
 </head>
+
 <body>
     <nav id="service-navbar"></nav>
     <div id="service-container">
         <canvas id="canvasOne"></canvas>
     </div>
-<script type="application/javascript">
-    $(function () {
-        $("#service-container").service();
-    });
-</script>
+
+    <!-- menu context on right click -->
+    <ul id="menuContext">       
+    </ul>
+
+    <script type="application/javascript">
+        $(function() {
+            $("#service-container").service();
+        });
+    </script>
 
 </body>
+
 </html>
