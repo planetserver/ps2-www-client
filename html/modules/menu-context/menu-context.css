@@ -1,0 +1,17 @@
+#menuContext .ui-menuContext {
+    min-width: 280px;
+}
+
+#menuContext .ui-menu-item {
+    min-width: 230px;
+}
+
+#menuContext {
+    position: absolute;
+    display: none;
+    font-size: 18px;
+}
+
+.glyphicon {
+	margin-right: 10px;
+}

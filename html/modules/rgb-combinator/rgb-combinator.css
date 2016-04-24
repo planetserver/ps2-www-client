@@ -1,0 +1,69 @@
+/* need to make the sub drop down menu appear on the right */
+
+.popover{
+    max-width: 800px; /* Max Width of the popover */
+}
+
+
+/* this is for auto complete with type WCPS band */
+.ui-autocomplete {
+	color: red;
+	max-height: 150px;
+	overflow-y: auto;
+	/* prevent horizontal scrollbar */
+	overflow-x: hidden;
+}
+
+.dropdown-menu {
+  top: 0%;
+  min-width: 170px;
+  width:170px;
+
+  z-index: 1000;
+
+   position:absolute;
+  font-size: 90%;
+  margin-left: -20px;
+}
+
+/* RGB combination dropdown */
+#dropDownSelectedFootPrintsMenu .dropdown-menu {
+  font-size: 90%;
+  width: 375px;
+  margin-left: 0px;
+  min-width: 220px;
+
+  position: relative;
+  vertical-align: middle;
+
+}
+
+
+/*  rgb bands dropdown submenu */
+#dropDownRGBBands.dropdown-menu .scrollable-sub-menu {
+  margin-left: 110px;
+  width: 240px;
+  min-width: 240px;
+
+  /* scroll bar vertical */
+  max-height: 350px;
+  overflow-y: scroll;
+
+  z-index: 1000;
+
+  position:absolute;
+}
+
+/* wcps bands dropdown submenu  ID and class is on same then no space between*/
+#dropDownWCPSBands .scrollable-sub-menu {
+  margin-left: 40px;
+  width: 340px;
+  min-width: 240px;
+
+  /* scroll bar vertical */
+  max-height: 350px;
+  overflow-y: scroll;
+
+  z-index: 1000;
+}
+
