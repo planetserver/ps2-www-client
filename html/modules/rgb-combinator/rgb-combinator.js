@@ -688,7 +688,7 @@ $(document).ready(function() {
                 //alert(checkedFootPrintsArray[i].Easternmost_longitude + " " + checkedFootPrintsArray[i].Maximum_latitude);
 
                 //wwd.navigator.range = 5e6; (zoom 5*10^6 meters)
-                wwd.goTo(new WorldWind.Position(checkedFootPrintsArray[i].Maximum_latitude, checkedFootPrintsArray[i].Easternmost_longitude, 36e4));
+                wwd.goTo(new WorldWind.Location(checkedFootPrintsArray[i].Maximum_latitude, checkedFootPrintsArray[i].Easternmost_longitude));
                 break;
             }
         }
