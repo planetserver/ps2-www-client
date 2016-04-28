@@ -31,6 +31,7 @@ $(function () {
             // gisToolbar.addClickHandler("#zoom-in-tool", function() {
             //     console.log("Zoom in.")
             // });
+            var coordinates = $("<div>").coordinateOverlay().coordinateOverlay("instance");
         }
     })
 });

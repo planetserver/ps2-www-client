@@ -64,8 +64,9 @@ var qsParam = {
 // Load dependent libraries
 requirejs(['../../config/config',
         '../../libs/web-world-wind/WorldWind',
+        './CoordinateController',
         '../../libs/web-world-wind/navigate/Navigator',
-        '../layer-manager/layer-manager',
+        '../layer-manager/LayerManager',
         '../foot-prints/foot-prints',
         '../tour/tour',
         '../rgb-combinator/rgb-combinator',
@@ -74,11 +75,13 @@ requirejs(['../../config/config',
     ],
     function(config,
         ww,
+        CoordinateController,
         Navigator,
         LayerManager,
         Footprints,
         tour,
         rgb_combination,
+        menu_context,
         line_chart) {
         "use strict";
 
@@ -197,7 +200,7 @@ requirejs(['../../config/config',
 
                 // get last footprint which contains the new clicked point (load image by synchronous)
                 $.when(getFootPrintsContainingPointLeftClick(shapes, defaultAttributes, checkedAttributes, clickedLatitude, clickedLongitude)).then(function() {
-                    
+
                     // If click outside of footprint then do nothing
                     if(leftClickFootPrintsArray.length === 0) {
                         return;
@@ -468,7 +471,7 @@ requirejs(['../../config/config',
                 });
 
                 // Before menu item can be shown, it needs to init first with not close the submenu item
-                // Just don't close the submenu of menucontext                
+                // Just don't close the submenu of menucontext
                 $("#menuContext").show();
 
             }
@@ -483,6 +486,9 @@ requirejs(['../../config/config',
 
         // Now set up to handle highlighting.
         var highlightController = new WorldWind.HighlightController(wwd);
+
+        // Create a coordinate controller to update the coordinate overlay elements.
+        var coordinateController = new CoordinateController(wwd);
 
         //go to Location given in the URL
         var myLocation = new WorldWind.Position(qsParam.lat, qsParam.lon, qsParam.range);
