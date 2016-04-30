@@ -52,6 +52,7 @@ function implementChart(floatsArray) {
         }
      
        // Only add chart div when it does not exist
+
        if(!$("#chartdiv").length) {
        	    $("#mCSB_3_container").append("<div class='chartdiv' id='chartdiv' style='width:100%; height:560px;'></div>");
        }
@@ -60,11 +61,14 @@ function implementChart(floatsArray) {
             "theme": "light",
             "marginRight": 10,
 	    "marginLeft": 10,
+            "backgroundColor": "#2F5597",
+	    "backgroundAlpha": 1,
             "autoMarginOffset": 20,
             "mouseWheelZoomEnabled": true,
             "dataProvider": spectraDataProviderChart,
 	    "fontSize": 14,
-	    "color": "#e6e600",
+	    "color": "#F6FF00",
+	    "marginTop": 50,
             "valueAxes": [{
                 "axisAlpha": 0,
                 "guides": [{
@@ -79,28 +83,31 @@ function implementChart(floatsArray) {
                 "title": "Reflectance"
             }],
             "categoryAxis": {
-                "title": "Wavelength"
+                "title": "Wavelength (µm)"
             },
             "graphs": [{
                 "id": "g1",
                 "balloonText": "<span style='font-size:14px; color: #ff0000'> Wave Length:[[bandIndex]]<br><b> Reflectance:[[value]]</span></b>",
-                "bullet": "round",
-                "dashLength": 3,
+              //  "bullet": "round",
+	      //  "bulletSize": 0,
+                "dashLength": 0,
+		"lineThickness": 2,
                 "colorField": "color",
                 "valueField": "value",
-                "title": "Wavelength",
                 "connect": false,
             }],
 
             "chartCursor": {
                 "pan": true,
                 "valueLineEnabled": true,
-                "valueLineBalloonEnabled": true,
+                "valueLineBalloonEnabled": false,
                 "cursorAlpha": 1,
                 "cursorColor": "#258cbb",
                 "limitToGraph": "g1",
                 "valueLineAlpha": 0.2,
-                "valueZoomable": true
+                "valueZoomable": true,
+	        "valueBalloonsEnabled": true,
+		"categoryBalloonEnabled": true
             },
             "categoryField": "bandIndex",
             "categoryAxis": {
@@ -112,7 +119,8 @@ function implementChart(floatsArray) {
                 "title": "Wavelength"
             },
             "export": {
-                "enabled": true
+                "enabled": true,
+		"fileName": "ps2_" + drawCoverageID
             }
         });
 
@@ -120,7 +128,7 @@ function implementChart(floatsArray) {
       	chart.invalidateSize();
 	chart.write('chartdiv');
 
-	$(".export-main").css("margin-top","-30px");
+	$(".plot-dock").css("background", "#2F5597");
 }
 
 // Parse float from string of float values in CSV ('{"0.2323 0.342 0.436"}')

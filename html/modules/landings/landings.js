@@ -42,6 +42,9 @@ defaultAttributes = "";
 // Global variable web world wind
 wwd = null;
 
+// which coverageID is used to draw map
+drawCoverageID = "";
+
 function getQueryVariable(variable) {
     var query = window.location.search.substring(1);
     var vars = query.split("&");
@@ -64,7 +67,7 @@ var qsParam = {
 // Load dependent libraries
 requirejs(['../../config/config',
         '../../libs/web-world-wind/WorldWind',
-        './CoordinateController',
+        '../coordinate-controller/CoordinateController',
         '../../libs/web-world-wind/navigate/Navigator',
         '../layer-manager/LayerManager',
         '../foot-prints/foot-prints',
@@ -379,6 +382,9 @@ requirejs(['../../config/config',
         /* This function is used to draw chart when user click in 1 point and get all the values of bands */
         var placemarkLayer = null;
         var queryBuilder = function(latitude, longitude, covID, east, west) {
+
+	    // Set the fileName when export to this value
+	    drawCoverageID = covID;
 
             //update the title of the chart with name and lat long
             $("#service-container .right-dock.plot-dock .panel-title").text("Coverage Name: " + covID);
