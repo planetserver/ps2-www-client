@@ -44,6 +44,8 @@ wwd = null;
 
 // which coverageID is used to draw map
 drawCoverageID = "";
+drawLat = "";
+drawLon = "";
 
 function getQueryVariable(variable) {
     var query = window.location.search.substring(1);
@@ -385,6 +387,8 @@ requirejs(['../../config/config',
 
 	    // Set the fileName when export to this value
 	    drawCoverageID = covID;
+      drawLat = latitude;
+      drawLon = longitude;
 
             //update the title of the chart with name and lat long
             $("#service-container .right-dock.plot-dock .panel-title").text("Coverage Name: " + covID);

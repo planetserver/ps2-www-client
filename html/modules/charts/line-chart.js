@@ -7,7 +7,7 @@ function getQueryResponseAndSetChart(query) {
                 var parsedFloats = [];
                 parsedFloats = parseFloats(data);
                 implementChart(parsedFloats);
-            }        
+            }
     });
 }
 
@@ -50,7 +50,7 @@ function implementChart(floatsArray) {
             // If point value is valid or not valid still need to calculate the X coordinate for it.
             xPrev = xPrev + xDist; // Setting the correct X-axis wavelength of the current Band/point
         }
-     
+
        // Only add chart div when it does not exist
 
        if(!$("#chartdiv").length) {
@@ -67,7 +67,7 @@ function implementChart(floatsArray) {
             "mouseWheelZoomEnabled": true,
             "dataProvider": spectraDataProviderChart,
 	    "fontSize": 14,
-	    "color": "#F6FF00",
+	    "color": "#ffffff",
 	    "marginTop": 50,
             "valueAxes": [{
                 "axisAlpha": 0,
@@ -87,7 +87,7 @@ function implementChart(floatsArray) {
             },
             "graphs": [{
                 "id": "g1",
-                "balloonText": "<span style='font-size:14px; color: #ff0000'> Wave Length:[[bandIndex]]<br><b> Reflectance:[[value]]</span></b>",
+                "balloonText": "<span style='font-size:14px; color: #ff0000'> Wavelength:[[bandIndex]]<br><b> Reflectance:[[value]]</span></b>",
               //  "bullet": "round",
 	      //  "bulletSize": 0,
                 "dashLength": 0,
@@ -116,15 +116,15 @@ function implementChart(floatsArray) {
                 "gridAlpha": 0.1,
                 "minorGridAlpha": 0.1,
                 "minorGridEnabled": true,
-                "title": "Wavelength"
+                "title": "Wavelength (µm)"
             },
             "export": {
                 "enabled": true,
-		"fileName": "ps2_" + drawCoverageID
+		"fileName": "ps2_" + drawCoverageID + "_lat_" + drawLat + "_lon_" + drawLon
             }
         });
 
-	// it needs to resize the chart and write it when it is hidden	
+	// it needs to resize the chart and write it when it is hidden
       	chart.invalidateSize();
 	chart.write('chartdiv');
 
@@ -141,7 +141,7 @@ function parseFloats(input) {
     for(var i = 0; i < floatsArray.length; i++) {
 	floatsArray[i] = parseFloat(floatsArray[i]);
     }
- 
+
     //console.log("after filter null values:");
     //console.log(floatsArray);
     return floatsArray;
