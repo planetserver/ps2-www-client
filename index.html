@@ -55,7 +55,7 @@
     <script src="html/js/intro.js"></script>
     <script src="html/js/google-analytic.js"></script>
 
-        <!-- Web World Wind - libraries online -->
+    <!-- requirejs - include js into javascript file -->
     <script data-main="html/modules/landings/landings" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.17/require.min.js"></script>
 
     <!-- Javascript local docks/panels (modules)-->
@@ -94,6 +94,23 @@
     <!-- menu context on right click -->
     <ul id="menuContext">
     </ul>
+
+   <!-- goto panel -->
+   <div id="gotoPanel" style="position: absolute; top: 350px; float: right;left: 68%; background-color: rgba(47, 85, 151, .2);">
+     <table style="border-spacing: 10px; border-collapse: separate; width: 500px; color: white;">
+       <tr> <td colspan="3" style="font-size:10px;"> Please choose Region or Coverage Name or (Latitude and Longitude) to navigate on globe.</td> </tr>
+       <tr> <td>1. Region Search: </td> <td> <input type="text" id="txtRegionGoTo" class="autocompleteRegionGoTo" style="width:100%; color:blue; font-size:12px;"/>  </td> 
+	<td> <button id="btnClearRegionGoTo" type="button" class="btn btn-success" style="float: right; margin-right: 20%; height: 20px;
+    font-size: 10px;">Clear</button> </td> </tr>
+       <tr> <td>2. Coverage Name: </td> <td> <input type="text" id="txtCoverageIDGoTo" class="autocompleteCoverageIDGoTo" style="width:100%; color:blue; font-size:12px;"/> </td> 
+	<td> <button id="btnClearCoverageIDGoTo" type="button" class="btn btn-success" style="float: right; margin-right: 20%; height: 20px; font-size: 10px;">Clear</button> </td> </tr>
+       <tr> <td>3. Latitude: </td> <td colspan="2"> <input type="text" id="txtLatitudeGoTo" style="width:95%; color:blue;"/> </td> </tr>
+       <tr> <td>4. Longitude: </td> <td colspan="2"> <input type="text" id="txtLongitudeGoTo" style="width:95%; color:blue;"/> </td> </tr>
+       <tr> <td colspan="3"> <a href="#" id="linkGoTo" style="color:yellow; font-size:9px;"></a></tr>
+       <tr> <td colspan="3"> <button id="btnGoTo" type="button" class="btn btn-danger" style="float: right; margin-right: 3%;">Goto</button> </tr>        
+     </table>
+   </div>
+
 
     <script type="application/javascript">
         $(function() {

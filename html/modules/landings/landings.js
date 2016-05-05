@@ -6,6 +6,9 @@
  * @version $Id: BasicExample.js 3320 2015-07-15 20:53:05Z dcollins $
  */
 /* Global variables */
+
+ps2EndPoint = "http://localhost:8080/";
+
 checkedFootPrintsArray = []; // array of footprints that user choosed
 
 containedFootPrintsArray = []; // array of footprints which contain the point which user right click
@@ -42,6 +45,9 @@ defaultAttributes = "";
 // Global variable web world wind
 wwd = null;
 
+// place x icon on footprint
+placemarkLayer = null;
+
 // which coverageID is used to draw map
 drawCoverageID = "";
 drawLat = "";
@@ -56,14 +62,14 @@ function getQueryVariable(variable) {
             return pair[1];
         }
     }
-    return (false);
+    return "";
 }
 
 var qsParam = {
     lat: getQueryVariable("lat"),
     lon: getQueryVariable("lon"),
     range: getQueryVariable("range"),
-    coverage: getQueryVariable("coverage")
+    covID: getQueryVariable("covName")
 };
 
 // Load dependent libraries
@@ -76,7 +82,8 @@ requirejs(['../../config/config',
         '../tour/tour',
         '../rgb-combinator/rgb-combinator',
         '../menu-context/menu-context',
-        '../charts/line-chart'
+        '../charts/line-chart',
+        '../goto/goto'
     ],
     function(config,
         ww,
@@ -206,14 +213,61 @@ requirejs(['../../config/config',
                 // get last footprint which contains the new clicked point (load image by synchronous)
                 $.when(getFootPrintsContainingPointLeftClick(shapes, defaultAttributes, checkedAttributes, clickedLatitude, clickedLongitude)).then(function() {
 
-                    // If click outside of footprint then do nothing
+                    // set the latitude, longitude to goto panel
+                    $("#txtLatitudeGoTo").val(clickedLatitude);
+                    $("#txtLongitudeGoTo").val(clickedLongitude);
+
+                    // Generate a link to access to coverageID and/or Latitude and Longitude
+                    var link = ps2EndPoint + "index.html?";
+
+                    if(leftClickFootPrintsArray.length !== 0) {
+                        link = link + "covName=" + leftClickFootPrintsArray[0].coverageID;
+                    }
+
+                    if(clickedLatitude != "" && clickedLongitude != "") {
+                        link = link + "&lat=" + clickedLatitude;
+                        link = link + "&lon=" + clickedLongitude;
+                    }
+
+                    link = link + "&range=" + wwd.navigator.range;
+
+                    // add link to goto panel
+                    $("#linkGoTo").attr("href", link);
+                    $("#linkGoTo").text(link);
+
+
+
+                    // Put placemark, remove the last clicked point
+                    if (placemarkLayer != null) {
+                        wwd.removeLayer(placemarkLayer);
+                    }
+
+                    var placemark = new WorldWind.Placemark(new WorldWind.Position(clickedLatitude, clickedLongitude, 1e2), true, null);
+                    var placemarkAttributes = new WorldWind.PlacemarkAttributes(placemarkAttributes);
+                    placemarkAttributes.imageSource = "html/images/close.png";
+                    placemark.attributes = placemarkAttributes;
+
+                    placemarkLayer = new WorldWind.RenderableLayer("Placemarks");
+                    placemarkLayer.addRenderable(placemark);
+
+                    // Marker layer
+                    wwd.insertLayer(4, placemarkLayer);
+
+
+
+                    // If click outside of footprint then not draw chart
                     if(leftClickFootPrintsArray.length === 0) {
                         return;
                     }
 
+                    // Get the first coverageID to goto panel
+                    $("#txtCoverageIDGoTo").val(leftClickFootPrintsArray[0].coverageID);
+                    
+
                     console.log("Found containing footprints now check to draw chart.");
                     // if click on loaded image then draw chart
                     if (pickList.objects[1] != null) {
+
                         console.log("Draw chart on coverageID: " + lastCovID);
                         // then it will load the array of values for all the bands which contains the clicked point and draw the chart
 
@@ -382,13 +436,12 @@ requirejs(['../../config/config',
 
 
         /* This function is used to draw chart when user click in 1 point and get all the values of bands */
-        var placemarkLayer = null;
         var queryBuilder = function(latitude, longitude, covID, east, west) {
 
 	    // Set the fileName when export to this value
 	    drawCoverageID = covID;
-      drawLat = latitude;
-      drawLon = longitude;
+        drawLat = latitude;
+        drawLon = longitude;
 
             //update the title of the chart with name and lat long
             $("#service-container .right-dock.plot-dock .panel-title").text("Coverage Name: " + covID);
@@ -399,22 +452,7 @@ requirejs(['../../config/config',
             // }
             // else {
             //   $("#service-container .right-dock.plot-dock .panel-title.panel-subtitle").text("Latitude: " + String(latitude.toFixed(2)) + ", Longitude: " + String(longitude.toFixed(2)) + ", R: " + String(redshow) + ", G: " + String(greenshow) + ", B: " + String(blueshow));
-            // }
-
-            // Put placemark, remove the last clicked point
-            if (placemarkLayer != null) {
-                wwd.removeLayer(placemarkLayer);
-            }
-            var placemark = new WorldWind.Placemark(new WorldWind.Position(latitude, longitude, 1e2), true, null);
-            var placemarkAttributes = new WorldWind.PlacemarkAttributes(placemarkAttributes);
-            placemarkAttributes.imageSource = "html/images/close.png";
-            placemark.attributes = placemarkAttributes;
-
-            placemarkLayer = new WorldWind.RenderableLayer("Placemarks");
-            placemarkLayer.addRenderable(placemark);
-
-            // Marker layer
-            wwd.insertLayer(4, placemarkLayer);
+            // }         
 
             // open the chart dock #ui-id-3
             $("#ui-id-3").addClass('open');
@@ -498,11 +536,90 @@ requirejs(['../../config/config',
         var highlightController = new WorldWind.HighlightController(wwd);
 
         // Create a coordinate controller to update the coordinate overlay elements.
-        var coordinateController = new CoordinateController(wwd);
+        var coordinateController = new CoordinateController(wwd); 
 
-        //go to Location given in the URL
-        var myLocation = new WorldWind.Position(qsParam.lat, qsParam.lon, qsParam.range);
-        wwd.goTo(myLocation);
+        var latitude = qsParam.lat;
+        var longitude = qsParam.lon;
+        var coverageID = qsParam.covID;
+        var range = qsParam.range;
 
+        $("#txtLatitudeGoTo").val(qsParam.lat);
+        $("#txtLongitudeGoTo").val(qsParam.lon);
+        $("#txtCoverageIDGoTo").val(qsParam.covID);
+
+
+        // Generate a link to access to coverageID and/or Latitude and Longitude
+        var link = ps2EndPoint + "index.html?";
+        if(coverageID != "") {
+            link = link + "covName=" + coverageID;
+        }
+        if(latitude != "" && longitude != "") {
+            link = link + "&lat=" + latitude;
+            link = link + "&lon=" + longitude;
+        }
+
+        // keep the current of range
+        link = link + "&range=" + wwd.navigator.range;
+
+        // add to goto panel
+        $("#linkGoTo").attr("href", link);
+        $("#linkGoTo").text(link);
+
+
+        //go to CoverageID given in the URL
+        if(coverageID !== "") {
+            moveToCoverageID(coverageID);
+        }
+        else {
+            // go to Latitude, Longitude in the URL
+            moveToLocation(latitude, longitude, range); 
+        }
+
+        // Move to coverageID on globe
+        function moveToCoverageID(coverageID) {
+            for (var i = 0; i < allFootPrintsArray.length; i++) {
+                if (qsParam.covID.toLowerCase() === allFootPrintsArray[i].coverageID.toLowerCase()) {
+                    var centerLatitude = (allFootPrintsArray[i].Maximum_latitude + allFootPrintsArray[i].Minimum_latitude) / 2;
+                    var centerLongitude = (allFootPrintsArray[i].Easternmost_longitude + allFootPrintsArray[i].Westernmost_longitude) / 2;
+                    moveToLocation(centerLatitude, centerLongitude, qsParam.range);
+                    return;
+                }
+            }
+
+            alert("Coverage Name: " + qsParam.covID + " does not exist.");
+        }
+
+        // Move to longitude, Latitude and Range
+        function moveToLocation(latitude, longitude, range) {
+
+            if(range != "") {
+                if(range.toString().indexOf("e") > -1) {
+                    wwd.navigator.range = range;
+                } else {
+                    //alert(range.toString().charAt(0) + "e" + (Math.round(range).toString().length - 1));
+                   // wwd.navigator.range = (range.charAt(0) + "e" + (Math.round(range).toString().length - 1)).toString();
+                   wwd.navigator.range = 4e6;
+                }
+            }           
+
+            console.log(wwd.navigator.range);
+
+            wwd.goTo(new WorldWind.Location(latitude, longitude));
+
+            // Put placemark, remove the last clicked point
+            if (placemarkLayer != null) {
+                wwd.removeLayer(placemarkLayer);
+            }
+
+            var placemark = new WorldWind.Placemark(new WorldWind.Position(latitude, longitude, range), true, null);
+            var placemarkAttributes = new WorldWind.PlacemarkAttributes(placemarkAttributes);
+            placemarkAttributes.imageSource = "html/images/close.png";
+            placemark.attributes = placemarkAttributes;
+
+            placemarkLayer = new WorldWind.RenderableLayer("Placemarks");
+            placemarkLayer.addRenderable(placemark);
+
+            wwd.insertLayer(4, placemarkLayer);
+        }
 
     });
