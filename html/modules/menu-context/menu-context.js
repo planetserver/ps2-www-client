@@ -269,11 +269,11 @@ $( document ).ready(function() {
         var menuContextSubItemTemplate = '<ul class=".menuContext_functions" data="$COVERAGEID"><li style="font-weight: bold;font-size: 14px;background-color: #E01B1B;color: white;"><span class="glyphicon glyphicon-tasks"></span>Functions</li>$MENUCONTEXT_SUBITEMS_FUNCTIONS</ul>';
 
         // check
-        var hightLightSubMenuItemTemplate = '<li><a href="#" id="menuContext_$COVERAGEID_hightlight" class="menuContext_hightlight" data="$COVERAGEID"> <span class="glyphicon glyphicon-arrow-up" style="color:green;"></span>Hightlight Footprint</a></li>';
+        var hightLightSubMenuItemTemplate = '<li><a href="#" id="menuContext_$COVERAGEID_hightlight" class="menuContext_hightlight" data="$COVERAGEID"> <span class="glyphicon glyphicon-arrow-up" style="color:green;"></span>Lock On Footprint</a></li>';
         var selectSubMenuItemTemplate = '<li><a href="#" id="menuContext_$COVERAGEID_select" class="menuContext_select" data="$COVERAGEID"> <span class="glyphicon glyphicon-signal" style="color:blue;"></span>Select Footprint </a></li>';
 
         // uncheck
-        var unHightLightSubMenuItemTemplate = '<li><a href="#" id="menuContext_$COVERAGEID_unhightlight" class="menuContext_hightlight" data="$COVERAGEID"> <span class="glyphicon glyphicon-sort" style="color:green;"></span>Unhightlight Footprint</a></li>';
+        var unHightLightSubMenuItemTemplate = '<li><a href="#" id="menuContext_$COVERAGEID_unhightlight" class="menuContext_hightlight" data="$COVERAGEID"> <span class="glyphicon glyphicon-sort" style="color:green;"></span>Unlock On Footprint</a></li>';
         var unSelectSubMenuItemTemplate = '<li><a href="#" id="menuContext_$COVERAGEID_unselect" class="menuContext_select" data="$COVERAGEID"> <span class="glyphicon glyphicon-remove-circle" style="color:blue;"></span>Unselect Footprint </a></li>';
 
         var menuContextItems = "";

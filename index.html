@@ -32,10 +32,12 @@
     <script src="html/js/jquery/jquery-ui.min.js"></script>
 
     <!-- Javascript amcharts -->
-    <script src="https://www.amcharts.com/lib/3/amcharts.js"></script>
-    <script src="https://www.amcharts.com/lib/3/serial.js"></script>
-    <script src="https://www.amcharts.com/lib/3/themes/light.js"></script>
-    <script src="https://www.amcharts.com/lib/3/plugins/export/export.js" type="text/javascript"></script>
+    <script src="html/libs/amcharts/amcharts.js"></script>
+    <script src="html/libs/amcharts/serial.js"></script>
+    <script src="html/libs/amcharts/light.js"></script>
+    <script src="html/libs/amcharts/plugins/export/libs/jszip/jszip.js"></script>
+    <script src="html/libs/amcharts/plugins/export/libs/xlsx/xlsx.js"></script>
+    <script src="html/libs/amcharts/export.js"></script>
 
 
     <!-- Javascript bootstrap library -->
@@ -96,16 +98,17 @@
     </ul>
 
    <!-- goto panel -->
-   <div id="gotoPanel" style="position: absolute; top: 350px; float: right;left: 68%; background-color: rgba(47, 85, 151, .2);">
+   <div id="gotoPanel" style="position: absolute; top: 425px; float: right;left: 67%; background-color: rgba(47, 85, 151, .2);">
      <table style="border-spacing: 10px; border-collapse: separate; width: 500px; color: white;">
        <tr> <td colspan="3" style="font-size:10px;"> Please choose Region or Coverage Name or (Latitude and Longitude) to navigate on globe.</td> </tr>
-       <tr> <td>1. Region Search: </td> <td> <input type="text" id="txtRegionGoTo" class="autocompleteRegionGoTo" style="width:100%; color:blue; font-size:12px;"/>  </td> 
-	<td> <button id="btnClearRegionGoTo" type="button" class="btn btn-success" style="float: right; margin-right: 20%; height: 20px;
-    font-size: 10px;">Clear</button> </td> </tr>
-       <tr> <td>2. Coverage Name: </td> <td> <input type="text" id="txtCoverageIDGoTo" class="autocompleteCoverageIDGoTo" style="width:100%; color:blue; font-size:12px;"/> </td> 
-	<td> <button id="btnClearCoverageIDGoTo" type="button" class="btn btn-success" style="float: right; margin-right: 20%; height: 20px; font-size: 10px;">Clear</button> </td> </tr>
-       <tr> <td>3. Latitude: </td> <td colspan="2"> <input type="text" id="txtLatitudeGoTo" style="width:95%; color:blue;"/> </td> </tr>
-       <tr> <td>4. Longitude: </td> <td colspan="2"> <input type="text" id="txtLongitudeGoTo" style="width:95%; color:blue;"/> </td> </tr>
+       <tr> <td style="">1. Region Search: </td> <td colspan="2"> <input type="text" id="txtRegionGoTo" class="autocompleteRegionGoTo" style="width:75%; color:blue; font-size:12px;"/> <button id="btnClearRegionGoTo" type="button" class="btn btn-success" style="height: 20px; font-size: 10px;">Clear</button> </td> </tr>
+
+       <tr> <td>2. Coverage Name: </td> <td colspan="2"> <input type="text" id="txtCoverageIDGoTo" class="autocompleteCoverageIDGoTo" style="width:75%; color:blue; font-size:12px;"/> <button id="btnClearCoverageIDGoTo" type="button" class="btn btn-success" style="height: 20px; font-size: 10px;">Clear</button> </td> </tr>
+
+       <tr> <td>3. Latitude: </td> <td colspan="2"> <input type="text" id="txtLatitudeGoTo" style="width:95%; color:blue; font-size:12px;"/> </td> </tr>
+
+       <tr> <td>4. Longitude: </td> <td colspan="2"> <input type="text" id="txtLongitudeGoTo" style="width:95%; color:blue; font-size:12px;"/> </td> </tr>
+
        <tr> <td colspan="3"> <a href="#" id="linkGoTo" style="color:yellow; font-size:9px;"></a></tr>
        <tr> <td colspan="3"> <button id="btnGoTo" type="button" class="btn btn-danger" style="float: right; margin-right: 3%;">Goto</button> </tr>        
      </table>

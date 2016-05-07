@@ -20,7 +20,7 @@ function DataSetConstructor(coverageID, Easternmost_longitude, Maximum_latitude,
     this.isLoadedImage = isLoadedImage;
 }
 
-function CheckedDataSetConstructor(coverageID, Easternmost_longitude, Maximum_latitude, Minimum_latitude, Westernmost_longitude, latList, longList, latClickedPoint, longClickedPoint) {
+function CheckedDataSetConstructor(coverageID, Easternmost_longitude, Maximum_latitude, Minimum_latitude, Westernmost_longitude, latList, longList, latClickedPoint, longClickedPoint, shapeObj) {
     this.coverageID = coverageID;
     this.Easternmost_longitude = Easternmost_longitude;
     this.Maximum_latitude = Maximum_latitude;
@@ -33,6 +33,9 @@ function CheckedDataSetConstructor(coverageID, Easternmost_longitude, Maximum_la
     // store for view to this footprint where user clicked coordinate
     this.latClickedPoint = latClickedPoint;
     this.longClickedPoint = longClickedPoint;
+
+    // store the shape object to set attribute of shape faster
+    this.shapeObj = shapeObj;
 }
 
 // when page loads then load all footprints
@@ -82,7 +85,7 @@ function getFootPrintsContainingPointLeftClick(shapesArray, attributesObj, check
 	    }
 
             $.each(data, function(key, val) {
-                var dataSetFootPrint = new CheckedDataSetConstructor(val.coverageID, val.Easternmost_longitude, val.Maximum_latitude, val.Minimum_latitude, val.Westernmost_longitude, val.latList, val.longList, latitude, longitude);
+                var dataSetFootPrint = new CheckedDataSetConstructor(val.coverageID, val.Easternmost_longitude, val.Maximum_latitude, val.Minimum_latitude, val.Westernmost_longitude, val.latList, val.longList, latitude, longitude, null);
 
                 // Get the last clicked coverageID to draw the chart when clicking on loaded image
                 lastCovID = val.coverageID;
@@ -108,9 +111,7 @@ function getFootPrintsContainingPointLeftClick(shapesArray, attributesObj, check
                     if (isChecked === false) {
 
                         // user has selected new footprints then need to draw image on it.
-                        isUpdateCheckedFootPrintsArray = true;
-
-                        checkedFootPrintsArray.push(dataSetFootPrint);
+                        isUpdateCheckedFootPrintsArray = true;                        
                         console.log("New checked footprint: " + val.coverageID);
 
                         // Change footprint to checked footprint
@@ -128,12 +129,17 @@ function getFootPrintsContainingPointLeftClick(shapesArray, attributesObj, check
 
                                 // If the footprint is not hightlighted then it can be checked
                                 if(!isHightLighted) {
-                                    shapes[j].attributes = checkedAttributes;    
+                                    shapes[j].attributes = checkedAttributes;
+
+                                    // shape object of checked footprint
+                                    dataSetFootPrint.shapeObj = shapes[j];   
                                 }
 
                                 break;
                             }
                         }
+
+                        checkedFootPrintsArray.push(dataSetFootPrint);
                     }
 
                     // update the content of dropdown Box
@@ -262,11 +268,11 @@ function updateCheckedFootPrintsDropdownBox() {
 
     var dropDownContent = "<li> <input type='checkbox' class='checkBoxSelectedFootPrints' data='0' id='checkBoxSelectedFootPrints_0' name='type' value='4' style='margin-left: 10px;'/><a class='menuItem' style='display: inline-block;' href='#' data='0' id='linkSelectedFootPrints_0'><b>***All Selected Footprints***</b></a> <a class='removeMenuItemAll' style='display: inline-block;  margin-left:20px;' data='0' href='#'><span class='glyphicon glyphicon-remove'></span></a> <li role='separator' class='divider' id='checkBoxSelectedFootPrints_Divider_0'></li>";
 
-    var templateRow = "<li> <input type='checkbox' class='checkBoxSelectedFootPrints' data='$MENU_ITEM_INDEX' id='checkBoxSelectedFootPrints_$MENU_ITEM_INDEX' name='type' value='4' style='margin-left: 10px;'/><a class='menuItem' style='display: inline-block;' href='#' data='$MENU_ITEM_INDEX' id='linkSelectedFootPrints_$MENU_ITEM_INDEX' value='$COVERAGE_ID'>$COVERAGE_ID</a> <a class='removeMenuItem' style='display: inline-block;' data='$MENU_ITEM_INDEX' href='#'><span class='glyphicon glyphicon-remove-circle' style='margin-left: 20px;'></span></a> </li><li role='separator' class='divider' id='checkBoxSelectedFootPrints_Divider_$MENU_ITEM_INDEX'></li>";
+    var templateRow = "<li> <input type='checkbox' class='checkBoxSelectedFootPrints' data='$COVERAGE_ID' id='checkBoxSelectedFootPrints_$COVERAGE_ID' name='type' value='4' style='margin-left: 10px;'/><a class='menuItem' style='display: inline-block;' href='#' data='$COVERAGE_ID' id='linkSelectedFootPrints_$COVERAGE_ID' value='$COVERAGE_ID'>$COVERAGE_ID</a> <a class='removeMenuItem' style='display: inline-block;' data='$COVERAGE_ID' href='#'><span class='glyphicon glyphicon-remove-circle' style='margin-left: 20px;'></span></a> </li><li role='separator' class='divider' id='checkBoxSelectedFootPrints_Divider_$COVERAGE_ID'></li>";
 
     for (var i = 0; i < checkedFootPrintsArray.length; i++) { //add if to not update the cov if already exist
         var tmp = replaceAll(templateRow, "$COVERAGE_ID", checkedFootPrintsArray[i].coverageID);
-        tmp = replaceAll(tmp, "$MENU_ITEM_INDEX", (i + 1));
+        //tmp = replaceAll(tmp, "$MENU_ITEM_INDEX", (i + 1));
 
         // add to dropDownBoxContent
         dropDownContent = dropDownContent + tmp;
@@ -292,7 +298,7 @@ function removeAllSelectedFootPrints() {
         for (j = 0; j < shapes.length; j++) {
             if (shapes[j]._displayName === checkedFootPrintsArray[i].coverageID) {
 
-                // uncheck footprints by setting to blue color
+                // uncheck footprints by setting to red color
                 shapes[j].attributes = attributes;
             }
         }

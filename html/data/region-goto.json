@@ -11,17 +11,13 @@
   "latitude": 41.233,
   "longitude": 35
 }, {
-  "name": "WC",
-  "latitude": 31.233,
-  "longitude": 35
+  "name": "Other",
+  "latitude": 12.34,
+  "longitude": 34.25
 }, {
-  "name": "Playboy",
-  "latitude": 25.233,
-  "longitude": 35
-}, {
-  "name": "Dont Go To Here",
-  "latitude": 36.233,
-  "longitude": 35
+  "name": "Horizon Mars",
+  "latitude": 65.34,
+  "longitude": 121.25
 }
 ]
 

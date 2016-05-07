@@ -8,6 +8,7 @@
 /* Global variables */
 
 ps2EndPoint = "http://localhost:8080/";
+ps2WCPSEndPoint = "http://access.planetserver.eu:8080/rasdaman/ows?service=WCS&version=2.0.1&request=ProcessCoverages&query=";
 
 checkedFootPrintsArray = []; // array of footprints that user choosed
 
@@ -35,6 +36,9 @@ loadDropDownWCPSBands = "";
 
 // blue
 checkedAttributes = "";
+
+// yellow
+selectedAttributes = ""; // it is selected to load RGB Bands
 
 // hightlight
 hightlightedAttributes = "";
@@ -166,6 +170,12 @@ requirejs(['../../config/config',
         checkedAttributes.outlineColor = WorldWind.Color.BLUE;
         checkedAttributes.interiorColor = new WorldWind.Color(0, 1, 1, 0.5);
         checkedAttributes.drawInterior = false;
+
+
+        selectedAttributes = new WorldWind.ShapeAttributes(null);
+        selectedAttributes.outlineColor = WorldWind.Color.YELLOW;
+        selectedAttributes.interiorColor = new WorldWind.Color(0, 1, 1, 0.5);
+        selectedAttributes.drawInterior = false;
 
 
         hightlightedAttributes = new WorldWind.ShapeAttributes(null);
@@ -381,7 +391,8 @@ requirejs(['../../config/config',
 
                 checkedFootPrintsArray[i].isLoadedImage = true;
                 // If just use http://access.planetserver.eu:8080/rasdaman/ows?query it will have error NULL
-                var WCPSLoadImage = "http://access.planetserver.eu:8080/rasdaman/ows?service=WCS&version=2.0.1&request=ProcessCoverages&query=for%20data%20in%20(%20" + coverageID + "%20)%20return%20encode(%20{%20red:%20(int)(255%20/%20(max((data.band_233%20!=%2065535)%20*%20data.band_233)%20-%20min(data.band_233)))%20*%20(data.band_233%20-%20min(data.band_233));%20green:%20(int)(255%20/%20(max((data.band_78%20!=%2065535)%20*%20data.band_78)%20-%20min(data.band_78)))%20*%20(data.band_78%20-%20min(data.band_78));%20blue:(int)(255%20/%20(max((data.band_13%20!=%2065535)%20*%20data.band_13)%20-%20min(data.band_13)))%20*%20(data.band_13%20-%20min(data.band_13));%20alpha:%20(data.band_100%20!=%2065535)%20*%20255%20},%20%22png%22,%20%22nodata=null%22)";
+                // Load default bands for all footprintss
+                var WCPSLoadImage = ps2WCPSEndPoint + 'for data in (' + coverageID + ') return encode( { red: ' + redBandDefault + '; green: ' + greenBandDefault + '; blue: ' + blueBandDefault + ' ; alpha: ' + alphaBandDefault + '}, "png", "nodata=null")';
                 var surfaceImage = new WorldWind.SurfaceImage(new WorldWind.Sector(checkedFootPrintsArray[i].Minimum_latitude, checkedFootPrintsArray[i].Maximum_latitude, minlong, maxlong), WCPSLoadImage);
 
                 renderLayer[i] = new WorldWind.RenderableLayer("");
@@ -399,7 +410,7 @@ requirejs(['../../config/config',
         // this function will load a RGB combination image from rgbcombination.js to selected footprint from selected comboBox
         window.loadRGBCombinations = function(WCPSLoadImage, coverageID) {
             //alert(WCPSLoadImage);
-            WCPSLoadImage = "http://access.planetserver.eu:8080/rasdaman/ows?service=WCS&version=2.0.1&request=ProcessCoverages&query=" + WCPSLoadImage;
+            WCPSLoadImage = ps2WCPSEndPoint + WCPSLoadImage;
 
             for (var i = 0; i < checkedFootPrintsArray.length; i++) {
                 var maxlong;
@@ -438,25 +449,10 @@ requirejs(['../../config/config',
         /* This function is used to draw chart when user click in 1 point and get all the values of bands */
         var queryBuilder = function(latitude, longitude, covID, east, west) {
 
-	    // Set the fileName when export to this value
-	    drawCoverageID = covID;
-        drawLat = latitude;
-        drawLon = longitude;
-
-            //update the title of the chart with name and lat long
-            $("#service-container .right-dock.plot-dock .panel-title").text("Coverage Name: " + covID);
-            $("#service-container .right-dock.plot-dock .panel-title.panel-subtitle").text("Latitude: " + String(latitude.toFixed(2)) + ", Longitude: " + String(longitude.toFixed(2)));
-
-            // if(redshow === undefined){
-            //   $("#service-container .right-dock.plot-dock .panel-title.panel-subtitle").text("Latitude: " + String(latitude.toFixed(2)) + ", Longitude: " + String(longitude.toFixed(2)));
-            // }
-            // else {
-            //   $("#service-container .right-dock.plot-dock .panel-title.panel-subtitle").text("Latitude: " + String(latitude.toFixed(2)) + ", Longitude: " + String(longitude.toFixed(2)) + ", R: " + String(redshow) + ", G: " + String(greenshow) + ", B: " + String(blueshow));
-            // }         
-
-            // open the chart dock #ui-id-3
-            $("#ui-id-3").addClass('open');
-
+            // Set the fileName when export to this value
+            drawCoverageID = covID;
+            drawLat = latitude;
+            drawLon = longitude;
 
             var r = 3396190;
             var cosOf0 = 1;
@@ -469,8 +465,8 @@ requirejs(['../../config/config',
                 var lat0 = 90;
                 var lon0 = (west - ((west - east) / 2)) - 360;
                 var k = 2 / (1 + Math.sin(lat0 * rho) * Math.sin(latitude * rho) + Math.cos(lat0 * rho) * Math.cos(latitude * rho) * Math.cos(longitude * rho - lon0 * rho));
-                var N = r * k * (Math.cos(lat0 * rho) * Math.sin(latitude * rho) - Math.sin(lat0 * rho) * Math.cos(latitude * rho) * Math.cos(longitude * rho - lon0 * rho));
-                var E = r * k * Math.cos(latitude * rho) * Math.sin(longitude * rho - lon0 * rho);
+                N = r * k * (Math.cos(lat0 * rho) * Math.sin(latitude * rho) - Math.sin(lat0 * rho) * Math.cos(latitude * rho) * Math.cos(longitude * rho - lon0 * rho));
+                E = r * k * Math.cos(latitude * rho) * Math.sin(longitude * rho - lon0 * rho);
 
 
             }
@@ -479,10 +475,60 @@ requirejs(['../../config/config',
                 var lat0 = -90;
                 var lon0 = (west - ((west - east) / 2)) - 360;
                 var k = 2 / (1 + Math.sin(lat0 * rho) * Math.sin(latitude * rho) + Math.cos(lat0 * rho) * Math.cos(latitude * rho) * Math.cos(longitude * rho - lon0 * rho));
-                var N = r * k * (Math.cos(lat0 * rho) * Math.sin(latitude * rho) - Math.sin(lat0 * rho) * Math.cos(latitude * rho) * Math.cos(longitude * rho - lon0 * rho));
-                var E = r * k * Math.cos(latitude * rho) * Math.sin(longitude * rho - lon0 * rho);
-
+                N = r * k * (Math.cos(lat0 * rho) * Math.sin(latitude * rho) - Math.sin(lat0 * rho) * Math.cos(latitude * rho) * Math.cos(longitude * rho - lon0 * rho));
+                E = r * k * Math.cos(latitude * rho) * Math.sin(longitude * rho - lon0 * rho);
             }
+
+            //update the title of the chart with name and lat long
+            $("#service-container .right-dock.plot-dock .panel-title").text("Coverage Name: " + covID);
+            $("#service-container .right-dock.plot-dock .panel-title.panel-subtitle").text("Latitude: " + String(latitude.toFixed(2)) + ", Longitude: " + String(longitude.toFixed(2)));
+
+            var rgbValues = '<hr style="margin-top: -30px;"> <div style="text-align: center; margin-top: -10px; color: white;" id="divRGBValues"> </div>';
+
+            var result = ""; // query RGB values for the coordinate
+
+            // Get the selected Coverage ID RGB bands and query to get the values
+            var isClickOnSelectedFootPrint = false;
+            for(var i = 0; i < selectedFootPrintsArray.length; i++) {
+                // If find the footprint then get the R, G, B bands of it to query WCPS and get values
+                if(selectedFootPrintsArray[i].coverageID == covID) {
+                    isClickOnSelectedFootPrint = true;
+                    
+                    // Get all wcps queries for this footprint (it can has 3 bands or 1 or 2 bands)
+                    var rgbArray = [];
+                    if(selectedFootPrintsArray[i].redBand != "") {
+                        rgbArray.push({"name" : "Red", "query" : selectedFootPrintsArray[i].redBand});
+                    }
+
+                    if(selectedFootPrintsArray[i].greenBand != "") {
+                        rgbArray.push({"name" : "Green", "query" : selectedFootPrintsArray[i].greenBand});
+                    }
+
+                    if(selectedFootPrintsArray[i].blueBand != "") {
+                        rgbArray.push({"name" : "Blue", "query" : selectedFootPrintsArray[i].blueBand});
+                    }
+
+                    // Get rgb values from rgb-combinator
+                    window.queryRGBValue(covID, E, N, rgbArray);
+
+                    break;
+                }
+            }
+
+            // If clicked on unselected footprint then just load band defaults (WCPS queries for this footprint)
+            if(!isClickOnSelectedFootPrint) {
+                var rgbArray = [{"name" : "Red", "query" : redBandDefault}, {"name" : "Green" , "query" : greenBandDefault}, {"name" : "Blue" , "query" : blueBandDefault}];
+
+                // Get rgb values from rgb-combinator
+                window.queryRGBValue(covID, E, N, rgbArray);
+            }
+
+            $("#mCSB_3_container").append(rgbValues);            
+
+
+            // open the chart dock #ui-id-3
+            $("#ui-id-3").addClass('open');
+          
 
             var query = "http://access.planetserver.eu:8080/rasdaman/ows?query=for%20c%20in%20(" + covID.toLowerCase() + ")%20return%20encode(c[%20N(" +
                 N + ":" + N + "),%20E(" + E + ":" + E + ")%20],%20%22csv%22)";
