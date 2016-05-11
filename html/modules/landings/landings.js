@@ -224,8 +224,8 @@ requirejs(['../../config/config',
                 $.when(getFootPrintsContainingPointLeftClick(shapes, defaultAttributes, checkedAttributes, clickedLatitude, clickedLongitude)).then(function() {
 
                     // set the latitude, longitude to goto panel
-                    $("#txtLatitudeGoTo").val(clickedLatitude);
-                    $("#txtLongitudeGoTo").val(clickedLongitude);
+                    //$("#txtLatitudeGoTo").val(clickedLatitude);
+                    //$("#txtLongitudeGoTo").val(clickedLongitude);
 
                     // Generate a link to access to coverageID and/or Latitude and Longitude
                     var link = ps2EndPoint + "index.html?";
@@ -589,6 +589,7 @@ requirejs(['../../config/config',
         var coverageID = qsParam.covID;
         var range = qsParam.range;
 
+        // Set text boxes goto with values from URL
         $("#txtLatitudeGoTo").val(qsParam.lat);
         $("#txtLongitudeGoTo").val(qsParam.lon);
         $("#txtCoverageIDGoTo").val(qsParam.covID);

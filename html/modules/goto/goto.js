@@ -61,23 +61,9 @@ $( document ).ready(function() {
     });
 
 
-    // Clear goto region to allow goto coverageID or (Latitude and Longitude)
-    $("#btnClearRegionGoTo").on("click", function() {
-        $("#txtRegionGoTo").val("");
-    });
-
-    // Clear goto CoverageID to allow goto Latitude and Longitude
-    $("#btnClearCoverageIDGoTo").on("click", function() {
-        $("#txtCoverageIDGoTo").val("");
-    });
-
-	// Go to Latitude, Longitude or CoverageID user want
-    $("#btnGoTo").on("click", function() {
+    // goto region to allow goto coverageID or (Latitude and Longitude)
+    $("#btnRegionGoTo").on("click", function() {
         var region = $("#txtRegionGoTo").val();
-    	var latitude = $("#txtLatitudeGoTo").val();
-    	var longitude = $("#txtLongitudeGoTo").val();
-    	var coverageID = $("#txtCoverageIDGoTo").val();
-
         // User want to go to region
         if(region !== "") {
             for(var i = 0; i < availableRegionsJSON.length; i++){
@@ -91,42 +77,59 @@ $( document ).ready(function() {
             alert("You need to choose existing region on globe.");
             return false;
         }
-
-    	// User want to goto by Latitude, Longitude
-    	if(coverageID === "") {
-    		if(checkLatitude(latitude) && checkLongitude(longitude)) {
-    			moveToFootPrint(latitude, longitude);
-    		} else {
-    			return false;
-    		}
-    	}
-    	// User want to goto by CoverageID 
-    	else if(coverageID !== "") {
-    		moveToCoverageID(coverageID);
-    	} else {
-    		alert("Please type Region or Coverage Name or Latitude & Longitude to navigate on globe.");
-    		return false;
-    	}
-
-    	// Generate a link to access to coverageID and/or Latitude and Longitude
-    	var link = ps2EndPoint + "index.html?";
-    	if(coverageID != "") {
-    		link = link + "covName=" + coverageID;
-    	}
-    	if(latitude != "" && longitude != "") {
-    		link = link + "&lat=" + latitude;
-    		link = link + "&lon=" + longitude;
-    	}
-
-    	// keep the current of range
-    	link = link + "&range=" + wwd.navigator.range;
-
-    	// add to goto panel
-    	$("#linkGoTo").attr("href", link);
-    	$("#linkGoTo").text(link);
-
     });
 
+    // goto CoverageID to allow goto Latitude and Longitude
+    $("#btnCoverageIDGoTo").on("click", function() {
+        var coverageID = $("#txtCoverageIDGoTo").val();
+
+        if(coverageID !== "") {
+            moveToCoverageID(coverageID);
+
+            makeLinkGoTo(coverageID, "", "");
+        } else {
+            alert("Please type existing coverage name on globe.");
+            return false;
+        }
+    });
+
+    // goto Latitude, Longitude to allow goto Latitude and Longitude
+    $("#btnLatLonGoTo").on("click", function() {
+        var latitude = $("#txtLatitudeGoTo").val();
+        var longitude = $("#txtLongitudeGoTo").val();
+
+        if(checkLatitude(latitude) && checkLongitude(longitude)) {
+            moveToFootPrint(latitude, longitude);
+
+            makeLinkGoTo("", latitude, longitude);
+        } else {
+            return false;
+        }       
+    });
+    
+
+    /* Get the latitude, longitude of region/coverageID or manual latitude, longitude to goto */
+    function makeLinkGoTo(coverageID, latitude, longitude) {
+        // Generate a link to access to coverageID and/or Latitude and Longitude
+        var link = ps2EndPoint + "index.html?";
+        if(coverageID != "") {
+            link = link + "covName=" + coverageID;
+        }
+        if(latitude != "" && longitude != "") {
+            link = link + "&lat=" + latitude;
+            link = link + "&lon=" + longitude;
+        }
+
+        // keep the current of range
+        link = link + "&range=" + wwd.navigator.range;
+
+        // add to goto panel
+        $("#linkGoTo").attr("href", link);
+        $("#linkGoTo").text(link);
+    }
+
+
+    // Check if latitude, longitude is valid
     function checkLatitude(latitude) {
     	val = parseFloat(latitude);
 		if(isNaN(latitude) || latitude === "") {
