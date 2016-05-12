@@ -95,9 +95,20 @@ $(function() {
             // return this;
         },
 
+        //GoTO pannel
+        addGoToPanel: function() {
+            this.goToPanel = $("<div>").goToPanel({
+                dock: this.dock,
+                panelId: "goTo",
+                panelTitle: "search location"
+            });
+            return this;
+          },
+
         // RGB Panels
 	// So first create a file .js which contains widget name (e.g: $.widget("panel.rgbCombinatorPanel", $.dock.panel))
-	// here is rgb-combinator-panel.js  
+	// here is rgb-combinator-panel.js
+
         addRgbCombinatorPanel: function() {
             this.rgbCombinatorPanel = $("<div>").rgbCombinatorPanel({
                 dock: this.dock,

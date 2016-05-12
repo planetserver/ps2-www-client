@@ -228,7 +228,7 @@ requirejs(['../../config/config',
                     //$("#txtLongitudeGoTo").val(clickedLongitude);
 
                     // Generate a link to access to coverageID and/or Latitude and Longitude
-                    var link = ps2EndPoint + "index.html?";
+                    var link = "http://access.planetserver.eu/" + "index.html?";
 
                     if(leftClickFootPrintsArray.length !== 0) {
                         link = link + "covName=" + leftClickFootPrintsArray[0].coverageID;
@@ -271,8 +271,8 @@ requirejs(['../../config/config',
                     }
 
                     // Get the first coverageID to goto panel
-                    $("#txtCoverageIDGoTo").val(leftClickFootPrintsArray[0].coverageID);
-                    
+                    // $("#txtCoverageIDGoTo").val(leftClickFootPrintsArray[0].coverageID);
+
 
                     console.log("Found containing footprints now check to draw chart.");
                     // if click on loaded image then draw chart
@@ -493,8 +493,8 @@ requirejs(['../../config/config',
                 // If find the footprint then get the R, G, B bands of it to query WCPS and get values
                 if(selectedFootPrintsArray[i].coverageID == covID) {
                     isClickOnSelectedFootPrint = true;
-                    
-                    // Get all wcps queries for this footprint (it can has 3 bands or 1 or 2 bands)
+
+                    // Get all wcps queries for this footprint (it can have 3 bands or 1 or 2 bands)
                     var rgbArray = [];
                     if(selectedFootPrintsArray[i].redBand != "") {
                         rgbArray.push({"name" : "Red", "query" : selectedFootPrintsArray[i].redBand});
@@ -523,12 +523,12 @@ requirejs(['../../config/config',
                 window.queryRGBValue(covID, E, N, rgbArray);
             }
 
-            $("#mCSB_3_container").append(rgbValues);            
+            $("#mCSB_3_container").append(rgbValues);
 
 
             // open the chart dock #ui-id-3
             $("#ui-id-3").addClass('open');
-          
+
 
             var query = "http://access.planetserver.eu:8080/rasdaman/ows?query=for%20c%20in%20(" + covID.toLowerCase() + ")%20return%20encode(c[%20N(" +
                 N + ":" + N + "),%20E(" + E + ":" + E + ")%20],%20%22csv%22)";
@@ -582,7 +582,7 @@ requirejs(['../../config/config',
         var highlightController = new WorldWind.HighlightController(wwd);
 
         // Create a coordinate controller to update the coordinate overlay elements.
-        var coordinateController = new CoordinateController(wwd); 
+        var coordinateController = new CoordinateController(wwd);
 
         var latitude = qsParam.lat;
         var longitude = qsParam.lon;
@@ -596,7 +596,7 @@ requirejs(['../../config/config',
 
 
         // Generate a link to access to coverageID and/or Latitude and Longitude
-        var link = ps2EndPoint + "index.html?";
+        var link = "http://access.planetserver.eu/" + "index.html?";
         if(coverageID != "") {
             link = link + "covName=" + coverageID;
         }
@@ -619,7 +619,7 @@ requirejs(['../../config/config',
         }
         else {
             // go to Latitude, Longitude in the URL
-            moveToLocation(latitude, longitude, range); 
+            moveToLocation(latitude, longitude, range);
         }
 
         // Move to coverageID on globe
@@ -647,7 +647,7 @@ requirejs(['../../config/config',
                    // wwd.navigator.range = (range.charAt(0) + "e" + (Math.round(range).toString().length - 1)).toString();
                    wwd.navigator.range = 4e6;
                 }
-            }           
+            }
 
             console.log(wwd.navigator.range);
 

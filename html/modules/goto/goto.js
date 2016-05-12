@@ -81,7 +81,7 @@ $( document ).ready(function() {
 
     // goto CoverageID to allow goto Latitude and Longitude
     $("#btnCoverageIDGoTo").on("click", function() {
-        var coverageID = $("#txtCoverageIDGoTo").val();
+      var coverageID = $("#txtCoverageIDGoTo").val();
 
         if(coverageID !== "") {
             moveToCoverageID(coverageID);
@@ -104,14 +104,14 @@ $( document ).ready(function() {
             makeLinkGoTo("", latitude, longitude);
         } else {
             return false;
-        }       
+        }
     });
-    
+
 
     /* Get the latitude, longitude of region/coverageID or manual latitude, longitude to goto */
     function makeLinkGoTo(coverageID, latitude, longitude) {
         // Generate a link to access to coverageID and/or Latitude and Longitude
-        var link = ps2EndPoint + "index.html?";
+        var link = "http://access.planetserver.eu/" + "index.html?";
         if(coverageID != "") {
             link = link + "covName=" + coverageID;
         }
@@ -202,7 +202,7 @@ $( document ).ready(function() {
     	var tmp = "";
     	// If user has not clicked on map and scroll
     	if(linkText.indexOf("range") < 0) {
-    		tmp = ps2EndPoint + "index.html?range=" + range;
+    		tmp = "http://access.planetserver.eu/" + "index.html?range=" + range;
     	} else {
     		// update the new range
 	    	var startIndex = linkText.lastIndexOf("=");
