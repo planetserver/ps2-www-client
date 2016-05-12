@@ -1,23 +1,22 @@
 [{
-  "name": "Angelo Home",
-  "latitude": 21.233,
-  "longitude": 35
+  "name": "Olympus Mons",
+  "latitude": 18.65275,
+  "longitude": 226.1974
 }, {
-  "name": "Ramiro Home",
-  "latitude": 31.233,
-  "longitude": 35
+  "name": "Valles Marineris",
+  "latitude": -14.005868,
+  "longitude": 301.412325
 }, {
-  "name": "Bang Home",
-  "latitude": 41.233,
-  "longitude": 35
+  "name": "Gale Crater",
+  "latitude": -5.3672,
+  "longitude": 137
 }, {
-  "name": "Other",
-  "latitude": 12.34,
-  "longitude": 34.25
+  "name": "Meridiani Planum",
+  "latitude": -0.0408,
+  "longitude": 356.86
 }, {
-  "name": "Horizon Mars",
-  "latitude": 65.34,
-  "longitude": 121.25
+  "name": "Gusev Crater",
+  "latitude": -14.530808,
+  "longitude": 175.524372
 }
 ]
-
