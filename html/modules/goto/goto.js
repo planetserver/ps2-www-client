@@ -111,7 +111,7 @@ $( document ).ready(function() {
     /* Get the latitude, longitude of region/coverageID or manual latitude, longitude to goto */
     function makeLinkGoTo(coverageID, latitude, longitude) {
         // Generate a link to access to coverageID and/or Latitude and Longitude
-        var link = "http://access.planetserver.eu/" + "index.html?";
+        var link = ps2EndPoint + "index.html?";
         if(coverageID != "") {
             link = link + "covName=" + coverageID;
         }
@@ -202,7 +202,7 @@ $( document ).ready(function() {
     	var tmp = "";
     	// If user has not clicked on map and scroll
     	if(linkText.indexOf("range") < 0) {
-    		tmp = "http://access.planetserver.eu/" + "index.html?range=" + range;
+    		tmp = ps2EndPoint + "index.html?range=" + range;
     	} else {
     		// update the new range
 	    	var startIndex = linkText.lastIndexOf("=");

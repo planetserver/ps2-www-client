@@ -7,7 +7,7 @@
  */
 /* Global variables */
 
-ps2EndPoint = "http://localhost:8080/";
+ps2EndPoint = "http://access.planetserver.eu/";
 ps2WCPSEndPoint = "http://access.planetserver.eu:8080/rasdaman/ows?service=WCS&version=2.0.1&request=ProcessCoverages&query=";
 
 checkedFootPrintsArray = []; // array of footprints that user choosed
@@ -228,7 +228,7 @@ requirejs(['../../config/config',
                     //$("#txtLongitudeGoTo").val(clickedLongitude);
 
                     // Generate a link to access to coverageID and/or Latitude and Longitude
-                    var link = "http://access.planetserver.eu/" + "index.html?";
+                    var link = ps2EndPoint + "index.html?";
 
                     if(leftClickFootPrintsArray.length !== 0) {
                         link = link + "covName=" + leftClickFootPrintsArray[0].coverageID;
@@ -596,7 +596,7 @@ requirejs(['../../config/config',
 
 
         // Generate a link to access to coverageID and/or Latitude and Longitude
-        var link = "http://access.planetserver.eu/" + "index.html?";
+        var link = ps2EndPoint + "index.html?";
         if(coverageID != "") {
             link = link + "covName=" + coverageID;
         }
