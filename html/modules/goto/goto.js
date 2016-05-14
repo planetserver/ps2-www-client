@@ -197,7 +197,7 @@ $( document ).ready(function() {
     	var range = wwd.navigator.range;
     	var linkText = $("#linkGoTo").text();
 
-    	console.log(linkText);
+    	//console.log(linkText);
 
     	var tmp = "";
     	// If user has not clicked on map and scroll
