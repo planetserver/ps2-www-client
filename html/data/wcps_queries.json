@@ -38,15 +38,15 @@
       "name": "HYD_OK",
       "array": [
         {
-          "name": "SINDEX2",
+          "name": "SINDEX2_T",
           "query": "(int) ( 255 / ( max((1 - ((1 - (0.607142857))*data.band_171*(data.band_171 != 65535) + (0.607142857)*data.band_213*(data.band_213 != 65535))/(data.band_197*(data.band_197 != 65535)))) - min((1 - ((1 - (0.607142857))*data.band_171*(data.band_171 != 65535) + (0.607142857)*data.band_213*(data.band_213 != 65535))/(data.band_197*(data.band_197 != 65535)))) )) * ( ((1 - ((1 - (0.607142857))*data.band_171*(data.band_171 != 65535) + (0.607142857)*data.band_213*(data.band_213 != 65535))/(data.band_197*(data.band_197 != 65535)))) - min((1 - ((1 - (0.607142857))*data.band_171*(data.band_171 != 65535) + (0.607142857)*data.band_213*(data.band_213 != 65535))/(data.band_197*(data.band_197 != 65535)))) );"
         },
         {
-          "name": "BD2100_2",
+          "name": "BD2100_2_T",
           "query": "(int)( 255 / ( max((1 - ((data.band_173*(data.band_173 != 65535)) / ((1 - (0.63125)) * data.band_142*(data.band_142 != 65535) + (0.63125) * data.band_191*(data.band_191 != 65535))))) - min((1 - ((data.band_173*(data.band_173 != 65535)) / ((1 - (0.63125)) * data.band_142*(data.band_142 != 65535) + (0.63125) * data.band_191*(data.band_191 != 65535))))) )) * ( ((1 - ((data.band_173*(data.band_173 != 65535)) / ((1 - (0.63125)) * data.band_142*(data.band_142 != 65535) + (0.63125) * data.band_191*(data.band_191 != 65535))))) - min((1 - ((data.band_173*(data.band_173 != 65535)) / ((1 - (0.63125)) * data.band_142*(data.band_142 != 65535) + (0.63125) * data.band_191*(data.band_191 != 65535))))) );"
         },
         {
-          "name": "BD1900_2",
+          "name": "BD1900_2_T",
           "query": "(int)( 255 / ( max((0.5 * (1 - ((data.band_142*(data.band_142 != 65535)) / ((1 - (0.36346516)) * data.band_130*(data.band_130 != 65535) + (0.36346516) * data.band_163*(data.band_163 != 65535)))) * 0.5 * (1 - ((data.band_151*(data.band_151 != 65535)) / ((1 - (0.636167379)) * data.band_130*(data.band_130 != 65535) + (0.636167379) * data.band_163*(data.band_163 != 65535)))))) - min((0.5 * (1 - ((data.band_142*(data.band_142 != 65535)) / ((1 - (0.36346516)) * data.band_130*(data.band_130 != 65535) + (0.36346516) * data.band_163*(data.band_163 != 65535)))) * 0.5 * (1 - ((data.band_151*(data.band_151 != 65535)) / ((1 - (0.636167379)) * data.band_130*(data.band_130 != 65535) + (0.636167379) * data.band_163*(data.band_163 != 65535)))))) )) * ( ((0.5 * (1 - ((data.band_142*(data.band_142 != 65535)) / ((1 - (0.36346516)) * data.band_130*(data.band_130 != 65535) + (0.36346516) * data.band_163*(data.band_163 != 65535)))) * 0.5 * (1 - ((data.band_151*(data.band_151 != 65535)) / ((1 - (0.636167379)) * data.band_130*(data.band_130 != 65535) + (0.636167379) * data.band_163*(data.band_163 != 65535)))))) - min((0.5 * (1 - ((data.band_142*(data.band_142 != 65535)) / ((1 - (0.36346516)) * data.band_130*(data.band_130 != 65535) + (0.36346516) * data.band_163*(data.band_163 != 65535)))) * 0.5 * (1 - ((data.band_151*(data.band_151 != 65535)) / ((1 - (0.636167379)) * data.band_130*(data.band_130 != 65535) + (0.636167379) * data.band_163*(data.band_163 != 65535)))))) );   "
         }
       ]
