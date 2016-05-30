@@ -9,20 +9,9 @@ from BaseHTTPServer import BaseHTTPRequestHandler,HTTPServer
 PORT_NUMBER = 8090
 
 # Kill old webserver before starting new server
-popen = subprocess.Popen(['netstat', '-lpn'],
-                         shell=False,
-                         stdout=subprocess.PIPE)
-(data, err) = popen.communicate()
-
-pattern = "^tcp.*((?:{0})).* (?P<pid>[0-9]*)/.*$"
-pattern = pattern.format(')|(?:' + str(PORT_NUMBER))
-prog = re.compile(pattern)
-for line in data.split('\n'):
-    match = re.match(prog, line)
-    if match:
-        pid = match.group('pid')
-        subprocess.Popen(['kill', '-9', pid])
-
+print "Kill process on port {0}".format(PORT_NUMBER)
+subprocess.call("fuser -k {0}/tcp".format(PORT_NUMBER), shell=True)
+print "Start simpleHTTPServer for stretching WCPS query. Use Ctrl + C to stop server."
 
 #This class will handles any incoming request from
 #the browser 
@@ -46,7 +35,7 @@ try:
 	#Create a web server and define the handler to manage the
 	#incoming request
 	server = HTTPServer(('', PORT_NUMBER), PythonWebHandler)
-	print 'Started httpserver on port ' , PORT_NUMBER
+	print 'Started httpserver on port', PORT_NUMBER
 	
 	#Wait forever for incoming htto requests
 	server.serve_forever()
