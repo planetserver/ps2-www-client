@@ -19,15 +19,15 @@ class StretchHandler:
 		self.dataSet = None;
 		self.outputDirectory = os.path.dirname(os.path.realpath(__file__)) + "/tmp/";
 		self.outputPNGFileName = "";
-		
+
 		# array values after been stretched
 		self.stretchArray = collections.OrderedDict();
-			
+
 		# return the PNG as byte arrays to stream
 		self.output = None;
 
 	# Write the stretched image to file
-	def createOutputFile(self, totalBand, prefix):	
+	def createOutputFile(self, totalBand, prefix):
 		rows = self.dataSet.RasterXSize
 		cols = self.dataSet.RasterYSize
 
@@ -47,8 +47,8 @@ class StretchHandler:
 			bandNumber += 1
 
 		# Remove tiff file
-		os.remove(tmpFileTiff)		
-	
+		os.remove(tmpFileTiff)
+
 		png_driver = gdal.GetDriverByName("PNG")
 		png_driver.CreateCopy( self.outputPNGFileName, tiff_outRaster, 0 )
 		os.remove( self.outputPNGFileName  + ".aux.xml");
@@ -67,19 +67,19 @@ class StretchHandler:
 
 		print "Total band: ", self.totalBand
 		bandNumber = 1;
-		for band in range( self.totalBand ):			
+		for band in range( self.totalBand ):
 			band = self.dataSet.GetRasterBand(bandNumber);
 			array = band.ReadAsArray()
 
 			if bandNumber != 4:
 				# Stretch with new range for each band
 				newMin = self.bandStretchValues["b" + str(bandNumber)][0]
-				newMax = self.bandStretchValues["b" + str(bandNumber)][1]			
+				newMax = self.bandStretchValues["b" + str(bandNumber)][1]
 				percent = 255 / (newMax - newMin)
 				array = (array - newMin) * percent
 
 			# Add all stretched array and write to a new file
-			self.stretchArray["b" + str(bandNumber)] = array							
+			self.stretchArray["b" + str(bandNumber)] = array
 			bandNumber += 1;
 
 		# also write to file
@@ -92,22 +92,22 @@ class StretchHandler:
 		if self.bandStats["b1"] is not None:
 			mean = self.bandStats["b1"][0]
 			staDev = self.bandStats["b1"][1]
-			newMax = int(mean + staDev)
-			newMin = int(mean + 0.5 * staDev)
+			newMax = int(mean + 1.5 * staDev)
+			newMin = int(mean - 1.5 * staDev)
 			self.bandStretchValues["b1"] = [newMin, newMax]
 
 		if self.bandStats["b2"] is not None:
 			mean = self.bandStats["b2"][0]
 			staDev = self.bandStats["b2"][1]
-			newMax = int(mean + 0.8 * staDev)
-			newMin = int(mean + 0.65 * staDev)
+			newMax = int(mean + 1.5 * staDev)
+			newMin = int(mean - 1.5 * staDev)
 			self.bandStretchValues["b2"] = [newMin, newMax]
 
 		if self.bandStats["b3"] is not None:
 			mean = self.bandStats["b3"][0]
 			staDev = self.bandStats["b3"][1]
-			newMax = int(mean + 0.85 * staDev)
-			newMin = int(mean + 0.65 * staDev)
+			newMax = int(mean + 1.5 * staDev)
+			newMin = int(mean - 1.5 * staDev)
 			self.bandStretchValues["b3"] = [newMin, newMax]
 
 		print self.bandStretchValues
@@ -134,17 +134,17 @@ class StretchHandler:
 
 		# calculate the min, max for each band
 		bandNumber = 1
-	
-		# Store the mean and standard deviation for each band		
+
+		# Store the mean and standard deviation for each band
 		for band in range( self.totalBand ):
 			print "Getting band: ", bandNumber
-		
+
 			# Get the statistic from band
 			band = self.dataSet.GetRasterBand(bandNumber)
 			if band is None:
-        			continue			
+        			continue
 			stats = band.GetStatistics( True, True )
-			
+
 			print "[ STATS ] =  Minimum=%.3f, Maximum=%.3f, Mean=%.3f, StdDev=%.3f" % ( stats[0], stats[1], stats[2], stats[3] )
 
 			# Add the band and values to bandStats
