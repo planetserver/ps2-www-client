@@ -48,7 +48,7 @@ class StretchHandler:
 			bandNumber += 1
 
 		# Remove tiff file
-		# os.remove(tmpFileTiff)
+		os.remove(tmpFileTiff)
 
 		png_driver = gdal.GetDriverByName("PNG")
 		png_driver.CreateCopy( self.outputPNGFileName, tiff_outRaster, 0 )
@@ -60,7 +60,7 @@ class StretchHandler:
 		image.close()
 
 		# Remove the PNG file after reading the content
-		# os.remove(self.outputPNGFileName)
+		os.remove(self.outputPNGFileName)
 
 
 	# Stretch image's bands with new range
