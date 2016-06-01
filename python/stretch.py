@@ -3,11 +3,14 @@ import urllib2
 import sys
 import os
 import collections
+import numpy as np
 from PIL import Image
 from StringIO import StringIO
 from osgeo.gdalconst import *
 from osgeo import gdal
 from uuid import uuid4
+
+# Author: Bang Pham Huu, mailto: b.phamhuu@jacobs-university.de
 
 class StretchHandler:
 	def __init__(self, image, wcpsQuery):
@@ -19,7 +22,7 @@ class StretchHandler:
 		self.dataSet = None;
 		self.outputDirectory = os.path.dirname(os.path.realpath(__file__)) + "/tmp/";
 		if not os.path.exists(self.outputDirectory):
-            os.makedirs(self.outputDirectory)
+			os.makedirs(self.outputDirectory)
 		self.outputPNGFileName = "";
 
 		# array values after been stretched
@@ -77,6 +80,17 @@ class StretchHandler:
 				# Stretch with new range for each band
 				newMin = self.bandStretchValues["b" + str(bandNumber)][0]
 				newMax = self.bandStretchValues["b" + str(bandNumber)][1]
+
+
+				firstMin = self.bandStats["b" + str(bandNumber)][2]
+				firstMax = self.bandStats["b" + str(bandNumber)][3]
+
+
+				print "banNumber: ", str(bandNumber), "firstMin: ", firstMin, "firstMax: ", firstMax
+
+				firstPercent = 255 / (firstMax - firstMin)
+				array = (array - firstMin) * firstPercent
+
 				percent = 255 / (newMax - newMin)
 				array = (array - newMin) * percent
 
@@ -96,9 +110,6 @@ class StretchHandler:
 			staDev = self.bandStats["b1"][1]
 			newMax = int(mean + 1.5 * staDev)
 			newMin = int(mean - 1.5 * staDev)
-			print 'band 1='
-			print newMin
-			print newMax
 			self.bandStretchValues["b1"] = [newMin, newMax]
 
 		if self.bandStats["b2"] is not None:
@@ -106,9 +117,6 @@ class StretchHandler:
 			staDev = self.bandStats["b2"][1]
 			newMax = int(mean + 1.5 * staDev)
 			newMin = int(mean - 1.5 * staDev)
-			print 'band 2='
-			print newMin
-			print newMax
 			self.bandStretchValues["b2"] = [newMin, newMax]
 
 		if self.bandStats["b3"] is not None:
@@ -116,9 +124,6 @@ class StretchHandler:
 			staDev = self.bandStats["b3"][1]
 			newMax = int(mean + 1.5 * staDev)
 			newMin = int(mean - 1.5 * staDev)
-			print 'band 3='
-			print newMin
-			print newMax
 			self.bandStretchValues["b3"] = [newMin, newMax]
 
 		print self.bandStretchValues
@@ -148,19 +153,36 @@ class StretchHandler:
 
 		# Store the mean and standard deviation for each band
 		for band in range( self.totalBand ):
+			if bandNumber == 4:
+				break;
 			print "Getting band: ", bandNumber
 
 			# Get the statistic from band
 			band = self.dataSet.GetRasterBand(bandNumber)
 			if band is None:
         			continue
-			stats = band.GetStatistics( True, True )
+			stats = band.GetStatistics( 0, 1 )
 
-			print "[ STATS ] =  Minimum=%.3f, Maximum=%.3f, Mean=%.3f, StdDev=%.3f" % ( stats[0], stats[1], stats[2], stats[3] )
+			print "[ INPUT STATS ] =  Minimum=%.3f, Maximum=%.3f, Mean=%.3f, StdDev=%.3f" % ( stats[0], stats[1], stats[2], stats[3] )
+
+			tmpArray = np.array(band.ReadAsArray())
+			tmpArray = (tmpArray - stats[0]) * ( 255 / ( stats[1] - stats[0] ) )
+
+			minArray = np.nanmin(tmpArray)
+			maxArray = np.nanmax(tmpArray)
+			meanArray = np.nanmean(tmpArray)
+			staDevArray = np.nanstd(tmpArray)
+
+			print "min: ", minArray
+			print "max: ", maxArray
+			print "mean: ", meanArray
+			print "stad: ", staDevArray
+
+			print "[ STRETCHED STATS [ 0 - 255] ] =  Minimum=%.3f, Maximum=%.3f, Mean=%.3f, StdDev=%.3f" % ( minArray, maxArray, meanArray, staDevArray )
 
 			# Add the band and values to bandStats
-			self.bandStats["b" + str(bandNumber)] = [ stats[2], stats[3] ]
-
+			#self.bandStats["b" + str(bandNumber)] = [ stats[2], stats[3] ]
+			self.bandStats["b" + str(bandNumber)] = [ meanArray, staDevArray, stats[0], stats[1] ]
 			bandNumber += 1
 		# Calculate the stretch values for each band
 		self.calculateStretch();

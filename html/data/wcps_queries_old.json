@@ -39,15 +39,15 @@
       "array": [
         {
           "name": "BD2210_2",
-          "query":"(1 - (data.band_185 / ((1 - (0.538461538)) * data.band_178 + (0.538461538) * data.band_191)))"
+          "query":"(int)( 255 / ( max((1 - (data.band_185 / ((1 - (0.538461538)) * data.band_178 + (0.538461538) * data.band_191)))) - min((1 - (data.band_185 / ((1 - (0.538461538)) * data.band_178 + (0.538461538) * data.band_191)))) )) * ( ((1 - (data.band_185 / ((1 - (0.538461538)) * data.band_178 + (0.538461538) * data.band_191)))) - min((1 - (data.band_185 / ((1 - (0.538461538)) * data.band_178 + (0.538461538) * data.band_191)))) );"
         },
         {
           "name": "BD2190",
-          "query": "(1 - (data.band_181 / ((1 - (0.49988651)) * data.band_171 + (0.49988651) * data.band_191)))"
+          "query": "(int)( 255 / ( max((1 - (data.band_181 / ((1 - (0.49988651)) * data.band_171 + (0.49988651) * data.band_191)))) - min((1 - (data.band_181 / ((1 - (0.49988651)) * data.band_171 + (0.49988651) * data.band_191)))) )) * ( ((1 - (data.band_181 / ((1 - (0.49988651)) * data.band_171 + (0.49988651) * data.band_191)))) - min((1 - (data.band_181 / ((1 - (0.49988651)) * data.band_171 + (0.49988651) * data.band_191)))) );"
         },
         {
           "name": "BD2165",
-          "query": "(1 - (data.band_178 / ((1 - (0.374881786)) * data.band_171 + (0.374881786) * data.band_188)))"
+          "query": "(int)( 255 / ( max((1 - (data.band_178 / ((1 - (0.374881786)) * data.band_171 + (0.374881786) * data.band_188)))) - min((1 - (data.band_178 / ((1 - (0.374881786)) * data.band_171 + (0.374881786) * data.band_188)))) )) * ( ((1 - (data.band_178 / ((1 - (0.374881786)) * data.band_171 + (0.374881786) * data.band_188)))) - min((1 - (data.band_178 / ((1 - (0.374881786)) * data.band_171 + (0.374881786) * data.band_188)))) );"
         }
       ]
     }
