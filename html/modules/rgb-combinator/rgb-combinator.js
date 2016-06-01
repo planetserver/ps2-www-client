@@ -4,6 +4,10 @@ var wcpsQueriesJSON = ""; // array to store wcpsQueries from server
 var DEFAULT_BANDS = 438;
 var SUBMENU_BANDS = 73;
 
+// when combine with WCPS custom queries will need to stretch it with Python web service
+var stretch = false;
+var isAllBandsCustomWCPSQueries = 0;
+
 var availableWCPSQueries = []; // store all the WCPS queries from JSON
 
 var selectedFootPrintsArray = []; // store the selected footprints from dropDownSelectedFootPrints
@@ -702,6 +706,7 @@ function getBandWCPSQuery(simpleBandTemplate, targetName, bandName) {
                 if (bandName.toLowerCase() === subMenuItems[j].name.toLowerCase()) {
 
                     isSuccessRGBCombination = true;
+                    isAllBandsCustomWCPSQueries += 1;
                     return (targetNameSubString + ":" + subMenuItems[j].query);
                 }
             }
@@ -718,6 +723,11 @@ function getBandWCPSQuery(simpleBandTemplate, targetName, bandName) {
 // button submit RGBCombinations handle
 $("#btnSubmitRGBCombination").click(function(e) {
     e.preventDefault();
+    e.stopPropagation();
+
+
+    // If 1 of band is custom WCPS query then need to use stretch service
+    isAllBandsCustomWCPSQueries = 0;
 
     // not choose any selected footprint
     if (selectedFootPrintsArray.length === 0) {
@@ -789,6 +799,7 @@ $("#btnSubmitRGBCombination").click(function(e) {
         }
 
         WCPS_TEMPLATE = replaceAll(WCPS_TEMPLATE, "$RGB_BANDS", rgbCombination);
+        // When combine with custom WCPS queries it will need to stretch all bands (first: 0 - 255 then to mean and standard deviation)
 
         // then call the function to load the image on selected footprint from landing.js
         if(isSuccessRGBCombination === true) {
@@ -835,7 +846,14 @@ $("#btnSubmitRGBCombination").click(function(e) {
 
                     // replace $COVERAGE_ID with selected coverageID and load WCPS combination on checked footprint
                     WCPS_TEMPLATE = replaceAll(WCPS_TEMPLATE, "$COVERAGE_ID", selectedFootPrintsArray[i].coverageID.toLowerCase());
-                    loadRGBCombinations(WCPS_TEMPLATE, selectedFootPrintsArray[i].coverageID.toLowerCase());
+                    if(isAllBandsCustomWCPSQueries === 3) {
+                        // current encode in PNG has problem when gdalinfo does not ignore NODATA ( = 0 ) then need to use tiff as it will 
+                        // calculate correctly
+                        stretch = true;
+                        WCPS_TEMPLATE = WCPS_TEMPLATE.replace("png", "tiff");
+                        console.log("Stretched WCPS query: " + WCPS_TEMPLATE);
+                    }
+                    loadRGBCombinations(WCPS_TEMPLATE, selectedFootPrintsArray[i].coverageID.toLowerCase(), stretch);
                 }                
             }
         }

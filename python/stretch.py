@@ -94,9 +94,10 @@ class StretchHandler:
 			mean = self.bandStats["b1"][0]
 			staDev = self.bandStats["b1"][1]
 			newMax = int(mean + 1.5 * staDev)
-			print newMax;
 			newMin = int(mean - 1.5 * staDev)
-			print newMin;
+			print 'band 1='
+			print newMin
+			print newMax
 			self.bandStretchValues["b1"] = [newMin, newMax]
 
 		if self.bandStats["b2"] is not None:
@@ -104,6 +105,9 @@ class StretchHandler:
 			staDev = self.bandStats["b2"][1]
 			newMax = int(mean + 1.5 * staDev)
 			newMin = int(mean - 1.5 * staDev)
+			print 'band 2='
+			print newMin
+			print newMax
 			self.bandStretchValues["b2"] = [newMin, newMax]
 
 		if self.bandStats["b3"] is not None:
@@ -111,6 +115,9 @@ class StretchHandler:
 			staDev = self.bandStats["b3"][1]
 			newMax = int(mean + 1.5 * staDev)
 			newMin = int(mean - 1.5 * staDev)
+			print 'band 3='
+			print newMin
+			print newMax
 			self.bandStretchValues["b3"] = [newMin, newMax]
 
 		print self.bandStretchValues

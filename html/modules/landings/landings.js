@@ -9,6 +9,7 @@
 
 ps2EndPoint = "http://access.planetserver.eu/";
 ps2WCPSEndPoint = "http://access.planetserver.eu:8080/rasdaman/ows?service=WCS&version=2.0.1&request=ProcessCoverages&query=";
+ps2StretchWCPSEndPoint = "http://localhost:8090/python?wcpsQuery=";
 
 checkedFootPrintsArray = []; // array of footprints that user choosed
 
@@ -408,9 +409,15 @@ requirejs(['../../config/config',
         }
 
         // this function will load a RGB combination image from rgbcombination.js to selected footprint from selected comboBox
-        window.loadRGBCombinations = function(WCPSLoadImage, coverageID) {
+        window.loadRGBCombinations = function(WCPSLoadImage, coverageID, stretch) {
+            // If stretch is true then need to use Python stretch.py to stretch
             //alert(WCPSLoadImage);
             WCPSLoadImage = ps2WCPSEndPoint + WCPSLoadImage;
+
+            if(stretch) {
+                // Use Python web service to stretch WCPS queries
+                WCPSLoadImage = ps2StretchWCPSEndPoint + WCPSLoadImage;
+            }
 
             for (var i = 0; i < checkedFootPrintsArray.length; i++) {
                 var maxlong;
