@@ -18,7 +18,8 @@ class StretchHandler:
 		self.totalBand = 0;
 		self.dataSet = None;
 		self.outputDirectory = os.path.dirname(os.path.realpath(__file__)) + "/tmp/";
-		# self.outputDirectory = "/home/rmarcofigu/Downloads/to_delete/ps2-www-client/python/tmp";
+		if not os.path.exists(self.outputDirectory):
+            os.makedirs(self.outputDirectory)
 		self.outputPNGFileName = "";
 
 		# array values after been stretched
