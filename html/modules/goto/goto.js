@@ -81,7 +81,7 @@ $( document ).ready(function() {
 
     // goto CoverageID to allow goto Latitude and Longitude
     $("#btnCoverageIDGoTo").on("click", function() {
-        var coverageID = $("#txtCoverageIDGoTo").val();
+      var coverageID = $("#txtCoverageIDGoTo").val();
 
         if(coverageID !== "") {
             moveToCoverageID(coverageID);
@@ -104,9 +104,9 @@ $( document ).ready(function() {
             makeLinkGoTo("", latitude, longitude);
         } else {
             return false;
-        }       
+        }
     });
-    
+
 
     /* Get the latitude, longitude of region/coverageID or manual latitude, longitude to goto */
     function makeLinkGoTo(coverageID, latitude, longitude) {
@@ -197,7 +197,7 @@ $( document ).ready(function() {
     	var range = wwd.navigator.range;
     	var linkText = $("#linkGoTo").text();
 
-    	//console.log(linkText);
+    	console.log(linkText);
 
     	var tmp = "";
     	// If user has not clicked on map and scroll

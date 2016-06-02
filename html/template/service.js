@@ -21,7 +21,9 @@ $(function () {
             .addTab("report", "report", "Report", "", "<p>For error notifications or suggestions, follow this <a href=https://github.com/planetserver/ps2-www-client/issues target=_blank>link</a></p>");
             /* main dock (required) */
             var leftDock = $("<div>").mainDock().mainDock("instance");
+            leftDock.addGoToPanel();
             leftDock.addRgbCombinatorPanel();
+
 
             /*plot dock */
             var plotDock = $("<div>").plotDock().plotDock("instance");

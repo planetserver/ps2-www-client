@@ -4,6 +4,10 @@ var wcpsQueriesJSON = ""; // array to store wcpsQueries from server
 var DEFAULT_BANDS = 438;
 var SUBMENU_BANDS = 73;
 
+// when combine with WCPS custom queries will need to stretch it with Python web service
+var stretch = false;
+var isAllBandsCustomWCPSQueries = 0;
+
 var availableWCPSQueries = []; // store all the WCPS queries from JSON
 
 var selectedFootPrintsArray = []; // store the selected footprints from dropDownSelectedFootPrints
@@ -12,7 +16,6 @@ var selectedFootPrintsArray = []; // store the selected footprints from dropDown
 var redBandDefault = "(int)(255 / (max((data.band_233 != 65535) * data.band_233) - min(data.band_233))) * (data.band_233 - min(data.band_233))";
 var blueBandDefault = "(int)(255 / (max((data.band_78 != 65535) * data.band_78) - min(data.band_78))) * (data.band_78 - min(data.band_78))";
 var greenBandDefault = "(int)(255 / (max((data.band_13 != 65535) * data.band_13) - min(data.band_13))) * (data.band_13 - min(data.band_13))";
-
 var alphaBandDefault = "(data.band_100 != 65535) * 255";
 
 // return the value of Red/Green/Blue band on clicked coordinate
@@ -30,33 +33,7 @@ function selectedFootPrint(coverageID, redBand, greenBand, blueBand, isChosen) {
     this.isChosen = isChosen;
 }
 
-// Replace the data.band in query with data.band[trimming interval] at the occurence number
-function replaceByOccurrence(query, sourceStr, replaceStr, occurrenceNo) {
-    var re = new RegExp(sourceStr,"g");
-    var i = 0;
-    var query = query.replace(re, function () {
-        i++;
-        return (i === occurrenceNo) ? replaceStr : sourceStr;
-    });
-
-    return query;
-}
-
-// Get RGB value for clicked point on any footprint 
-/*
-http://access.planetserver.eu:8080/rasdaman/ows?service=WCS&version=2.0.1&request=ProcessCoverages&query=
-for data in (frt0000a0ac_07_if165l_trr3) return encode(
-{ Red: (int)(
-255 / (max(((data.band_15) != 65535) 
-* 
-(data.band_15) [E(1590.2564261692585), N(3707.750394339771)]) 
-- 
-min((data.band_15)))) 
-* 
-((data.band_15) [E(1590.2564261692585), N(3707.750394339771)] 
--
-min((data.band_15))) }, "csv")
-*/
+// Get RGB value for clicked point on any footprint
 window.queryRGBValue = function(coverageID, longitude, latitude, rgbQueryArray) {
     var result = "";
 
@@ -67,7 +44,7 @@ window.queryRGBValue = function(coverageID, longitude, latitude, rgbQueryArray) 
         var bandName = rgbQueryArray[i].name;
         var query = rgbQueryArray[i].query;
 
-        var slicingInterval = "[E(" + longitude + "), N(" + latitude + ")]";
+        var trimInterval = "[E(" + longitude + ":" + longitude + "), N(" + latitude + ":" + latitude + ")]";
 
         var value = 0;
 
@@ -98,23 +75,11 @@ window.queryRGBValue = function(coverageID, longitude, latitude, rgbQueryArray) 
         }
 
         // Now, make the trimming band and replace in query
-        // If dataBandArray only has 1 band then it is the default band or simple band (1 - 400)
-        if(dataBandArray.length === 1) {
-            // Only replace data.band at position 1, 3 (with the slicing point), max and min still need to use the whole domain
-            var tmp = "(" + dataBandArray[0].bandName + ") " + slicingInterval;
-
-            // Occurrence start with 1 not 0
-            query = replaceByOccurrence(query, dataBandArray[0].bandName, tmp, 2);
-            query = replaceByOccurrence(query, dataBandArray[0].bandName, tmp, 4);
-        } else {
-            // it has multiple data.band in WCPS queries and need to replce all
-            for(var j = 0; j < dataBandArray.length; j++) {
-                // Add trimming interval to the data.band
-                var tmp = "(" + dataBandArray[j].bandName + ") " + slicingInterval;
-                query = replaceAll(query, dataBandArray[j].bandName, tmp);
-            }
+        for(var j = 0; j < dataBandArray.length; j++) {   
+            // Add trimming interval to the data.band
+            var tmp = "(" + dataBandArray[j].bandName + ") " + trimInterval;
+            query = replaceAll(query, dataBandArray[j].bandName, tmp);
         }
-        
 
         // bandName and query with trimming interval
         queryCombination.push({"name" : bandName,  "query" : query});
@@ -741,6 +706,7 @@ function getBandWCPSQuery(simpleBandTemplate, targetName, bandName) {
                 if (bandName.toLowerCase() === subMenuItems[j].name.toLowerCase()) {
 
                     isSuccessRGBCombination = true;
+                    isAllBandsCustomWCPSQueries += 1;
                     return (targetNameSubString + ":" + subMenuItems[j].query);
                 }
             }
@@ -757,6 +723,11 @@ function getBandWCPSQuery(simpleBandTemplate, targetName, bandName) {
 // button submit RGBCombinations handle
 $("#btnSubmitRGBCombination").click(function(e) {
     e.preventDefault();
+    e.stopPropagation();
+
+
+    // If 1 of band is custom WCPS query then need to use stretch service
+    isAllBandsCustomWCPSQueries = 0;
 
     // not choose any selected footprint
     if (selectedFootPrintsArray.length === 0) {
@@ -828,6 +799,7 @@ $("#btnSubmitRGBCombination").click(function(e) {
         }
 
         WCPS_TEMPLATE = replaceAll(WCPS_TEMPLATE, "$RGB_BANDS", rgbCombination);
+        // When combine with custom WCPS queries it will need to stretch all bands (first: 0 - 255 then to mean and standard deviation)
 
         // then call the function to load the image on selected footprint from landing.js
         if(isSuccessRGBCombination === true) {
@@ -874,8 +846,14 @@ $("#btnSubmitRGBCombination").click(function(e) {
 
                     // replace $COVERAGE_ID with selected coverageID and load WCPS combination on checked footprint
                     WCPS_TEMPLATE = replaceAll(WCPS_TEMPLATE, "$COVERAGE_ID", selectedFootPrintsArray[i].coverageID.toLowerCase());
-                    console.log("WCPS query to load image: " + WCPS_TEMPLATE);
-                    loadRGBCombinations(WCPS_TEMPLATE, selectedFootPrintsArray[i].coverageID.toLowerCase());
+                    if(isAllBandsCustomWCPSQueries === 3) {
+                        // current encode in PNG has problem when gdalinfo does not ignore NODATA ( = 0 ) then need to use tiff as it will 
+                        // calculate correctly
+                        stretch = true;
+                        WCPS_TEMPLATE = WCPS_TEMPLATE.replace("png", "tiff");
+                        console.log("Stretched WCPS query: " + WCPS_TEMPLATE);
+                    }
+                    loadRGBCombinations(WCPS_TEMPLATE, selectedFootPrintsArray[i].coverageID.toLowerCase(), stretch);
                 }                
             }
         }
@@ -1070,7 +1048,7 @@ $(document).ready(function() {
         // add or remove selected footprints from selectedFootPrintsArray
         if(checkBox.prop("checked")) {
             // Not add 'all' value to selected footprints array
-            if(coverageID !== "0") {
+            if(id !== "0") {
                 // chosen coverageID to selectedFootPrintsArray
                 var index = getIndexOfCoveragesArray(selectedFootPrintsArray, coverageID);
                 if(index > -1) {                    

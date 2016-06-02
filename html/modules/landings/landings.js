@@ -7,8 +7,9 @@
  */
 /* Global variables */
 
-ps2EndPoint = "http://localhost:8080/";
+ps2EndPoint = "http://access.planetserver.eu/";
 ps2WCPSEndPoint = "http://access.planetserver.eu:8080/rasdaman/ows?service=WCS&version=2.0.1&request=ProcessCoverages&query=";
+ps2StretchWCPSEndPoint = "http://access.planetserver.eu:8090/python?wcpsQuery=";
 
 checkedFootPrintsArray = []; // array of footprints that user choosed
 
@@ -271,8 +272,8 @@ requirejs(['../../config/config',
                     }
 
                     // Get the first coverageID to goto panel
-                    $("#txtCoverageIDGoTo").val(leftClickFootPrintsArray[0].coverageID);
-                    
+                    // $("#txtCoverageIDGoTo").val(leftClickFootPrintsArray[0].coverageID);
+
 
                     console.log("Found containing footprints now check to draw chart.");
                     // if click on loaded image then draw chart
@@ -408,9 +409,15 @@ requirejs(['../../config/config',
         }
 
         // this function will load a RGB combination image from rgbcombination.js to selected footprint from selected comboBox
-        window.loadRGBCombinations = function(WCPSLoadImage, coverageID) {
+        window.loadRGBCombinations = function(WCPSLoadImage, coverageID, stretch) {
+            // If stretch is true then need to use Python stretch.py to stretch
             //alert(WCPSLoadImage);
             WCPSLoadImage = ps2WCPSEndPoint + WCPSLoadImage;
+
+            if(stretch) {
+                // Use Python web service to stretch WCPS queries
+                WCPSLoadImage = ps2StretchWCPSEndPoint + WCPSLoadImage;
+            }
 
             for (var i = 0; i < checkedFootPrintsArray.length; i++) {
                 var maxlong;
@@ -493,8 +500,8 @@ requirejs(['../../config/config',
                 // If find the footprint then get the R, G, B bands of it to query WCPS and get values
                 if(selectedFootPrintsArray[i].coverageID == covID) {
                     isClickOnSelectedFootPrint = true;
-                    
-                    // Get all wcps queries for this footprint (it can has 3 bands or 1 or 2 bands)
+
+                    // Get all wcps queries for this footprint (it can have 3 bands or 1 or 2 bands)
                     var rgbArray = [];
                     if(selectedFootPrintsArray[i].redBand != "") {
                         rgbArray.push({"name" : "Red", "query" : selectedFootPrintsArray[i].redBand});
@@ -523,12 +530,12 @@ requirejs(['../../config/config',
                 window.queryRGBValue(covID, E, N, rgbArray);
             }
 
-            $("#mCSB_3_container").append(rgbValues);            
+            $("#mCSB_3_container").append(rgbValues);
 
 
             // open the chart dock #ui-id-3
             $("#ui-id-3").addClass('open');
-          
+
 
             var query = "http://access.planetserver.eu:8080/rasdaman/ows?query=for%20c%20in%20(" + covID.toLowerCase() + ")%20return%20encode(c[%20N(" +
                 N + ":" + N + "),%20E(" + E + ":" + E + ")%20],%20%22csv%22)";
@@ -582,7 +589,7 @@ requirejs(['../../config/config',
         var highlightController = new WorldWind.HighlightController(wwd);
 
         // Create a coordinate controller to update the coordinate overlay elements.
-        var coordinateController = new CoordinateController(wwd); 
+        var coordinateController = new CoordinateController(wwd);
 
         var latitude = qsParam.lat;
         var longitude = qsParam.lon;
@@ -619,7 +626,7 @@ requirejs(['../../config/config',
         }
         else {
             // go to Latitude, Longitude in the URL
-            moveToLocation(latitude, longitude, range); 
+            moveToLocation(latitude, longitude, range);
         }
 
         // Move to coverageID on globe
@@ -647,7 +654,7 @@ requirejs(['../../config/config',
                    // wwd.navigator.range = (range.charAt(0) + "e" + (Math.round(range).toString().length - 1)).toString();
                    wwd.navigator.range = 4e6;
                 }
-            }           
+            }
 
             console.log(wwd.navigator.range);
 
