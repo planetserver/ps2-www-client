@@ -29,7 +29,8 @@ function getQueryResponseAndSetChart(query) {
                     var parsedFloats = [];
                     for(var i = 0; i < bandRatioNumeratorValues.length; i++) {
                         if(bandRatioDenominatorValues[i] !== 0) {
-                            parsedFloats[i] = bandRatioNumeratorValues[i] / bandRatioDenominatorValues[i];  
+                            parsedFloats[i] = bandRatioNumeratorValues[i] / bandRatioDenominatorValues[i];
+
                         } else {
                             // cannot divide for 0 then set it to 65535
                             parsedFloats[i] = 65535;
@@ -63,7 +64,7 @@ function implementChart(containerID, chartDivID, floatsArray) {
         // Only get points with valid value
         var relectance = 0;
 
-        if (floatsArray[i] != 65535 && floatsArray[i] != 0) {
+        if (floatsArray[i] != 65535 && floatsArray[i] != 0 && floatsArray[i] < 20 && floatsArray[i] > 0.0001) {
             relectance = floatsArray[i];
         } else {
             relectance = null;
@@ -76,6 +77,7 @@ function implementChart(containerID, chartDivID, floatsArray) {
             Ymin = floatsArray[i];
         } else if (Ymax < floatsArray[i]) { // Getting the maximum of value to draw chart
             Ymax = floatsArray[i];
+            console.log("max: " + Ymax);
         }
 
         // If point value is valid or not valid still need to calculate the X coordinate for it.
@@ -88,7 +90,7 @@ function implementChart(containerID, chartDivID, floatsArray) {
             // e.g: containerID = mCSB_3_container
             $("#" + containerID).append("<div class='chartDiv' id='" + chartDivID + "' style='width:100%; height:560px;'></div>");
         }
-    }    
+    }
 
     var chart = AmCharts.makeChart("#" + chartDivID, {
         "type": "serial",
