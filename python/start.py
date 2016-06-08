@@ -25,11 +25,15 @@ class PythonWebHandler(BaseHTTPRequestHandler):
 	def do_GET(self):
 		self.send_response(200)
 		self.send_header('Content-type','image/png')
+		self.send_header("Access-Control-Allow-Origin", "*")
 		self.end_headers()
 		# Get the result from WCPS query and return the stretched image to web
 		stretchHandler = StretchHandler(None, "");
-		uri = stretchHandler.parseURI(self.path);
-		self.wfile.write(uri);
+		try:
+			uri = stretchHandler.parseURI(self.path);
+			self.wfile.write(uri);
+		except:
+			print ""
 		return
 
 try:
