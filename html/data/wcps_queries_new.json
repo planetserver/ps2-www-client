@@ -39,32 +39,15 @@
       "array": [
         {
           "name": "BD2210_2",
-          "query":"(int)( 255 / ( max((1 - (data.band_185 / ((1 - (0.538461538)) * data.band_178 + (0.538461538) * data.band_191)))) - min((1 - (data.band_185 / ((1 - (0.538461538)) * data.band_178 + (0.538461538) * data.band_191)))) )) * ( ((1 - (data.band_185 / ((1 - (0.538461538)) * data.band_178 + (0.538461538) * data.band_191)))) - min((1 - (data.band_185 / ((1 - (0.538461538)) * data.band_178 + (0.538461538) * data.band_191)))) );"
+          "query":"(double)(1 - ((data.band_185 * (data.band_185 != 65535)) / ((1 - (0.538461538)) * (data.band_178 * data.band_178 != 65535 )  + (0.538461538) * (data.band_191 * (data.band_191 != 65535)))));"
         },
         {
           "name": "BD2190",
-          "query": "(int)( 255 / ( max((1 - (data.band_181 / ((1 - (0.49988651)) * data.band_171 + (0.49988651) * data.band_191)))) - min((1 - (data.band_181 / ((1 - (0.49988651)) * data.band_171 + (0.49988651) * data.band_191)))) )) * ( ((1 - (data.band_181 / ((1 - (0.49988651)) * data.band_171 + (0.49988651) * data.band_191)))) - min((1 - (data.band_181 / ((1 - (0.49988651)) * data.band_171 + (0.49988651) * data.band_191)))) );"
+          "query": "(double)(1 - ((data.band_181 * (data.band_181 != 65535) )/ ((1 - (0.49988651)) * (data.band_171 * (data.band_185 != 65535)) + (0.49988651) * (data.band_191 * (data.band_191 != 65535)))));"
         },
         {
           "name": "BD2165",
-          "query": "(int)( 255 / ( max((1 - (data.band_178 / ((1 - (0.374881786)) * data.band_171 + (0.374881786) * data.band_188)))) - min((1 - (data.band_178 / ((1 - (0.374881786)) * data.band_171 + (0.374881786) * data.band_188)))) )) * ( ((1 - (data.band_178 / ((1 - (0.374881786)) * data.band_171 + (0.374881786) * data.band_188)))) - min((1 - (data.band_178 / ((1 - (0.374881786)) * data.band_171 + (0.374881786) * data.band_188)))) );"
-        }
-      ]
-    },
-    {
-      "name": "MAF",
-      "array": [
-        {
-          "name": "OLINDEX3",
-          "query":"(int)( 255 / ( max(data.band_13 * 0.03 + data.band_24 * 0.03 + data.band_33 * 0.03 + data.band_39 * 0.03 + data.band_41 * 0.07 + data.band_43 * 0.07 + data.band_51 * 0.12 + data.band_57 * 0.12 + data.band_61 * 0.14 + data.band_66 * 0.18 + data.band_73 * 0.18) - min(data.band_13 * 0.03 + data.band_24 * 0.03 + data.band_33 * 0.03 + data.band_39 * 0.03 + data.band_41 * 0.07 + data.band_43 * 0.07 + data.band_51 * 0.12 + data.band_57 * 0.12 + data.band_61 * 0.14 + data.band_66 * 0.18 + data.band_73 * 0.18) )) * ( (data.band_13 * 0.03 + data.band_24 * 0.03 + data.band_33 * 0.03 + data.band_39 * 0.03 + data.band_41 * 0.07 + data.band_43 * 0.07 + data.band_51 * 0.12 + data.band_57 * 0.12 + data.band_61 * 0.14 + data.band_66 * 0.18 + data.band_73 * 0.18) - min(data.band_13 * 0.03 + data.band_24 * 0.03 + data.band_33 * 0.03 + data.band_39 * 0.03 + data.band_41 * 0.07 + data.band_43 * 0.07 + data.band_51 * 0.12 + data.band_57 * 0.12 + data.band_61 * 0.14 + data.band_66 * 0.18 + data.band_73 * 0.18) );"
-        },
-        {
-          "name": "LCPINDEX2",
-          "query": "(int)( 255 / ( max(data.band_106 * 0.2 + data.band_115 * 0.2 + data.band_124 * 0.3 + data.band_133 * 0.3) - min(data.band_106 * 0.2 + data.band_115 * 0.2 + data.band_124 * 0.3 + data.band_133 * 0.3) )) * ( (data.band_106 * 0.2 + data.band_115 * 0.2 + data.band_124 * 0.3 + data.band_133 * 0.3) - min(data.band_106 * 0.2 + data.band_115 * 0.2 + data.band_124 * 0.3 + data.band_133 * 0.3) );"
-        },
-        {
-          "name": "HCPINDEX2",
-          "query": "(int)( 255 / ( max(data.band_171 * 0.10 + data.band_174 * 0.10 + data.band_188 * 0.15 + data.band_191 * 0.3 + data.band_218 * 0.2 + data.band_223 * 0.15) - min(data.band_171 * 0.10 + data.band_174 * 0.10 + data.band_188 * 0.15 + data.band_191 * 0.3 + data.band_218 * 0.2 + data.band_223 * 0.15) )) * ( (data.band_171 * 0.10 + data.band_174 * 0.10 + data.band_188 * 0.15 + data.band_191 * 0.3 + data.band_218 * 0.2 + data.band_223 * 0.15) - min(data.band_171 * 0.10 + data.band_174 * 0.10 + data.band_188 * 0.15 + data.band_191 * 0.3 + data.band_218 * 0.2 + data.band_223 * 0.15) );"
+          "query": "(double)(1 - ((data.band_178 * (data.band_178 != 65535)) / ((1 - (0.374881786)) * (data.band_171* (data.band_171 != 65535)) + (0.374881786) * (data.band_188* (data.band_188 != 65535)))));"
         }
       ]
     }

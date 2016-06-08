@@ -5,6 +5,10 @@ import re
 from stretch import *
 from BaseHTTPServer import BaseHTTPRequestHandler,HTTPServer
 
+# Author: Bang Pham Huu, mailto: b.phamhuu@jacobs-university.de
+
+# Require: python PIL, urllib2, gdal, numpy (version >= 1.8)
+
 # This port is for python
 PORT_NUMBER = 8090
 
@@ -21,15 +25,11 @@ class PythonWebHandler(BaseHTTPRequestHandler):
 	def do_GET(self):
 		self.send_response(200)
 		self.send_header('Content-type','image/png')
-		self.send_header("Access-Control-Allow-Origin", "*")
 		self.end_headers()
 		# Get the result from WCPS query and return the stretched image to web
 		stretchHandler = StretchHandler(None, "");
-		try:
-			uri = stretchHandler.parseURI(self.path);
-			self.wfile.write(uri);
-		except:
-			print ""
+		uri = stretchHandler.parseURI(self.path);
+		self.wfile.write(uri);
 		return
 
 try:
