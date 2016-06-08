@@ -313,6 +313,11 @@ body {
     width: 35%;
 }
 
+#service-container .right-dock.ratio-dock {
+    right: -35%;
+    width: 35%;
+}
+
 
 #service-container .right-dock .right-dock-toggle {
     position: fixed;
