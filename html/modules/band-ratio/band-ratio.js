@@ -34,9 +34,11 @@ function BandRatio_setFraction(arrayValues) {
 	if( $("#bandRatioNumerator").is(":checked") ) {
 		console.log("Set values for numerator.");
 		bandRatioNumeratorValues = arrayValues;
+		$("#labelNumeratorBandRatioDock").css('color','green');
 	} else {
 		bandRatioDenominatorValues = arrayValues;
 		console.log("Set values for denominator");
+		$("#labelDenominatorBandRatioDock").css('color','green');
 	}
 }
 

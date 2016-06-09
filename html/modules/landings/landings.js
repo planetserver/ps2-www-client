@@ -58,6 +58,11 @@ drawCoverageID = "";
 drawLat = "";
 drawLon = "";
 
+// which dock is allowed to open (default chartDock is opened then to open another dock, such as radioDock, need to close chartDock first)
+currentOpenDock = "mainChartDock";
+
+//currentOpenDock = "bandRatioDock"; // need to handle it when open, close the dock not here
+
 function getQueryVariable(variable) {
     var query = window.location.search.substring(1);
     var vars = query.split("&");
@@ -87,8 +92,11 @@ requirejs(['../../config/config',
         '../tour/tour',
         '../rgb-combinator/rgb-combinator',
         '../menu-context/menu-context',
-        '../charts/line-chart',
-        '../goto/goto'
+        '../charts/main-chart',
+        '../charts/ratio-chart',
+        '../goto/goto',
+        '../band-ratio/band-ratio',
+        '../charts/chart'
     ],
     function(config,
         ww,
@@ -99,7 +107,11 @@ requirejs(['../../config/config',
         tour,
         rgb_combination,
         menu_context,
-        line_chart) {
+        main_chart,
+        ratio_chart,
+        go_to,
+        band_ratio,
+        chart) {
         "use strict";
 
         WorldWind.Logger.setLoggingLevel(WorldWind.Logger.LEVEL_WARNING);
@@ -495,53 +507,54 @@ requirejs(['../../config/config',
             var result = ""; // query RGB values for the coordinate
 
             // Get the selected Coverage ID RGB bands and query to get the values
-            var isClickOnSelectedFootPrint = false;
-            for(var i = 0; i < selectedFootPrintsArray.length; i++) {
-                // If find the footprint then get the R, G, B bands of it to query WCPS and get values
-                if(selectedFootPrintsArray[i].coverageID == covID) {
-                    isClickOnSelectedFootPrint = true;
+            if(currentOpenDock === "mainChartDock") {
+                var isClickOnSelectedFootPrint = false;
+                for(var i = 0; i < selectedFootPrintsArray.length; i++) {
+                    // If find the footprint then get the R, G, B bands of it to query WCPS and get values
+                    if(selectedFootPrintsArray[i].coverageID == covID) {
+                        isClickOnSelectedFootPrint = true;
 
-                    // Get all wcps queries for this footprint (it can have 3 bands or 1 or 2 bands)
-                    var rgbArray = [];
-                    if(selectedFootPrintsArray[i].redBand != "") {
-                        rgbArray.push({"name" : "Red", "query" : selectedFootPrintsArray[i].redBand});
-                    }
+                        // Get all wcps queries for this footprint (it can have 3 bands or 1 or 2 bands)
+                        var rgbArray = [];
+                        if(selectedFootPrintsArray[i].redBand != "") {
+                            rgbArray.push({"name" : "Red", "query" : selectedFootPrintsArray[i].redBand});
+                        }
 
-                    if(selectedFootPrintsArray[i].greenBand != "") {
-                        rgbArray.push({"name" : "Green", "query" : selectedFootPrintsArray[i].greenBand});
-                    }
+                        if(selectedFootPrintsArray[i].greenBand != "") {
+                            rgbArray.push({"name" : "Green", "query" : selectedFootPrintsArray[i].greenBand});
+                        }
 
-                    if(selectedFootPrintsArray[i].blueBand != "") {
-                        rgbArray.push({"name" : "Blue", "query" : selectedFootPrintsArray[i].blueBand});
+                        if(selectedFootPrintsArray[i].blueBand != "") {
+                            rgbArray.push({"name" : "Blue", "query" : selectedFootPrintsArray[i].blueBand});
+                        }
+
+                        // Get rgb values from rgb-combinator
+                        window.queryRGBValue(covID, E, N, rgbArray);
+
+                        break;
                     }
+                }
+
+                 // If clicked on unselected footprint then just load band defaults (WCPS queries for this footprint)
+                if(!isClickOnSelectedFootPrint) {
+                    var rgbArray = [{"name" : "Red", "query" : redBandDefault}, {"name" : "Green" , "query" : greenBandDefault}, {"name" : "Blue" , "query" : blueBandDefault}];
 
                     // Get rgb values from rgb-combinator
                     window.queryRGBValue(covID, E, N, rgbArray);
-
-                    break;
                 }
+
+                $("#mCSB_3_container").append(rgbValues);
+
+                // open the chart dock #ui-id-3
+                $("#ui-id-3").addClass('open');
             }
-
-            // If clicked on unselected footprint then just load band defaults (WCPS queries for this footprint)
-            if(!isClickOnSelectedFootPrint) {
-                var rgbArray = [{"name" : "Red", "query" : redBandDefault}, {"name" : "Green" , "query" : greenBandDefault}, {"name" : "Blue" , "query" : blueBandDefault}];
-
-                // Get rgb values from rgb-combinator
-                window.queryRGBValue(covID, E, N, rgbArray);
-            }
-
-            $("#mCSB_3_container").append(rgbValues);
-
-
-            // open the chart dock #ui-id-3
-            $("#ui-id-3").addClass('open');
 
 
             var query = "http://access.planetserver.eu:8080/rasdaman/ows?query=for%20c%20in%20(" + covID.toLowerCase() + ")%20return%20encode(c[%20N(" +
                 N + ":" + N + "),%20E(" + E + ":" + E + ")%20],%20%22csv%22)";
 
             console.log("WCPS get bands value at clicked coordinate: " + query);
-            getQueryResponseAndSetChart(query);
+            Chart_getQueryResponseAndSetChart(query);
 
         };
 
@@ -675,5 +688,28 @@ requirejs(['../../config/config',
 
             wwd.insertLayer(4, placemarkLayer);
         }
+
+
+        // Handle when click on charts dock (e.g: main chart, band-ratio chart)
+        var mainChartID = "#ui-id-3";
+        var bandRatioChartID = "#ui-id-4";
+
+        $(mainChartID).click(function() {
+            // If the dock is closed then click to open
+            if( $(mainChartID).hasClass("open") ) {
+                currentOpenDock = "mainChartDock";
+            }
+
+            //alert(currentOpenDock);
+        });
+
+        $(bandRatioChartID).click(function() {
+            // If the dock is closed then click to open
+            if( $(bandRatioChartID).hasClass("open") ) {
+                currentOpenDock = "bandRatioDock";
+            }
+
+            //alert(currentOpenDock);
+        });
 
     });

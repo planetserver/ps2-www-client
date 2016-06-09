@@ -1,19 +1,19 @@
 // This function will get the WCPS query value for all the bands of clicked coordinate
-function getQueryResponseAndSetChart(query) {
+function MainChart_getQueryResponseAndSetChart(query) {
     $.ajax({
     	type: "get",
     	url: query,
     	success: function(data) {
                 var parsedFloats = [];
-                parsedFloats = parseFloats(data);
-                implementChart(parsedFloats);
+                parsedFloats = Chart_parseFloats(data);
+                MainChart_implementChart(parsedFloats);
             }
     });
 }
 
 
 //Implementation function of the graph
-function implementChart(floatsArray) {
+function MainChart_implementChart(floatsArray) {
 
         var xDist = 3.0 / floatsArray.length; // Value for setting the equidistance Band wavelength which should be between 1 and 4
         var xPrev = 1.0; // Value used for storing the Band wavelength of the previous Band
@@ -131,18 +131,3 @@ function implementChart(floatsArray) {
 	$(".plot-dock").css("background", "#2F5597");
 }
 
-// Parse float from string of float values in CSV ('{"0.2323 0.342 0.436"}')
-function parseFloats(input) {
-    var floatsArray = [];
-    input = input.match(/"([^"]+)"/)[1];
-    floatsArray = input.split(" ");
-
-    // convert string value to float
-    for(var i = 0; i < floatsArray.length; i++) {
-	floatsArray[i] = parseFloat(floatsArray[i]);
-    }
-
-    //console.log("after filter null values:");
-    //console.log(floatsArray);
-    return floatsArray;
-}

@@ -10,17 +10,17 @@ $(function () {
             this._super();
             this.element.append(
                 $(
-                "<div>"+
+                "<div style='margin-top: -70px; margin-bottom: 10px; color:white;'>"+
                       "Set WCPS query to selected radio button then click on loaded footprint for calculating band-ratio.<br/>"+
                       "<div class='radio'>"+
-                            "<label><input type='radio' name='optradio' checked id='bandRatioNumerator'>Numerator</label>"+
+                            "<label id='labelNumeratorBandRatioDock' style='color:red;'><input type='radio' name='optradio' checked id='bandRatioNumerator'>Numerator</label>"+
                       "</div>"+
                       "<div class='radio'>"+
-                            "<label><input type='radio' name='optradio' id='bandRatioDenominator'>Denominator</label>"+
+                            "<label id='labelDenominatorBandRatioDock' style='color:red;'><input type='radio' name='optradio' id='bandRatioDenominator'>Denominator</label>"+
                       "</div>"+
                        "<span class='label label-warning' id='bandRatioNotification'></span>"+
                     "</div>"+
-                    "<div class='chartdiv' id='bandRatioChartDiv'></div>"
+                    "<div class='chartdiv' id='bandRatioChartDiv' style='width:100%; height:560px;'></div>"
 
                 )
             );

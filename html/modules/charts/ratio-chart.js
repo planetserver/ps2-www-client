@@ -1,43 +1,34 @@
 requirejs(['../band-ratio/band-ratio']);
 
-
 // This function will get the WCPS query value for all the bands of clicked coordinate
-function getQueryResponseAndSetChart(query) {
+function RatioChart_getQueryResponseAndSetChart(query) {
     $.ajax({
         type: "get",
         url: query,
         success: function(data) {
             var parsedFloats = [];
-            parsedFloats = parseFloats(data);
+            parsedFloats = Chart_parseFloats(data);
+            console.log("Get values for chart on band ratio dock.");
+            BandRatio_setFraction(parsedFloats);
 
-            // If currentOpenDock is not chart then not open this dock
-            if (currentOpenDock === "chartDock") {
-                console.log("Get values for chart on chart dock.");
-                // need to add chartDiv to containerID (e.g: mCSB_3_container)
-                implementChart("mCSB_4_container", "chartDiv", parsedFloats);
-            } else {
-                console.log("Get values for chart on band ratio dock.");
-                BandRatio_setFraction(parsedFloats);
+            // Notify user about other radio button
+            BandRatio_getNotifyFraction();
 
-                // Notify user about other radio button
-                BandRatio_getNotifyFraction();
+            // Numerator and Denominator has values then draw chart
+            if (BandRatio_isSetAllValues()) {
+                // containerID is "" then it is test (not from the dock)
+                // Here it need to calculate the band-ratio from Numerator and Denominator
+                var parsedFloats = [];
+                for (var i = 0; i < bandRatioNumeratorValues.length; i++) {
+                    if (bandRatioDenominatorValues[i] !== 0) {
+                        parsedFloats[i] = bandRatioNumeratorValues[i] / bandRatioDenominatorValues[i];
 
-                // Numerator and Denominator has values then draw chart
-                if(BandRatio_isSetAllValues()) {
-                    // containerID is "" then it is test (not from the dock)
-                    // Here it need to calculate the band-ratio from Numerator and Denominator
-                    var parsedFloats = [];
-                    for(var i = 0; i < bandRatioNumeratorValues.length; i++) {
-                        if(bandRatioDenominatorValues[i] !== 0) {
-                            parsedFloats[i] = bandRatioNumeratorValues[i] / bandRatioDenominatorValues[i];
-
-                        } else {
-                            // cannot divide for 0 then set it to 65535
-                            parsedFloats[i] = 65535;
-                        }
+                    } else {
+                        // cannot divide for 0 then set it to 65535
+                        parsedFloats[i] = 65535;
                     }
-                    implementChart("", "bandRatioChartDiv", parsedFloats);
                 }
+                RatioChart_implementChart("mCSB_4_container", "bandRatioChartDiv", parsedFloats);
             }
         }
     });
@@ -45,7 +36,7 @@ function getQueryResponseAndSetChart(query) {
 
 
 //Implementation function of the graph
-function implementChart(containerID, chartDivID, floatsArray) {
+function RatioChart_implementChart(containerID, chartDivID, floatsArray) {
 
     var xDist = 3.0 / floatsArray.length; // Value for setting the equidistance Band wavelength which should be between 1 and 4
     var xPrev = 1.0; // Value used for storing the Band wavelength of the previous Band
@@ -85,12 +76,9 @@ function implementChart(containerID, chartDivID, floatsArray) {
     }
 
     // Only add chart div when it does not exist and CONTAINERID is not empty
-    if(containerID !== "") {
-        if (!$("#" + chartDivID).length) {
-            // e.g: containerID = mCSB_3_container
-            $("#" + containerID).append("<div class='chartDiv' id='" + chartDivID + "' style='width:100%; height:560px;'></div>");
-        }
-    }
+    //if(!$("#" + chartDivID).length) {
+    //	    $("#" + containerID).append("<div class='chartdiv' id='" + chartDivID + "' style='width:100%; height:560px;'></div>");
+    //}
 
     var chart = AmCharts.makeChart("#" + chartDivID, {
         "type": "serial",
@@ -122,7 +110,7 @@ function implementChart(containerID, chartDivID, floatsArray) {
             "title": "Wavelength (µm)"
         },
         "graphs": [{
-            "id": "g1",
+            "id": "g2",
             "balloonText": "<span style='font-size:14px; color: #ff0000'> Wavelength:[[bandIndex]]<br><b> Reflectance:[[value]]</span></b>",
             //  "bullet": "round",
             //  "bulletSize": 0,
@@ -165,20 +153,4 @@ function implementChart(containerID, chartDivID, floatsArray) {
     chart.write(chartDivID);
 
     $(".ratio-dock").css("background", "#2F5597");
-}
-
-// Parse float from string of float values in CSV ('{"0.2323 0.342 0.436"}')
-function parseFloats(input) {
-    var floatsArray = [];
-    input = input.match(/"([^"]+)"/)[1];
-    floatsArray = input.split(" ");
-
-    // convert string value to float
-    for (var i = 0; i < floatsArray.length; i++) {
-        floatsArray[i] = parseFloat(floatsArray[i]);
-    }
-
-    //console.log("after filter null values:");
-    //console.log(floatsArray);
-    return floatsArray;
 }
