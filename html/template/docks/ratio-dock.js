@@ -12,7 +12,22 @@ $(function () {
                 .append($("<span>", {class: "remove-plot-icon glyphicon glyphicon-remove"}))
                 .click(function() {
                     self.close();
-                    self.element.find(".panel-body").empty();
+                    self.element.find(".panel-body").append(
+                        $("<div style='width: 35%; float: right; position: fixed; margin-left: 62%; margin-top: 80px; color:white;'>"+
+                        "<div>"+
+                        			"Set WCPS query to selected radio button then click on loaded footprint for calculating band-ratio.<br/>"+
+                        			"<div class='radio'>"+
+                        			      "<label><input type='radio' name='optradio' checked id='bandRatioNumerator'>Numerator</label>"+
+                        			"</div>"+
+                        			"<div class='radio'>"+
+                        			      "<label><input type='radio' name='optradio' id='bandRatioDenominator'>Denominator</label>"+
+                        			"</div>"+
+                        			 "<span class='label label-warning' id='bandRatioNotification'></span>"+
+                        		"</div>"+
+                        		"<div class='chartdiv' id='bandRatioChartDiv' style='width:100%; height:560px; margin-top:5px;'></div>"+
+                            	"</div>"
+                        )
+                    );
                 }));
             this.dockToggleIconWrapper.append(
                 $("<img>", {class: "dock-toggle-icon", src: this.options.toggleIcon})
