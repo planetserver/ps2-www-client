@@ -8,7 +8,7 @@ function RatioChart_getQueryResponseAndSetChart(query) {
         success: function(data) {
             var parsedFloats = [];
             parsedFloats = Chart_parseFloats(data);
-            console.log("Get values for chart on band ratio dock.");
+            console.log("Get values for ");
             BandRatio_setFraction(parsedFloats);
 
             // Notify user about other radio button

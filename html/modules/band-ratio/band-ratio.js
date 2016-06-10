@@ -9,21 +9,21 @@ $( document ).ready(function() {
 
 // notify about values for numerator, denominator
 function BandRatio_getNotifyFraction() {
-	var returnStr = "Please get values for: ";
+	var returnStr = "Please get values for ";
 	var isSelectedAll = true;
 	if(bandRatioNumeratorValues.length === 0 ) {
-		returnStr = returnStr + " -Numerator- ";
+		returnStr = returnStr + " Numerator and ";
 		isSelectedAll = false;
 	}
 
 	if(bandRatioDenominatorValues.length === 0 ) {
-		returnStr = returnStr + " -Denominator- ";
+		returnStr = returnStr + " Denominator ";
 		isSelectedAll = false;
 	}
 
 	// no notify if numerator and denomiator has values
 	if(isSelectedAll) {
-		returnStr = "Numerator and Denominator has values, draw chart for band-ratio of 2 clicked points.";
+		returnStr = "Numerator and Denominator selected";
 	}
 
 	$("#bandRatioNotification").text(returnStr);
