@@ -546,7 +546,7 @@ requirejs(['../../config/config',
                 $("#mCSB_3_container").append(rgbValues);
 
                 // open the chart dock #ui-id-3
-                $("#ui-id-3").addClass('open');
+                //$("#ui-id-3").addClass('open');
             }
 
 

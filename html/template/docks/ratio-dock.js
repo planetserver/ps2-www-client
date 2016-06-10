@@ -11,7 +11,7 @@ $(function () {
             this.element.append(
                 $(
                 "<div style='margin-top: -70px; margin-bottom: 10px; color:white;'>"+
-                      "Set WCPS query to selected radio button then click on loaded footprint for calculating band-ratio.<br/>"+
+                      "Select numerator and denominator in order to calculate the band ratio<br/>"+
                       "<div class='radio'>"+
                             "<label id='labelNumeratorBandRatioDock' style='color:red;'><input type='radio' name='optradio' checked id='bandRatioNumerator'>Numerator</label>"+
                       "</div>"+
