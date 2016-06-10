@@ -14,11 +14,11 @@ $(function () {
                       "Select numerator and denominator in order to calculate the band ratio<br/>"+
                       "<div class='radio'>"+
                             "<label id='labelNumeratorBandRatioDock' style='color:red;'><input id='numeratorBandRatioDock' type='radio' name='optradio' checked >Numerator</label>"+
-			    "<img src='html/images/icons/numerator.png'/>" +
+			    "<img src='html/images/icons/numer.png'/>" +
                       "</div>"+
                       "<div class='radio'>"+
                             "<label id='labelDenominatorBandRatioDock' style='color:red;'><input id='denominatorBandRatioDock' type='radio' name='optradio'>Denominator</label>"+
-   			    "<img src='html/images/icons/denominator.png'/>" +
+   			    "<img src='html/images/icons/denom.png'/>" +
                       "</div>"+
                        "<span class='label label-warning' id='bandRatioNotification'></span>"+
                     "</div>"+
