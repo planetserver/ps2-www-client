@@ -31,7 +31,7 @@ function BandRatio_getNotifyFraction() {
 
 // Set values of clicked point for Numerator or Denominator
 function BandRatio_setFraction(arrayValues) {
-	if( $("#bandRatioNumerator").is(":checked") ) {
+	if( $("#numeratorBandRatioDock").is(":checked") ) {
 		console.log("Set values for numerator.");
 		bandRatioNumeratorValues = arrayValues;
 		$("#labelNumeratorBandRatioDock").css('color','green');

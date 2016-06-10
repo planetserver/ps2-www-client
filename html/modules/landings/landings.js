@@ -59,9 +59,22 @@ drawLat = "";
 drawLon = "";
 
 // which dock is allowed to open (default chartDock is opened then to open another dock, such as radioDock, need to close chartDock first)
-currentOpenDock = "mainChartDock";
+currentOpenDock = "";
 
-//currentOpenDock = "bandRatioDock"; // need to handle it when open, close the dock not here
+// 2 markers for band ratio chart
+placeMarkersBandRatio = [{
+    name: "numerator",
+    iconPath: "html/images/icons/numerator.png",
+    latitude: "",
+    longitude: "",
+    layer: null
+}, {
+    name: "denominator",
+    iconPath: "html/images/icons/denominator.png",
+    latitude: "",
+    longitude: "",
+    layer: null
+}];
 
 function getQueryVariable(variable) {
     var query = window.location.search.substring(1);
@@ -291,6 +304,11 @@ requirejs(['../../config/config',
                     // if click on loaded image then draw chart
                     if (pickList.objects[1] != null) {
 
+                        // no draw anything if not selected chart dock
+                        if(currentOpenDock === "") {
+                            return;
+                        }
+
                         console.log("Draw chart on coverageID: " + lastCovID);
                         // then it will load the array of values for all the bands which contains the clicked point and draw the chart
 
@@ -498,16 +516,17 @@ requirejs(['../../config/config',
                 E = r * k * Math.cos(latitude * rho) * Math.sin(longitude * rho - lon0 * rho);
             }
 
-            //update the title of the chart with name and lat long
-            $("#service-container .right-dock.plot-dock .panel-title").text("Coverage Name: " + covID);
-            $("#service-container .right-dock.plot-dock .panel-title.panel-subtitle").text("Latitude: " + String(latitude.toFixed(2)) + ", Longitude: " + String(longitude.toFixed(2)));
-
-            var rgbValues = '<hr style="margin-top: -30px;"> <div style="text-align: center; margin-top: -10px; color: white;" id="divRGBValues"> </div>';
-
-            var result = ""; // query RGB values for the coordinate
-
             // Get the selected Coverage ID RGB bands and query to get the values
             if(currentOpenDock === "mainChartDock") {
+
+                //update the title of the chart with name and lat long
+                $("#service-container .right-dock.plot-dock .panel-title").text("Coverage Name: " + covID);
+                $("#service-container .right-dock.plot-dock .panel-title.panel-subtitle").text("Latitude: " + String(latitude.toFixed(2)) + ", Longitude: " + String(longitude.toFixed(2)));
+
+                var rgbValues = '<hr style="margin-top: -30px;"> <div style="text-align: center; margin-top: -10px; color: white;" id="divRGBValues"> </div>';
+
+                var result = ""; // query RGB values for the coordinate
+
                 var isClickOnSelectedFootPrint = false;
                 for(var i = 0; i < selectedFootPrintsArray.length; i++) {
                     // If find the footprint then get the R, G, B bands of it to query WCPS and get values
@@ -547,6 +566,36 @@ requirejs(['../../config/config',
 
                 // open the chart dock #ui-id-3
                 //$("#ui-id-3").addClass('open');
+            } else if (currentOpenDock === "bandRatioDock") {
+                // Remove the clicked marker here
+                removePlaceMarker(placemarkLayer);
+
+                // if band ratio dock is opened then store the latitude, longitude for the numerator or denominator
+                if($("#numeratorBandRatioDock").is(':checked')) {
+                    // numerator
+                    placeMarkersBandRatio[0].latitude = latitude;
+                    placeMarkersBandRatio[0].longitude = longitude;
+
+                    // remove the old marker first
+                    removePlaceMarker(placeMarkersBandRatio[0].layer);
+
+                    // add the new marker for this globe;
+                    var layer = addPlaceMarker(5, placeMarkersBandRatio[0].name, placeMarkersBandRatio[0].iconPath, latitude, longitude);
+                    placeMarkersBandRatio[0].layer = layer;
+                    console.log(layer);
+                } else {
+                    // denominator
+                    placeMarkersBandRatio[1].latitude = latitude;
+                    placeMarkersBandRatio[1].longitude = longitude;
+
+                    // remove the old marker first
+                    removePlaceMarker(placeMarkersBandRatio[1].layer);
+
+                    // add the new marker for this globe;
+                    var layer = addPlaceMarker(6, placeMarkersBandRatio[1].name, placeMarkersBandRatio[1].iconPath, latitude, longitude);
+                    placeMarkersBandRatio[1].layer = layer;
+                    console.log(layer);
+                }
             }
 
 
@@ -698,6 +747,17 @@ requirejs(['../../config/config',
             // If the dock is closed then click to open
             if( $(mainChartID).hasClass("open") ) {
                 currentOpenDock = "mainChartDock";
+                console.log("Hide the band ratio chart");
+
+                if(placeMarkersBandRatio[0].layer != null) {
+                    placeMarkersBandRatio[0].layer.enabled = false;
+                }
+                if(placeMarkersBandRatio[1].layer != null) {
+                    placeMarkersBandRatio[1].layer.enabled = false;
+                }
+            } else {
+                // close the dock then no dock is opened
+                currentOpenDock = "";
             }
 
             //alert(currentOpenDock);
@@ -707,9 +767,50 @@ requirejs(['../../config/config',
             // If the dock is closed then click to open
             if( $(bandRatioChartID).hasClass("open") ) {
                 currentOpenDock = "bandRatioDock";
+
+                console.log("Show the band ratio chart");
+                if(placeMarkersBandRatio[0].layer != null) {
+                    placeMarkersBandRatio[0].layer.enabled = true;
+                }
+
+                if(placeMarkersBandRatio[1].layer != null) {
+                    placeMarkersBandRatio[1].layer.enabled = true;
+                }
+
+            } else {
+                // close the dock
+                // no dock is opened
+                currentOpenDock = "";
+
+                console.log("Hide the band ratio chart");
+                placeMarkersBandRatio[0].layer.enabled = false;
+                placeMarkersBandRatio[1].layer.enabled = false;
             }
 
             //alert(currentOpenDock);
         });
 
+        // remove the place mark on the globe
+        function removePlaceMarker(layer) {
+            // Put placemark, remove the last clicked point
+            if (layer != null) {
+                wwd.removeLayer(layer);
+            }
+        }
+
+        // add a place mark on the globe
+        function addPlaceMarker(layerIndex, placeMarkLayerName, iconPath, latitude, longitude) {
+            var placemark = new WorldWind.Placemark(new WorldWind.Position(latitude, longitude, 1e2), true, null);
+            var placemarkAttributes = new WorldWind.PlacemarkAttributes(placemarkAttributes);
+            placemarkAttributes.imageSource = iconPath;
+            placemark.attributes = placemarkAttributes;
+
+            var layer = new WorldWind.RenderableLayer(placeMarkLayerName);
+            layer.addRenderable(placemark);
+
+            // Marker layer
+            wwd.insertLayer(layerIndex, layer);
+
+            return layer;
+        }
     });
