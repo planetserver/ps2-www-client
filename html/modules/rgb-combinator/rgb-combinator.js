@@ -850,7 +850,7 @@ $("#btnSubmitRGBCombination").click(function(e) {
                         // current encode in PNG has problem when gdalinfo does not ignore NODATA ( = 0 ) then need to use tiff as it will
                         // calculate correctly
                         stretch = true;
-                        WCPS_TEMPLATE = WCPS_TEMPLATE.replace("png", "tiff");
+                        WCPS_TEMPLATE_QUERY = WCPS_TEMPLATE_QUERY.replace("png", "tiff");
                         console.log("Stretched WCPS query: " + WCPS_TEMPLATE_QUERY);
                     }
 
