@@ -64,13 +64,13 @@ currentOpenDock = "";
 // 2 markers for band ratio chart
 placeMarkersBandRatio = [{
     name: "numerator",
-    iconPath: "html/images/icons/numerator.png",
+    iconPath: "html/images/icons/numer.png",
     latitude: "",
     longitude: "",
     layer: null
 }, {
     name: "denominator",
-    iconPath: "html/images/icons/denominator.png",
+    iconPath: "html/images/icons/denom.png",
     latitude: "",
     longitude: "",
     layer: null
