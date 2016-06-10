@@ -391,16 +391,30 @@ requirejs(['../../config/config',
         /* This function is called from landing.js after all checked footprints are updated to checkedFootPrintsArray
         and it loads the image accordingly to checked footprints
         */
-        var imagesLayer = "";
+        var imagesLayer = null;
 
-        window.accessCheckedFootPrintsArray = function() {
+        window.accessCheckedFootPrintsArray = function(newClickedFootPrintsArray) {
 
             // Remove the old layers first
-            wwd.removeLayer(imagesLayer);
-            imagesLayer = new WorldWind.RenderableLayer("");
+            //wwd.removeLayer(imagesLayer);
+            if(imagesLayer == null) {
+                imagesLayer = new WorldWind.RenderableLayer("");
+                // Add the new one
+                wwd.insertLayer(3, imagesLayer);
+            }
 
             for (var i = 0; i < checkedFootPrintsArray.length; i++) {
+                // check if coverageID is new checked then load default image on this
                 var coverageID = checkedFootPrintsArray[i].coverageID.toLowerCase();
+
+                // only load default image on the new checked footprints in newClickedFootPrintsArray
+                if(checkedFootPrintsArray.length > 1 && newClickedFootPrintsArray.indexOf(coverageID) === -1) {
+                    // Check if the existing footprint has loaded any image first
+                    if( checkedFootPrintsArray[i].isLoadedImage ) {
+                        continue;
+                    }
+                };
+
                 var maxlong;
                 var minlong;
                 //  console.log("Checked Footprint: " + i + " ");
@@ -426,6 +440,9 @@ requirejs(['../../config/config',
                 var WCPSLoadImage = ps2WCPSEndPoint + 'for data in (' + coverageID + ') return encode( { red: ' + redBandDefault + '; green: ' + greenBandDefault + '; blue: ' + blueBandDefault + ' ; alpha: ' + alphaBandDefault + '}, "png", "nodata=null")';
                 var surfaceImage = new WorldWind.SurfaceImage(new WorldWind.Sector(checkedFootPrintsArray[i].Minimum_latitude, checkedFootPrintsArray[i].Maximum_latitude, minlong, maxlong), WCPSLoadImage);
 
+
+                console.log("Load default image on footprint: " + coverageID);
+
                 renderLayer[i] = new WorldWind.RenderableLayer("");
                 renderLayer[i].addRenderable(surfaceImage);
 
@@ -433,9 +450,6 @@ requirejs(['../../config/config',
                 imagesLayer.addRenderable(renderLayer[i]);
 
             }
-
-            // Add the new one
-            wwd.insertLayer(3, imagesLayer);
         }
 
         // this function will load a RGB combination image from rgbcombination.js to selected footprint from selected comboBox
@@ -475,6 +489,7 @@ requirejs(['../../config/config',
 
                     // then load the RGBCombinations to this footprint shapesLayer
                     renderLayer[i].addRenderable(rgbcombinationSurfaceImage);
+
 
                     console.log("Load new RGB Combinations on selected footprint.");
                     break;
@@ -783,8 +798,13 @@ requirejs(['../../config/config',
                 currentOpenDock = "";
 
                 console.log("Hide the band ratio chart");
-                placeMarkersBandRatio[0].layer.enabled = false;
-                placeMarkersBandRatio[1].layer.enabled = false;
+                if(placeMarkersBandRatio[0].layer != null) {
+                    placeMarkersBandRatio[0].layer.enabled = false;
+                }
+
+                if(placeMarkersBandRatio[1].layer != null) {
+                    placeMarkersBandRatio[1].layer.enabled = false;
+                }
             }
 
             //alert(currentOpenDock);

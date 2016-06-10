@@ -19,7 +19,7 @@ var greenBandDefault = "(int)(255 / (max((data.band_13 != 65535) * data.band_13)
 var alphaBandDefault = "(data.band_100 != 65535) * 255";
 
 // return the value of Red/Green/Blue band on clicked coordinate
-var wcpsQueryRGBValueTemplate = 'for data in ($COVERAGE_ID) return encode({ $QUERY }, "csv")'; 
+var wcpsQueryRGBValueTemplate = 'for data in ($COVERAGE_ID) return encode({ $QUERY }, "csv")';
 
 // #Object Definition
 // Store the WCPS query for each band and load the image RGB
@@ -75,7 +75,7 @@ window.queryRGBValue = function(coverageID, longitude, latitude, rgbQueryArray) 
         }
 
         // Now, make the trimming band and replace in query
-        for(var j = 0; j < dataBandArray.length; j++) {   
+        for(var j = 0; j < dataBandArray.length; j++) {
             // Add trimming interval to the data.band
             var tmp = "(" + dataBandArray[j].bandName + ") " + trimInterval;
             query = replaceAll(query, dataBandArray[j].bandName, tmp);
@@ -842,19 +842,20 @@ $("#btnSubmitRGBCombination").click(function(e) {
                         selectedFootPrintsArray[i].blueBand = "";
                     }
 
-                    console.log(selectedFootPrintsArray[i]);
+                    console.log("Combine bands in WCPS queries: " + selectedFootPrintsArray[i].coverageID);
 
                     // replace $COVERAGE_ID with selected coverageID and load WCPS combination on checked footprint
-                    WCPS_TEMPLATE = replaceAll(WCPS_TEMPLATE, "$COVERAGE_ID", selectedFootPrintsArray[i].coverageID.toLowerCase());
+                    WCPS_TEMPLATE_QUERY = replaceAll(WCPS_TEMPLATE, "$COVERAGE_ID", selectedFootPrintsArray[i].coverageID.toLowerCase());
                     if(isAllBandsCustomWCPSQueries === 3) {
-                        // current encode in PNG has problem when gdalinfo does not ignore NODATA ( = 0 ) then need to use tiff as it will 
+                        // current encode in PNG has problem when gdalinfo does not ignore NODATA ( = 0 ) then need to use tiff as it will
                         // calculate correctly
                         stretch = true;
                         WCPS_TEMPLATE = WCPS_TEMPLATE.replace("png", "tiff");
-                        console.log("Stretched WCPS query: " + WCPS_TEMPLATE);
+                        console.log("Stretched WCPS query: " + WCPS_TEMPLATE_QUERY);
                     }
-                    loadRGBCombinations(WCPS_TEMPLATE, selectedFootPrintsArray[i].coverageID.toLowerCase(), stretch);
-                }                
+
+                    loadRGBCombinations(WCPS_TEMPLATE_QUERY, selectedFootPrintsArray[i].coverageID.toLowerCase(), stretch);
+                }
             }
         }
 
@@ -906,7 +907,7 @@ $(document).ready(function() {
                 linkSelectedFootPrints.css("color", "rgb(255, 0, 0)")
 
                 // add all selected footprints to array (if it does exist then just update isChosen to true)
-                if(selectedFootPrintsArray[i] != null) {                    
+                if(selectedFootPrintsArray[i] != null) {
                     selectedFootPrintsArray[i].isChosen = true;
                 } else {
                     var obj = new selectedFootPrint(coverageID, redBandDefault, blueBandDefault, greenBandDefault, true);
@@ -941,7 +942,7 @@ $(document).ready(function() {
         var isChecked = $("#checkBoxSelectedFootPrints_0").is(":checked");
 
         // iterate all the selected footprints and set to check/uncheck
-        for(i = 0; i < checkedFootPrintsArray.length; i++) {        
+        for(i = 0; i < checkedFootPrintsArray.length; i++) {
             var coverageID = checkedFootPrintsArray[i].coverageID;
 
             if(isChecked) {
@@ -954,7 +955,7 @@ $(document).ready(function() {
                 linkSelectedFootPrints.css("color", "rgb(255, 0, 0)");
 
                 // add all selected footprints to array (if it does exist then just update isChosen to true)
-                if(selectedFootPrintsArray[i] != null) {                    
+                if(selectedFootPrintsArray[i] != null) {
                     selectedFootPrintsArray[i].isChosen = true;
                 } else {
                     var obj = new selectedFootPrint(coverageID, redBandDefault, blueBandDefault, greenBandDefault, true);
@@ -1005,7 +1006,7 @@ $(document).ready(function() {
             if(coverageID !== "0") {
                 // chosen coverageID to selectedFootPrintsArray
                 var index = getIndexOfCoveragesArray(selectedFootPrintsArray, coverageID);
-                if(index > -1) {                    
+                if(index > -1) {
                     selectedFootPrintsArray[i].isChosen = true;
                 } else {
                     // Push the new selected footprint to selectedFootPrintsArray
@@ -1023,7 +1024,7 @@ $(document).ready(function() {
                 selectedFootPrintsArray[i].isChosen = false;
                 // Change color to checked footprint
                 setAttributeToFootPrint(checkedAttributes, coverageID);
-            }            
+            }
         }
 
         console.log(selectedFootPrintsArray);
@@ -1051,7 +1052,7 @@ $(document).ready(function() {
             if(id !== "0") {
                 // chosen coverageID to selectedFootPrintsArray
                 var index = getIndexOfCoveragesArray(selectedFootPrintsArray, coverageID);
-                if(index > -1) {                    
+                if(index > -1) {
                     selectedFootPrintsArray[i].isChosen = true;
                 } else {
                     // Push the new selected footprint to selectedFootPrintsArray

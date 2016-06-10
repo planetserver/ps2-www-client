@@ -67,6 +67,8 @@ function getFootPrintsContainingPointLeftClick(shapesArray, attributesObj, check
     // store attributes of shapes
     attributes = attributesObj;
 
+    var newClickedFootPrintsArray = [];
+
     //alert(shapes.length);
     // only load images when click on footprints (and when click to select new footprints)
     var isUpdateCheckedFootPrintsArray = false;
@@ -79,7 +81,7 @@ function getFootPrintsContainingPointLeftClick(shapesArray, attributesObj, check
         async: false,
         success: function(data) {
 	    if(data.length === 0) {
-	      return; 
+	      return;
 	    } else {
             	console.log("Get footprints containing point:" + " request=getCoveragesContainingPoint&latPoint=" + latitude + "&longPoint=" + longitude);
 	    }
@@ -111,15 +113,18 @@ function getFootPrintsContainingPointLeftClick(shapesArray, attributesObj, check
                     if (isChecked === false) {
 
                         // user has selected new footprints then need to draw image on it.
-                        isUpdateCheckedFootPrintsArray = true;                        
+                        isUpdateCheckedFootPrintsArray = true;
                         console.log("New checked footprint: " + val.coverageID);
+
+                        // Only load default images on these new checked footprint, not the existing ones.
+                        newClickedFootPrintsArray.push(val.coverageID.toLowerCase());
 
                         // Change footprint to checked footprint
                         for (var j = 0; j < shapes.length; j++) {
                             if (shapes[j]._displayName === val.coverageID) {
                                 // Check if footprint is hightlighed or not
                                 var isHightLighted = false;
-                          
+
                                 for (var k =0; k < hightlightedFootPrintsArray.length; k++) {
                                     if(hightlightedFootPrintsArray[k].coverageID === val.coverageID) {
                                         isHightLighted = true;
@@ -132,7 +137,7 @@ function getFootPrintsContainingPointLeftClick(shapesArray, attributesObj, check
                                     shapes[j].attributes = checkedAttributes;
 
                                     // shape object of checked footprint
-                                    dataSetFootPrint.shapeObj = shapes[j];   
+                                    dataSetFootPrint.shapeObj = shapes[j];
                                 }
 
                                 break;
@@ -153,7 +158,8 @@ function getFootPrintsContainingPointLeftClick(shapesArray, attributesObj, check
 
             // This function is called in landing.js after checkedFootPrintsArray has been updated.
             if (isUpdateCheckedFootPrintsArray) {
-                accessCheckedFootPrintsArray();
+                // Load default image on these new checked footprints
+                accessCheckedFootPrintsArray(newClickedFootPrintsArray);
             }
         }
     });
@@ -174,7 +180,7 @@ function getFootPrintsContainingPointRightClick(shapesArray, attributesObj, chec
 
     // clear the containedFootPrintsArray and get the news one from footprint.js
     containedFootPrintsArray = [];
-    
+
     $.ajax({
         type: "get",
         url: "http://access.planetserver.eu:8080/ps2/" + "dataset",
@@ -192,10 +198,10 @@ function getFootPrintsContainingPointRightClick(shapesArray, attributesObj, chec
                 lastCovID = val.coverageID;
                 //alert("Last clicked footprint: " + lastCovID);
 
-                console.log("Footprints containing right clicked point: " + val.coverageID); 
+                console.log("Footprints containing right clicked point: " + val.coverageID);
 
-                // add these footprints to menucontext.js 
-                containedFootPrintsArray.push(dataSetFootPrint);    
+                // add these footprints to menucontext.js
+                containedFootPrintsArray.push(dataSetFootPrint);
             });
         }
     });
