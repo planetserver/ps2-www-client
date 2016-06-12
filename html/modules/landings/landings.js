@@ -8,6 +8,7 @@
 /* Global variables */
 
 ps2EndPoint = "http://access.planetserver.eu/";
+ps2EndPoint = "http://localhost:8080/";
 ps2WCPSEndPoint = "http://access.planetserver.eu:8080/rasdaman/ows?service=WCS&version=2.0.1&request=ProcessCoverages&query=";
 ps2StretchWCPSEndPoint = "http://access.planetserver.eu:8090/python?wcpsQuery=";
 
@@ -109,7 +110,8 @@ requirejs(['../../config/config',
         '../charts/ratio-chart',
         '../goto/goto',
         '../band-ratio/band-ratio',
-        '../charts/chart'
+        '../charts/chart',
+        '../spectral-library/spectral-library'
     ],
     function(config,
         ww,
@@ -124,7 +126,8 @@ requirejs(['../../config/config',
         ratio_chart,
         go_to,
         band_ratio,
-        chart) {
+        chart,
+        spectral_library) {
         "use strict";
 
         WorldWind.Logger.setLoggingLevel(WorldWind.Logger.LEVEL_WARNING);
@@ -543,6 +546,7 @@ requirejs(['../../config/config',
                 var result = ""; // query RGB values for the coordinate
 
                 var isClickOnSelectedFootPrint = false;
+                /*
                 for(var i = 0; i < selectedFootPrintsArray.length; i++) {
                     // If find the footprint then get the R, G, B bands of it to query WCPS and get values
                     if(selectedFootPrintsArray[i].coverageID == covID) {
@@ -576,8 +580,9 @@ requirejs(['../../config/config',
                     // Get rgb values from rgb-combinator
                     window.queryRGBValue(covID, E, N, rgbArray);
                 }
+                */
 
-                $("#mCSB_3_container").append(rgbValues);
+                //$("#mCSB_3_container").append(rgbValues);
 
                 // open the chart dock #ui-id-3
                 //$("#ui-id-3").addClass('open');

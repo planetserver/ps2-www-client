@@ -22,7 +22,7 @@ $(function () {
                       "</div>"+
                        "<span class='label label-warning' id='bandRatioNotification'></span>"+
                     "</div>"+
-                    "<div class='chartdiv' id='bandRatioChartDiv' style='width:100%; height:560px;'></div>"
+                    "<div class='chartdiv' id='bandRatioChartDiv' style='width:100%; height:480px;'></div>"
 
                 )
             );

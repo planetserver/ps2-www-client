@@ -7,6 +7,22 @@ function Chart_getQueryResponseAndSetChart(query) {
     }
 }
 
+// Parse float from string of float values in CSV("0.2323,0.3425,0.3535")
+function Chart_parseFloatsWithComma(input) {
+    var floatsArray = [];
+    input = input.replace(/,/g, ' ');
+    floatsArray = input.split(" ");
+
+    // convert string value to float
+    for(var i = 0; i < floatsArray.length; i++) {
+    floatsArray[i] = parseFloat(floatsArray[i]);
+    }
+
+    //console.log("after filter null values:");
+    //console.log(floatsArray);
+    return floatsArray;
+}
+
 // Parse float from string of float values in CSV ('{"0.2323 0.342 0.436"}')
 function Chart_parseFloats(input) {
     var floatsArray = [];
