@@ -4,6 +4,8 @@ selectedWaveLengthSpectralLibrary = null;
 // selected product value of spectral library
 selectedProductValuesSpectralLibrary = null;
 
+var isLoadedAllSpectralLibrary = false;
+
 $(document).ready(function() {
 
     // list of spectral files in html/data/spectral-chart
@@ -12,7 +14,7 @@ $(document).ready(function() {
 
     // store the JSON data for each file json
     var spectralLibraryArray = [];
-
+   
     // Load all the data from spectral library files
     $(function() {
         for (var i = 0; i < availableSpectralArray.length; i++) {
@@ -38,23 +40,27 @@ $(document).ready(function() {
             })(i);
         }
 
-        // Then load to category dropdownbox in mainChartDock
+        // Then load to category dropdownbox in mainChartDock (this is called after ajax event is finished)
         $(document).ajaxStop(function() {
-            console.log("Loaded all spectral library.");
-            // sort the array first
-            spectralLibraryArray = spectralLibraryArray.sort(SortByName);
-            console.log(spectralLibraryArray);
-            // category dropdown in category
-            for (var i = 0; i < spectralLibraryArray.length; i++) {
-                var tmp = "<li><a href='#' data-value='$DATA'>$NAME</a></li>";
-                // upper first character
-                tmp = tmp.replace("$DATA", spectralLibraryArray[i].name);
-                tmp = tmp.replace("$NAME", titleCase(spectralLibraryArray[i].name));
-                $("#dropDownCategorySpectralLibrary").append(tmp);
+            if(isLoadedAllSpectralLibrary === false) {
+                console.log("Loaded all spectral library.");
+                isLoadedAllSpectralLibrary = true;
+                // sort the array first
+                spectralLibraryArray = spectralLibraryArray.sort(SortByName);
+                console.log(spectralLibraryArray);
+                // category dropdown in category
+                for (var i = 0; i < spectralLibraryArray.length; i++) {
+                    var tmp = "<li><a href='#' data-value='$DATA'>$NAME</a></li>";
+                    // upper first character
+                    tmp = tmp.replace("$DATA", spectralLibraryArray[i].name);
+                    tmp = tmp.replace("$NAME", titleCase(spectralLibraryArray[i].name));
+                    $("#dropDownCategorySpectralLibrary").append(tmp);
+                }
             }
         });
         
     });
+
 
 
     // set selected dropdown box value
@@ -68,7 +74,7 @@ $(document).ready(function() {
 
         // Load the product dropdown from selected category dropdown
         // clear the content of product dropdown first
-        $("#dropDownProoductSpectralLibrary").empty();
+        $("#dropDownProductSpectralLibrary").empty();
 
         // Load all the values for the selected product
         for (var i = 0; i < spectralLibraryArray.length; i++) {
