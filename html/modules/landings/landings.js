@@ -8,7 +8,6 @@
 /* Global variables */
 
 ps2EndPoint = "http://access.planetserver.eu/";
-ps2EndPoint = "http://access.planetserver.eu:8080/";
 ps2WCPSEndPoint = "http://access.planetserver.eu:8080/rasdaman/ows?service=WCS&version=2.0.1&request=ProcessCoverages&query=";
 ps2StretchWCPSEndPoint = "http://access.planetserver.eu:8090/python?wcpsQuery=";
 
