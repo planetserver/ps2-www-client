@@ -291,7 +291,7 @@ requirejs(['../../config/config',
                     // Marker layer
                     wwd.insertLayer(4, placemarkLayer);
 
-
+                    wwd.redraw();
 
                     // If click outside of footprint then not draw chart
                     if(leftClickFootPrintsArray.length === 0) {
