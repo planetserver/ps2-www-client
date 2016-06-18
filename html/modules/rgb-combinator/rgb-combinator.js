@@ -729,6 +729,9 @@ $("#btnSubmitRGBCombination").click(function(e) {
     // If 1 of band is custom WCPS query then need to use stretch service
     isAllBandsCustomWCPSQueries = 0;
 
+    // mostly queries are not stretched.
+    stretch = false;
+
     // not choose any selected footprint
     if (selectedFootPrintsArray.length === 0) {
         alert("You have to choose at least *1 selected footprint* to load WCPS query combination.");
@@ -853,6 +856,8 @@ $("#btnSubmitRGBCombination").click(function(e) {
                         WCPS_TEMPLATE_QUERY = WCPS_TEMPLATE_QUERY.replace("png", "tiff");
                         console.log("Stretched WCPS query: " + WCPS_TEMPLATE_QUERY);
                     }
+
+                    console.log("WCPS query: " + WCPS_TEMPLATE_QUERY);
 
                     loadRGBCombinations(WCPS_TEMPLATE_QUERY, selectedFootPrintsArray[i].coverageID.toLowerCase(), stretch);
                 }

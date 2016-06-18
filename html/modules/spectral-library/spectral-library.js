@@ -118,7 +118,7 @@ $(document).ready(function() {
 
         // It has values for second line chart, only draw it if the first line from clicked coordinates has values
         if(MainChart_valuesClickedCoordinateArray != null) {
-            MainChart_implementChart("mainChartDiv", MainChart_valuesClickedCoordinateArray, selectedProductValuesSpectralLibrary);
+            MainChart_implementChart(MainChart_valuesClickedCoordinateArray, selectedProductValuesSpectralLibrary);
         } else {
             // Change the button html of dropDownProoductSpectralLibrary to default
             $("#btnProductSpectralLibrary").html("Spectral Library Products");
