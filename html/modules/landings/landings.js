@@ -53,10 +53,18 @@ wwd = null;
 // place x icon on footprint
 placemarkLayer = null;
 
+// the last clicked point
+placemark = null;
+
 // which coverageID is used to draw map
 drawCoverageID = "";
 drawLat = "";
 drawLon = "";
+
+
+// the clicked coordinate
+clickedLatitude = 0;
+clickedLongitude = 0;
 
 // which dock is allowed to open (default chartDock is opened then to open another dock, such as radioDock, need to close chartDock first)
 currentOpenDock = "";
@@ -245,8 +253,8 @@ requirejs(['../../config/config',
 
             if (pickList.objects[0] != null) {
                 // Get the clicked point (if it clicks on the globe then use object[0] or click on loaded image then use object[1])
-                var clickedLatitude = pickList.objects[0].position != null ? pickList.objects[0].position.latitude : pickList.objects[1].position.latitude;
-                var clickedLongitude = pickList.objects[0].position != null ? pickList.objects[0].position.longitude : pickList.objects[1].position.longitude;
+                clickedLatitude = pickList.objects[0].position != null ? pickList.objects[0].position.latitude : pickList.objects[1].position.latitude;
+                clickedLongitude = pickList.objects[0].position != null ? pickList.objects[0].position.longitude : pickList.objects[1].position.longitude;
 
                 // get last footprint which contains the new clicked point (load image by synchronous)
                 $.when(getFootPrintsContainingPointLeftClick(shapes, defaultAttributes, checkedAttributes, clickedLatitude, clickedLongitude)).then(function() {
@@ -275,23 +283,13 @@ requirejs(['../../config/config',
 
 
 
-                    // Put placemark, remove the last clicked point
+                    /*// Put placemark, remove the last clicked point
                     if (placemarkLayer != null) {
                         wwd.removeLayer(placemarkLayer);
-                    }
+                    }*/
 
-                    var placemark = new WorldWind.Placemark(new WorldWind.Position(clickedLatitude, clickedLongitude, 1e2), true, null);
-                    var placemarkAttributes = new WorldWind.PlacemarkAttributes(placemarkAttributes);
-                    placemarkAttributes.imageSource = "html/images/close.png";
-                    placemark.attributes = placemarkAttributes;
-
-                    placemarkLayer = new WorldWind.RenderableLayer("Placemarks");
-                    placemarkLayer.addRenderable(placemark);
-
-                    // Marker layer
-                    wwd.insertLayer(4, placemarkLayer);
-
-                    wwd.redraw();
+                    // When to add the clicked icon
+                    handlePlaceMarkerLayer();
 
                     // If click outside of footprint then not draw chart
                     if(leftClickFootPrintsArray.length === 0) {
@@ -587,7 +585,7 @@ requirejs(['../../config/config',
                 //$("#ui-id-3").addClass('open');
             } else if (currentOpenDock === "bandRatioDock") {
                 // Remove the clicked marker here
-                removePlaceMarker(placemarkLayer);
+                Landings_removePlaceMarker(placemarkLayer);
 
                 // if band ratio dock is opened then store the latitude, longitude for the numerator or denominator
                 if($("#numeratorBandRatioDock").is(':checked')) {
@@ -596,10 +594,10 @@ requirejs(['../../config/config',
                     placeMarkersBandRatio[0].longitude = longitude;
 
                     // remove the old marker first
-                    removePlaceMarker(placeMarkersBandRatio[0].layer);
+                    Landings_removePlaceMarker(placeMarkersBandRatio[0].layer);
 
                     // add the new marker for this globe;
-                    var layer = addPlaceMarker(5, placeMarkersBandRatio[0].name, placeMarkersBandRatio[0].iconPath, latitude, longitude);
+                    var layer = Landings_addPlaceMarker(5, placeMarkersBandRatio[0].name, placeMarkersBandRatio[0].iconPath, latitude, longitude);
                     placeMarkersBandRatio[0].layer = layer;
                     console.log(layer);
                 } else {
@@ -608,10 +606,10 @@ requirejs(['../../config/config',
                     placeMarkersBandRatio[1].longitude = longitude;
 
                     // remove the old marker first
-                    removePlaceMarker(placeMarkersBandRatio[1].layer);
+                    Landings_removePlaceMarker(placeMarkersBandRatio[1].layer);
 
                     // add the new marker for this globe;
-                    var layer = addPlaceMarker(6, placeMarkersBandRatio[1].name, placeMarkersBandRatio[1].iconPath, latitude, longitude);
+                    var layer = Landings_addPlaceMarker(6, placeMarkersBandRatio[1].name, placeMarkersBandRatio[1].iconPath, latitude, longitude);
                     placeMarkersBandRatio[1].layer = layer;
                     console.log(layer);
                 }
@@ -741,20 +739,25 @@ requirejs(['../../config/config',
 
             wwd.goTo(new WorldWind.Location(latitude, longitude));
 
-            // Put placemark, remove the last clicked point
-            if (placemarkLayer != null) {
-                wwd.removeLayer(placemarkLayer);
-            }
 
-            var placemark = new WorldWind.Placemark(new WorldWind.Position(latitude, longitude, range), true, null);
-            var placemarkAttributes = new WorldWind.PlacemarkAttributes(placemarkAttributes);
-            placemarkAttributes.imageSource = "html/images/close.png";
+            // Add the default place marker
+            placemark = new WorldWind.Placemark(new WorldWind.Position(latitude, longitude, range), true, null);
+            var placemarkAttributes = new WorldWind.PlacemarkAttributes();
+            placemarkAttributes.imageSource = CLICKED_ICON_PATH + "1.png";
             placemark.attributes = placemarkAttributes;
 
-            placemarkLayer = new WorldWind.RenderableLayer("Placemarks");
-            placemarkLayer.addRenderable(placemark);
 
-            wwd.insertLayer(4, placemarkLayer);
+            // Put placemark, remove the last clicked point
+            if (placemarkLayer != null) {
+                //wwd.removeLayer(placemarkLayer);
+                placemarkLayer.removeRenderable(placemark);
+                placemarkLayer.addRenderable(placemark);
+                
+            } else {
+                placemarkLayer = new WorldWind.RenderableLayer("Placemarks");
+                placemarkLayer.addRenderable(placemark);
+                wwd.insertLayer(4, placemarkLayer);
+            }
         }
 
 
@@ -814,27 +817,126 @@ requirejs(['../../config/config',
             //alert(currentOpenDock);
         });
 
-        // remove the place mark on the globe
-        function removePlaceMarker(layer) {
-            // Put placemark, remove the last clicked point
-            if (layer != null) {
-                wwd.removeLayer(layer);
-            }
-        }
+        
 
-        // add a place mark on the globe
-        function addPlaceMarker(layerIndex, placeMarkLayerName, iconPath, latitude, longitude) {
-            var placemark = new WorldWind.Placemark(new WorldWind.Position(latitude, longitude, 1e2), true, null);
-            var placemarkAttributes = new WorldWind.PlacemarkAttributes(placemarkAttributes);
-            placemarkAttributes.imageSource = iconPath;
-            placemark.attributes = placemarkAttributes;
 
-            var layer = new WorldWind.RenderableLayer(placeMarkLayerName);
-            layer.addRenderable(placemark);
-
-            // Marker layer
-            wwd.insertLayer(layerIndex, layer);
-
-            return layer;
-        }
     });
+
+// remove the place mark on the globe
+function Landings_removePlaceMarker(layer) {
+    // Put placemark, remove the last clicked point
+    if (layer != null) {
+        //wwd.removeLayer(layer);
+    }
+}
+
+// add a place mark on the globe
+function Landings_addPlaceMarker(layerIndex, placeMarkLayerName, iconPath, latitude, longitude) {
+    var placemark = new WorldWind.Placemark(new WorldWind.Position(latitude, longitude, 1e2), true, null);
+    var placemarkAttributes = new WorldWind.PlacemarkAttributes(placemarkAttributes);
+    placemarkAttributes.imageSource = iconPath;
+    placemark.attributes = placemarkAttributes;
+
+    var layer = new WorldWind.RenderableLayer(placeMarkLayerName);
+    layer.addRenderable(placemark);
+
+    // Marker layer
+    wwd.insertLayer(layerIndex, layer);
+
+    return layer;
+}
+
+// add multiple place marks on a layer
+function Landings_addMultiplePlaceMarkers(layerIndex, placeMarkersArray) {
+    // create a new layer
+    var layer = new WorldWind.RenderableLayer("mainChartsPlaceMarkersLayer");
+
+    for(var i = 0; i < placeMarkersArray.length; i++) {
+        var obj = placeMarkersArray[i];
+
+        var placemark = new WorldWind.Placemark(new WorldWind.Position(obj.latitude, obj.longitude, 1e2), true, null);
+        var placemarkAttributes = new WorldWind.PlacemarkAttributes(placemarkAttributes);
+        placemarkAttributes.imageSource = obj.iconPath;
+        placemark.attributes = placemarkAttributes;
+
+        layer.addRenderable(placemark);
+    }
+
+     // Marker layer
+    wwd.insertLayer(layerIndex, layer);
+
+    return layer;
+}
+
+// when to show the placemark icon on the clicked point
+function handlePlaceMarkerLayer() {
+    if(placemarkLayer == null) {
+        placemarkLayer = new WorldWind.RenderableLayer("Placemarks");
+        placemarkLayer.addRenderable(placemark);
+
+        // Marker layer
+        wwd.insertLayer(4, placemarkLayer);
+    } else {
+
+        // Check which dock is opened
+        if(currentOpenDock === "mainChartDock") {
+            var chartIndex = placeMarkersArray.length;
+            // Check if it is add chart or update chart
+            if($("#radioBtnAddChartMainChart").is(':checked')) {
+                // Add chart, then create a place marker for the new line in main chart                
+                if(!MainChart_isAddedALineChart) {
+                    // if any line chart is not drawn, then just remove the previous one, no add the place marker
+                    placemarkLayer.removeRenderable(placemark);
+
+                    addPlaceMarker(CLICKED_ICON_PATH + "1.png");
+                } else {
+                    // a line chart is drawn, then can add the place marker
+                    if(chartIndex < MAXIMUM_LINECHARTS) {                        
+                        var iconPath = CLICKED_ICON_PATH + (chartIndex + 1) + ".png";
+                        addPlaceMarker(iconPath);
+                    }
+                } 
+            } else {
+                // Update chart, then remove the previous clicked place marker and add the new place marker
+                placemarkLayer.removeRenderable(placemark);
+
+                // 0 is for spectral library
+                if(chartIndex == 0) {
+                    chartIndex = 1;
+                }
+                var iconPath = CLICKED_ICON_PATH + (chartIndex) + ".png";
+                addPlaceMarker(iconPath);
+            }
+        } else {
+            // just clear the previous clicked point
+            placemarkLayer.removeRenderable(placemark);
+
+            // Add the new place mark on the clicked point
+            addPlaceMarker(CLICKED_ICON_PATH + "1.png");
+        }
+        /*
+        // Only remove the previous point if it is not the add line charts in main charts
+        if(!$("#radioBtnAddChartMainChart").is(':checked')) {
+            // only when the main dock is not opened then remove all the place markers
+            // and remove the update chart only, not all the clicked points
+            placemarkLayer.removeAllRenderables();
+        }
+        
+        // Only add new place marker if it is allowed
+        if(placeMarkersArray.length < MAXIMUM_LINECHARTS) {
+            placemarkLayer.addRenderable(placemark);
+        } */                       
+    }
+
+    wwd.redraw();
+}
+
+// Add the place marker at clicked position
+function addPlaceMarker(iconPath) {
+    placemark = new WorldWind.Placemark(new WorldWind.Position(clickedLatitude, clickedLongitude, 1e2), true, null);
+    var placemarkAttributes = new WorldWind.PlacemarkAttributes();
+    placemarkAttributes.imageSource = iconPath;
+    placemark.attributes = placemarkAttributes;
+
+    placemarkLayer.addRenderable(placemark);
+}
