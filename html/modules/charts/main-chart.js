@@ -67,7 +67,7 @@ function MainChart_getQueryResponseAndSetChart(query) {
             MainChart_valuesClickedCoordinateArray = Chart_parseFloats(data);
 
             isAddNewLineChart = true;
-            // only click on the footprint to get values from coordinate   
+            // only click on the footprint to get values from coordinate
             MainChart_implementChart(MainChart_valuesClickedCoordinateArray, selectedProductValuesSpectralLibrary);
 
         }
@@ -177,12 +177,12 @@ $(function() {
     // clear all the drawn charts, not the spectral library chart
     $("#btnClearChartsMultipleCharts").click(function() {
         if(!MainChart_isAddedALineChart) {
-            alert("Please click on footprint to draw a line chart first!");
+            alert("Please click on a footprint to retrieve the spectra first!");
             return;
         }
 
         // If a line chart is drawn
-        var ret = confirm("Do you want to remove all clicked drawn charts?");
+        var ret = confirm("Do you want to remove all clicked spectra?");
         if(ret) {
             // remove the data provider array for chart
             dataProviderChartsArray = [];
@@ -237,7 +237,7 @@ function MainChart_CombineDataProviders(spectralDataProviderChartCombined) {
             console.log("wavelengh index: " + i);
             return;
         }
-        
+
 
         for(var j = 0 ; j < combinedArrayTmp.length; j++) {
             var reflectanceIndex = "reflectance" + j;
@@ -280,7 +280,7 @@ function MainChart_implementChart(floatsArray, spectralFloatsArray) {
             isAddNewLineChart = false;
 
             // add the clicked point to place markers array to draw a layer with all points
-            var obj = new PlaceMarkerConstructor(clickedLatitude, clickedLongitude, CLICKED_ICON_PATH + (lineChartsCount + 1) + ".png");           
+            var obj = new PlaceMarkerConstructor(clickedLatitude, clickedLongitude, CLICKED_ICON_PATH + (lineChartsCount + 1) + ".png");
             placeMarkersArray.push(obj);
 
             // a line chart is added
@@ -297,21 +297,21 @@ function MainChart_implementChart(floatsArray, spectralFloatsArray) {
             MainChart_isAddedALineChart = true;
 
             // add the clicked point to place markers array to draw a layer with all points
-            var obj = new PlaceMarkerConstructor(clickedLatitude, clickedLongitude, CLICKED_ICON_PATH + "1.png");  
-            placeMarkersArray.push(obj);       
+            var obj = new PlaceMarkerConstructor(clickedLatitude, clickedLongitude, CLICKED_ICON_PATH + "1.png");
+            placeMarkersArray.push(obj);
         } else {
             dataProviderChartsArray[lineChartsCount - 1] = spectralDataProviderChart1;
             console.log("Update current line chart");
         }
     }
 
-    // store the array for combining 2 line charts    
-    // It will need to combine data from spectral library with the clicked coordinate array by finding the most identical wavelength value 
+    // store the array for combining 2 line charts
+    // It will need to combine data from spectral library with the clicked coordinate array by finding the most identical wavelength value
     // in spectralDataProviderChart1 and spectraDataProviderChart (it is best if it is identical, otherwise the top min value)
     var spectralDataProviderChartCombined = MainChart_approximateSpectralValues(spectralDataProviderChart0, spectralDataProviderChart1);
 
     var combinedArray = MainChart_CombineDataProviders(spectralDataProviderChartCombined);
-    
+
     // This is a combined values from point values and spectral values in range (1 - 4)
     // As spectral library has more values from 0 - 1 and 4 - 5 then it need to prepend and append these values to spectralDataProviderChartCombined
     // Use the wavelength from spectral library to concatinate
@@ -367,10 +367,10 @@ function MainChart_implementChart(floatsArray, spectralFloatsArray) {
         // Concatinate the prepend and append values to array
         combinedArray = prependArray.concat(combinedArray).concat(appendArray);
     }
-    
+
     console.log(combinedArray);
-    
-    // Draw 2 charts from clicked coordinate and product spectral library 
+
+    // Draw 2 charts from clicked coordinate and product spectral library
     /*var chart = AmCharts.makeChart("#" + chartDivID, {
         "type": "xy",
         "theme": "light",
@@ -437,7 +437,7 @@ function MainChart_implementChart(floatsArray, spectralFloatsArray) {
 
 
     drawChart(combinedArray);
-    
+
 }
 
 
@@ -467,11 +467,11 @@ function drawChart(combinedArray) {
         obj["lineThickness"] = 2;
         obj["valueField"] = reflectanceIndex;
         obj["connect"] = false;
-        obj["lineColor"] = chartColors[i];    
+        obj["lineColor"] = chartColors[i];
 
         // the chart lines
         chartsArray.push(obj);
-               
+
     }
 
     console.log(chartsArray);
