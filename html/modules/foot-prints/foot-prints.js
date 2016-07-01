@@ -42,7 +42,7 @@ function CheckedDataSetConstructor(coverageID, Easternmost_longitude, Maximum_la
 $.ajax({
     type: "get",
     url: "http://access.planetserver.eu:8080/ps2/" + "dataset",
-    data: "request=getAllCoverages",
+    data: "request=getAllCoverages&type=mars",
     dataType: 'json',
     cache: false,
     async: false, // this needs time to query all footprints from database and load to WWW then the problem with cache is done.
@@ -75,7 +75,7 @@ function getFootPrintsContainingPointLeftClick(shapesArray, attributesObj, check
     $.ajax({
         type: "get",
         url: "http://access.planetserver.eu:8080/ps2/" + "dataset",
-        data: "request=getCoveragesContainingPoint&latPoint=" + latitude + "&longPoint=" + longitude,
+        data: "request=getCoveragesContainingPoint&type=mars&latPoint=" + latitude + "&longPoint=" + longitude,
         dataType: 'json',
         cache: false,
         async: false,
@@ -83,7 +83,7 @@ function getFootPrintsContainingPointLeftClick(shapesArray, attributesObj, check
 	    if(data.length === 0) {
 	      return;
 	    } else {
-            	console.log("Get footprints containing point:" + " request=getCoveragesContainingPoint&latPoint=" + latitude + "&longPoint=" + longitude);
+            	console.log("Get footprints containing point:" + " request=getCoveragesContainingPoint&type=mars&latPoint=" + latitude + "&longPoint=" + longitude);
 	    }
 
             $.each(data, function(key, val) {
@@ -184,12 +184,12 @@ function getFootPrintsContainingPointRightClick(shapesArray, attributesObj, chec
     $.ajax({
         type: "get",
         url: "http://access.planetserver.eu:8080/ps2/" + "dataset",
-        data: "request=getCoveragesContainingPoint&latPoint=" + latitude + "&longPoint=" + longitude,
+        data: "request=getCoveragesContainingPoint&type=mars&latPoint=" + latitude + "&longPoint=" + longitude,
         dataType: 'json',
         cache: false,
         async: false,
         success: function(data) {
-            console.log("Get footprints containing point for right click:" + " request=getCoveragesContainingPoint&latPoint=" + latitude + "&longPoint=" + longitude);
+            console.log("Get footprints containing point for right click:" + " request=getCoveragesContainingPoint&type=mars&latPoint=" + latitude + "&longPoint=" + longitude);
             $.each(data, function(key, val) {
                 var dataSetFootPrint = new CheckedDataSetConstructor(val.coverageID, val.Easternmost_longitude, val.Maximum_latitude, val.Minimum_latitude, val.Westernmost_longitude, val.latList, val.longList, latitude, longitude, false, false);
                 console.log("mememe: " + val.coverageID);
