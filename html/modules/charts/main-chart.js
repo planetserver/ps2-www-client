@@ -93,7 +93,7 @@ function MainChart_handleClickedChartValues(floatsArray) {
     var spectralDataProviderChart1 = [];
 
     // This is for the clicked coordinate from WCPS
-    var xDist = 3.0 / floatsArray.length; // Value for setting the equidistance Band wavelength which should be between 1 and 4
+    var xDist = 3.00913242 / floatsArray.length; // Value for setting the equidistance Band wavelength which should be between 1 and 4
     var xPrev = 1.0; // Value used for storing the Band wavelength of the previous Band
     var Ymin = Infinity,
         Ymax = -Infinity; // Values for getting the minimum and maximum out of the array
