@@ -6,7 +6,6 @@
  * @exports BMNGOneImageLayer
  * @version $Id: BMNGOneImageLayer.js 2942 2015-03-30 21:16:36Z tgaskins $
  */
-
 define([
         '../layer/RenderableLayer',
         '../geom/Sector',
@@ -26,19 +25,18 @@ define([
          * @augments RenderableLayer
          * @classdesc Displays a Blue Marble image layer that spans the entire globe with a single image.
          */
+        var BMNGOneImageLayer = function () {
+            RenderableLayer.call(this, "Blue Marble Image");
 
-        var BMNGOneImageLayer = function (url, layerName) {
-
-            RenderableLayer.call(this, layerName);
             var surfaceImage = new SurfaceImage(Sector.FULL_SPHERE,
-                url || (WWUtil.currentUrlSansFilePart() + "/../images/moon.jpg"));
-        
+                WorldWind.configuration.baseUrl + "images/BMNG_world.topo.bathy.200405.3.2048x1024.jpg");
+
             this.addRenderable(surfaceImage);
 
             this.pickEnabled = false;
-            this.minActiveAltitude = 0;//3e4;
+            this.minActiveAltitude = 3e6;
         };
-        
+
         BMNGOneImageLayer.prototype = Object.create(RenderableLayer.prototype);
 
         return BMNGOneImageLayer;

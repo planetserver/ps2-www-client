@@ -4,7 +4,7 @@
  */
 /**
  * @exports ScreenImage
- * @version $Id: ScreenImage.js 3300 2015-07-06 19:34:54Z tgaskins $
+ * @version $Id: ScreenImage.js 3345 2015-07-28 20:28:35Z dcollins $
  */
 define([
         '../error/ArgumentError',
@@ -299,13 +299,13 @@ define([
             // that they be in separate buffers, so the code below uses the 3D buffer for vertex coords and the 2D
             // buffer for texture coords.
             program = dc.currentProgram;
-            gl.bindBuffer(WebGLRenderingContext.ARRAY_BUFFER, dc.unitQuadBuffer());
-            gl.vertexAttribPointer(program.vertexTexCoordLocation, 2, WebGLRenderingContext.FLOAT, false, 0, 0);
+            gl.bindBuffer(gl.ARRAY_BUFFER, dc.unitQuadBuffer());
+            gl.vertexAttribPointer(program.vertexTexCoordLocation, 2, gl.FLOAT, false, 0, 0);
             gl.enableVertexAttribArray(program.vertexPointLocation);
             gl.enableVertexAttribArray(program.vertexTexCoordLocation);
 
             // Tell the program which texture unit to use.
-            program.loadTextureUnit(gl, WebGLRenderingContext.TEXTURE0);
+            program.loadTextureUnit(gl, gl.TEXTURE0);
             program.loadModulateColor(gl, dc.pickingMode);
 
             // Turn off depth testing.
@@ -323,12 +323,11 @@ define([
             gl.disableVertexAttribArray(program.vertexTexCoordLocation);
 
             // Clear GL bindings.
-            dc.bindProgram(null);
-            gl.bindBuffer(WebGLRenderingContext.ARRAY_BUFFER, null);
-            gl.bindTexture(WebGLRenderingContext.TEXTURE_2D, null);
+            gl.bindBuffer(gl.ARRAY_BUFFER, null);
+            gl.bindTexture(gl.TEXTURE_2D, null);
 
             // Re-enable depth testing.
-            gl.enable(WebGLRenderingContext.DEPTH_TEST);
+            gl.enable(gl.DEPTH_TEST);
         };
 
         // Internal. Intentionally not documented.
@@ -336,8 +335,8 @@ define([
             var gl = dc.currentGlContext,
                 program = dc.currentProgram;
 
-            gl.bindBuffer(WebGLRenderingContext.ARRAY_BUFFER, dc.unitQuadBuffer3());
-            gl.vertexAttribPointer(program.vertexPointLocation, 3, WebGLRenderingContext.FLOAT, false, 0, 0);
+            gl.bindBuffer(gl.ARRAY_BUFFER, dc.unitQuadBuffer3());
+            gl.vertexAttribPointer(program.vertexPointLocation, 3, gl.FLOAT, false, 0, 0);
 
             // Compute and specify the MVP matrix.
             ScreenImage.matrix.copy(dc.screenProjection);
@@ -370,7 +369,7 @@ define([
 
             if (this.activeTexture.bind(dc)) { // returns false if active texture cannot be bound
                 // Draw the placemark's image quad.
-                gl.drawArrays(WebGLRenderingContext.TRIANGLE_STRIP, 0, 4);
+                gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
             }
         };
 

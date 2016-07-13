@@ -4,7 +4,7 @@
  */
 /**
  * @exports BasicProgram
- * @version $Id: BasicProgram.js 2945 2015-03-31 20:37:04Z dcollins $
+ * @version $Id: BasicProgram.js 3327 2015-07-21 19:03:39Z dcollins $
  */
 define([
         '../error/ArgumentError',
@@ -92,7 +92,7 @@ define([
                     Logger.logMessage(Logger.LEVEL_SEVERE, "BasicProgram", "loadModelviewProjection", "missingMatrix"));
             }
 
-            GpuProgram.loadUniformMatrix(gl, matrix, this.mvpMatrixLocation);
+            this.loadUniformMatrix(gl, matrix, this.mvpMatrixLocation);
         };
 
         /**
@@ -108,7 +108,7 @@ define([
                     Logger.logMessage(Logger.LEVEL_SEVERE, "BasicProgram", "loadColor", "missingColor"));
             }
 
-            GpuProgram.loadUniformColor(gl, color, this.colorLocation);
+            this.loadUniformColor(gl, color, this.colorLocation);
         };
 
         /**
@@ -121,7 +121,7 @@ define([
          * @param {Number} alpha The alpha component, a number between 0 and 1.
          */
         BasicProgram.prototype.loadColorComponents = function (gl, red, green, blue, alpha) {
-            GpuProgram.loadUniformColorComponents(gl, red, green, blue, alpha, this.colorLocation);
+            this.loadUniformColorComponents(gl, red, green, blue, alpha, this.colorLocation);
         };
 
         return BasicProgram;

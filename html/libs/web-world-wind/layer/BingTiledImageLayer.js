@@ -38,9 +38,7 @@ define([
 
             this.displayName = displayName;
             this.pickEnabled = false;
-            this.detailHintOrigin = 2.6; // layer looks better at higher resolution
 
-            this.mapAncestorToTile = false;
             this.detectBlankImages = true;
 
             this.creditImage = WorldWind.configuration.baseUrl + "images/powered-by-bing.png"

@@ -3,7 +3,7 @@
  * National Aeronautics and Space Administration. All Rights Reserved.
  */
 /**
- * @version $Id: Logger.js 3298 2015-07-06 17:28:33Z dcollins $
+ * @version $Id: Logger.js 3418 2015-08-22 00:17:05Z tgaskins $
  */
 define(function () {
     "use strict";
@@ -60,7 +60,7 @@ define(function () {
         log: function (level, message) {
             if (message && level > 0 && level <= loggingLevel) {
                 if (level === Logger.LEVEL_SEVERE) {
-                    //console.error(message);
+                    console.error(message);
                 } else if (level === Logger.LEVEL_WARNING) {
                     console.warn(message);
                 } else if (level === Logger.LEVEL_INFO) {
@@ -100,9 +100,11 @@ define(function () {
             missingBuffer: "The specified buffer descriptor is null or undefined.",
             missingColor: "The specified color is null or undefined.",
             missingDc: "The specified draw context is null or undefined.",
+            missingDomElement: "The specified DOM element is null or undefined.",
             missingEntry: "The specified entry is null or undefined.",
             missingFont: "The specified font is null or undefined.",
             missingFrustum: "The specified frustum is null or undefined.",
+            missingFunction: "The specified function is null or undefined.",
             missingGlContext: "The specified WebGL rendering context is null or undefined.",
             missingGlobe: "The specified globe is null or undefined.",
             missingImage: "The specified image is null or undefined.",

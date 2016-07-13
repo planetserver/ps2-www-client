@@ -60,7 +60,7 @@ define([
                 if (typeof Math.cbrt == 'function') {
                     return Math.cbrt(x);
                 } else {
-                    return Math.pow(x, 1/3);
+                    return Math.pow(x, 1 / 3);
                 }
             },
 
@@ -206,6 +206,58 @@ define([
                     result[2] = sz + vz * t;
                     return true;
                 }
+            },
+
+            computeIndexedTrianglesIntersection: function (line, points, indices, results) {
+                if (!line) {
+                    throw new ArgumentError(Logger.logMessage(Logger.LEVEL_SEVERE, "WWMath",
+                        "computeIndexedTrianglesIntersection", "missingLine"));
+                }
+
+                if (!points) {
+                    throw new ArgumentError(Logger.logMessage(Logger.LEVEL_SEVERE, "WWMath",
+                        "computeIndexedTrianglesIntersection", "missingPoints"));
+                }
+
+                if (!indices) {
+                    throw new ArgumentError(Logger.logMessage(Logger.LEVEL_SEVERE, "WWMath",
+                        "computeIndexedTrianglesIntersection", "missingIndices"));
+                }
+
+                if (!results) {
+                    throw new ArgumentError(Logger.logMessage(Logger.LEVEL_SEVERE, "WWMath",
+                        "computeIndexedTrianglesIntersection", "missingResults"));
+                }
+
+                var v0 = new Vec3(0, 0, 0),
+                    v1 = new Vec3(0, 0, 0),
+                    v2 = new Vec3(0, 0, 0),
+                    iPoint = new Vec3(0, 0, 0);
+
+                for (var i = 0, len = indices.length; i < len; i += 3) {
+                    var i0 = 3 * indices[i],
+                        i1 = 3 * indices[i + 1],
+                        i2 = 3 * indices[i + 2];
+
+                    v0[0] = points[i0];
+                    v0[1] = points[i0 + 1];
+                    v0[2] = points[i0 + 2];
+
+                    v1[0] = points[i1];
+                    v1[1] = points[i1 + 1];
+                    v1[2] = points[i1 + 2];
+
+                    v2[0] = points[i2];
+                    v2[1] = points[i2 + 1];
+                    v2[2] = points[i2 + 2];
+
+                    if (WWMath.computeTriangleIntersection(line, v0, v1, v2, iPoint)) {
+                        results.push(iPoint);
+                        iPoint = new Vec3(0, 0, 0);
+                    }
+                }
+
+                return results.length > 0;
             },
 
             /**
@@ -706,6 +758,27 @@ define([
              */
             gudermannianInverse: function (latitude) {
                 return Math.log(Math.tan(Math.PI / 4 + (latitude * Angle.DEGREES_TO_RADIANS) / 2)) / Math.PI;
+            },
+
+            epsg3857ToEpsg4326: function (easting, northing) {
+                var r = 6.3781e6,
+                    latRadians = (Math.PI / 2) - 2 * Math.atan(Math.exp(-northing / r)),
+                    lonRadians = easting / r;
+
+                return [
+                    WWMath.clamp(latRadians * Angle.RADIANS_TO_DEGREES, -90, 90),
+                    WWMath.clamp(lonRadians * Angle.RADIANS_TO_DEGREES, -180, 180)
+                ];
+            },
+
+            /**
+             * Returns the value that is the nearest power of 2 less than or equal to the given value.
+             * @param {Number} value the reference value. The power of 2 returned is less than or equal to this value.
+             * @returns {Number} the value that is the nearest power of 2 less than or equal to the reference value
+             */
+            powerOfTwoFloor: function (value) {
+                var power = Math.floor(Math.log(value) / Math.log(2));
+                return Math.pow(2, power);
             }
         };
 

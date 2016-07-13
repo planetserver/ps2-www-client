@@ -4,7 +4,7 @@
  */
 /**
  * @exports Tessellator
- * @version $Id: Tessellator.js 3136 2015-06-02 17:14:24Z dcollins $
+ * @version $Id: Tessellator.js 3345 2015-07-28 20:28:35Z dcollins $
  */
 define([
         '../error/ArgumentError',
@@ -74,12 +74,14 @@ define([
             this.tileWidth = 32; // baseline: 32
             this.tileHeight = 32; // baseline: 32
 
-            // detailHintOrigin - a parameter that describes the size of the sampling grid when fully zoomed in.
-            // The size of the tile sampling grid when fully zoomed in is related to the logarithm base 10 of this parameter.
-            // A parameter of 2 will have a sampling size approximately 10 times finer than a parameter of 1.
-            // Parameters which result in changes of a factor of two are: 1.1, 1.4, 1.7, 2.0.
-            this.detailHintOrigin = 1.1; // baseline: 1.1
-            this.detailHint = 0;
+            /**
+             * Controls the level of detail switching for this layer. The next highest resolution level is
+             * used when an elevation tile's cell size is greater than this number of pixels, up to the maximum
+             * resolution of the elevation model.
+             * @type {Number}
+             * @default 1.75
+             */
+            this.detailControl = 40;
 
             this.levels = new LevelSet(
                 Sector.FULL_SPHERE,
@@ -100,7 +102,6 @@ define([
 
             this.vertexPointLocation = -1;
             this.vertexTexCoordLocation = -1;
-            this.modelViewProjectionMatrixLocation = -1;
 
             this.texCoords = null;
             this.texCoordVboCacheKey = 'global_tex_coords';
@@ -254,13 +255,12 @@ define([
             // bound, and therefore must look up the location of attributes by name.
             this.vertexPointLocation = program.attributeLocation(gl, "vertexPoint");
             this.vertexTexCoordLocation = program.attributeLocation(gl, "vertexTexCoord");
-            this.modelViewProjectionMatrixLocation = program.uniformLocation(gl, "mvpMatrix");
             gl.enableVertexAttribArray(this.vertexPointLocation);
 
             if (this.vertexTexCoordLocation >= 0) { // location of vertexTexCoord attribute is -1 when the basic program is bound
                 var texCoordVbo = gpuResourceCache.resourceForKey(this.texCoordVboCacheKey);
-                gl.bindBuffer(WebGLRenderingContext.ARRAY_BUFFER, texCoordVbo);
-                gl.vertexAttribPointer(this.vertexTexCoordLocation, 2, WebGLRenderingContext.FLOAT, false, 0, 0);
+                gl.bindBuffer(gl.ARRAY_BUFFER, texCoordVbo);
+                gl.vertexAttribPointer(this.vertexTexCoordLocation, 2, gl.FLOAT, false, 0, 0);
                 gl.enableVertexAttribArray(this.vertexTexCoordLocation);
             }
         };
@@ -272,8 +272,8 @@ define([
         Tessellator.prototype.endRendering = function (dc) {
             var gl = dc.currentGlContext;
 
-            gl.bindBuffer(WebGLRenderingContext.ARRAY_BUFFER, null);
-            gl.bindBuffer(WebGLRenderingContext.ELEMENT_ARRAY_BUFFER, null);
+            gl.bindBuffer(gl.ARRAY_BUFFER, null);
+            gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, null);
 
             // Restore the global OpenGL vertex attribute array state.
             if (this.vertexPointLocation >= 0) {
@@ -301,28 +301,28 @@ define([
                 gpuResourceCache = dc.gpuResourceCache;
 
             this.scratchMatrix.setToMultiply(dc.navigatorState.modelviewProjection, terrainTile.transformationMatrix);
-            GpuProgram.loadUniformMatrix(gl, this.scratchMatrix, this.modelViewProjectionMatrixLocation);
+            dc.currentProgram.loadModelviewProjection(gl, this.scratchMatrix);
 
             var vboCacheKey = dc.globeStateKey + terrainTile.tileKey,
                 vbo = gpuResourceCache.resourceForKey(vboCacheKey);
             if (!vbo) {
                 vbo = gl.createBuffer();
-                gl.bindBuffer(WebGLRenderingContext.ARRAY_BUFFER, vbo);
-                gl.bufferData(WebGLRenderingContext.ARRAY_BUFFER, terrainTile.points, WebGLRenderingContext.STATIC_DRAW);
+                gl.bindBuffer(gl.ARRAY_BUFFER, vbo);
+                gl.bufferData(gl.ARRAY_BUFFER, terrainTile.points, gl.STATIC_DRAW);
                 dc.frameStatistics.incrementVboLoadCount(1);
                 gpuResourceCache.putResource(vboCacheKey, vbo, terrainTile.points.length * 4);
                 terrainTile.pointsVboStateKey = terrainTile.pointsStateKey;
             }
             else if (terrainTile.pointsVboStateKey != terrainTile.pointsStateKey) {
-                gl.bindBuffer(WebGLRenderingContext.ARRAY_BUFFER, vbo);
-                gl.bufferSubData(WebGLRenderingContext.ARRAY_BUFFER, 0, terrainTile.points);
+                gl.bindBuffer(gl.ARRAY_BUFFER, vbo);
+                gl.bufferSubData(gl.ARRAY_BUFFER, 0, terrainTile.points);
                 terrainTile.pointsVboStateKey = terrainTile.pointsStateKey;
             }
             else {
-                dc.currentGlContext.bindBuffer(WebGLRenderingContext.ARRAY_BUFFER, vbo);
+                dc.currentGlContext.bindBuffer(gl.ARRAY_BUFFER, vbo);
             }
 
-            gl.vertexAttribPointer(this.vertexPointLocation, 3, WebGLRenderingContext.FLOAT, false, 0, 0);
+            gl.vertexAttribPointer(this.vertexPointLocation, 3, gl.FLOAT, false, 0, 0);
         };
 
         /**
@@ -350,15 +350,15 @@ define([
 
             var gl = dc.currentGlContext,
                 gpuResourceCache = dc.gpuResourceCache,
-                prim = WebGLRenderingContext.TRIANGLE_STRIP; // replace TRIANGLE_STRIP with LINE_STRIP to debug borders
+                prim = gl.TRIANGLE_STRIP; // replace TRIANGLE_STRIP with LINE_STRIP to debug borders
 
             var indicesVbo = gpuResourceCache.resourceForKey(this.indicesVboCacheKey);
-            gl.bindBuffer(WebGLRenderingContext.ELEMENT_ARRAY_BUFFER, indicesVbo);
+            gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indicesVbo);
 
             gl.drawElements(
                 prim,
                 this.numIndices,
-                WebGLRenderingContext.UNSIGNED_SHORT,
+                gl.UNSIGNED_SHORT,
                 0);
 
             var level = terrainTile.level,
@@ -367,88 +367,88 @@ define([
             neighborLevel = terrainTile.neighborLevel(WorldWind.NORTH);
             if (neighborLevel && neighborLevel.compare(level) < 0) {
                 var indicesLoresNorthVbo = gpuResourceCache.resourceForKey(this.indicesLoresNorthVboCacheKey);
-                gl.bindBuffer(WebGLRenderingContext.ELEMENT_ARRAY_BUFFER, indicesLoresNorthVbo);
+                gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indicesLoresNorthVbo);
 
                 gl.drawElements(
                     prim,
                     this.numIndicesLoresNorth,
-                    WebGLRenderingContext.UNSIGNED_SHORT,
+                    gl.UNSIGNED_SHORT,
                     0);
             }
             else {
                 var indicesNorthVbo = gpuResourceCache.resourceForKey(this.indicesNorthVboCacheKey);
-                gl.bindBuffer(WebGLRenderingContext.ELEMENT_ARRAY_BUFFER, indicesNorthVbo);
+                gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indicesNorthVbo);
 
                 gl.drawElements(
                     prim,
                     this.numIndicesNorth,
-                    WebGLRenderingContext.UNSIGNED_SHORT,
+                    gl.UNSIGNED_SHORT,
                     0);
             }
 
             neighborLevel = terrainTile.neighborLevel(WorldWind.SOUTH);
             if (neighborLevel && neighborLevel.compare(level) < 0) {
                 var indicesLoresSouthVbo = gpuResourceCache.resourceForKey(this.indicesLoresSouthVboCacheKey);
-                gl.bindBuffer(WebGLRenderingContext.ELEMENT_ARRAY_BUFFER, indicesLoresSouthVbo);
+                gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indicesLoresSouthVbo);
 
                 gl.drawElements(
                     prim,
                     this.numIndicesLoresSouth,
-                    WebGLRenderingContext.UNSIGNED_SHORT,
+                    gl.UNSIGNED_SHORT,
                     0);
             }
             else {
                 var indicesSouthVbo = gpuResourceCache.resourceForKey(this.indicesSouthVboCacheKey);
-                gl.bindBuffer(WebGLRenderingContext.ELEMENT_ARRAY_BUFFER, indicesSouthVbo);
+                gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indicesSouthVbo);
 
                 gl.drawElements(
                     prim,
                     this.numIndicesSouth,
-                    WebGLRenderingContext.UNSIGNED_SHORT,
+                    gl.UNSIGNED_SHORT,
                     0);
             }
 
             neighborLevel = terrainTile.neighborLevel(WorldWind.WEST);
             if (neighborLevel && neighborLevel.compare(level) < 0) {
                 var indicesLoresWestVbo = gpuResourceCache.resourceForKey(this.indicesLoresWestVboCacheKey);
-                gl.bindBuffer(WebGLRenderingContext.ELEMENT_ARRAY_BUFFER, indicesLoresWestVbo);
+                gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indicesLoresWestVbo);
 
                 gl.drawElements(
                     prim,
                     this.numIndicesLoresWest,
-                    WebGLRenderingContext.UNSIGNED_SHORT,
+                    gl.UNSIGNED_SHORT,
                     0);
             }
             else {
                 var indicesWestVbo = gpuResourceCache.resourceForKey(this.indicesWestVboCacheKey);
-                gl.bindBuffer(WebGLRenderingContext.ELEMENT_ARRAY_BUFFER, indicesWestVbo);
+                gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indicesWestVbo);
 
                 gl.drawElements(
                     prim,
                     this.numIndicesWest,
-                    WebGLRenderingContext.UNSIGNED_SHORT,
+                    gl.UNSIGNED_SHORT,
                     0);
             }
 
             neighborLevel = terrainTile.neighborLevel(WorldWind.EAST);
             if (neighborLevel && neighborLevel.compare(level) < 0) {
                 var indicesLoresEastVbo = gpuResourceCache.resourceForKey(this.indicesLoresEastVboCacheKey);
-                gl.bindBuffer(WebGLRenderingContext.ELEMENT_ARRAY_BUFFER, indicesLoresEastVbo);
+                gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indicesLoresEastVbo);
 
                 gl.drawElements(
                     prim,
                     this.numIndicesLoresEast,
-                    WebGLRenderingContext.UNSIGNED_SHORT,
+                    gl.UNSIGNED_SHORT,
                     0);
             }
             else {
                 var indicesEastVbo = gpuResourceCache.resourceForKey(this.indicesEastVboCacheKey);
-                gl.bindBuffer(WebGLRenderingContext.ELEMENT_ARRAY_BUFFER, indicesEastVbo);
+                gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indicesEastVbo);
 
                 gl.drawElements(
                     prim,
                     this.numIndicesEast,
-                    WebGLRenderingContext.UNSIGNED_SHORT,
+                    gl.UNSIGNED_SHORT,
                     0);
             }
         };
@@ -474,12 +474,12 @@ define([
             }
 
             var wireframeIndicesVbo = gpuResourceCache.resourceForKey(this.wireframeIndicesVboCacheKey);
-            gl.bindBuffer(WebGLRenderingContext.ELEMENT_ARRAY_BUFFER, wireframeIndicesVbo);
+            gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, wireframeIndicesVbo);
 
             gl.drawElements(
-                WebGLRenderingContext.LINES,
+                gl.LINES,
                 this.wireframeIndices.length,
-                WebGLRenderingContext.UNSIGNED_SHORT,
+                gl.UNSIGNED_SHORT,
                 0);
         };
 
@@ -504,12 +504,12 @@ define([
             }
 
             var outlineIndicesVbo = gpuResourceCache.resourceForKey(this.outlineIndicesVboCacheKey);
-            gl.bindBuffer(WebGLRenderingContext.ELEMENT_ARRAY_BUFFER, outlineIndicesVbo);
+            gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, outlineIndicesVbo);
 
             gl.drawElements(
-                WebGLRenderingContext.LINE_LOOP,
+                gl.LINE_LOOP,
                 this.outlineIndices.length,
-                WebGLRenderingContext.UNSIGNED_SHORT,
+                gl.UNSIGNED_SHORT,
                 0);
         };
 
@@ -586,7 +586,6 @@ define([
                 }
             } finally {
                 this.endRendering(dc);
-                dc.bindProgram(null);
             }
         };
 
@@ -949,9 +948,9 @@ define([
         };
 
         Tessellator.prototype.tileMeetsRenderCriteria = function (dc, tile) {
-            var s = this.detailHintOrigin + this.detailHint;
+            var s = this.detailControl;
             if (tile.sector.minLatitude >= 75 || tile.sector.maxLatitude <= -75) {
-                s *= 0.5;
+                s *= 2;
             }
             return tile.level.isLastLevel() || !tile.mustSubdivide(dc, s);
         };
@@ -1544,8 +1543,8 @@ define([
             var texCoordVbo = gpuResourceCache.resourceForKey(this.texCoordVboCacheKey);
             if (!texCoordVbo) {
                 texCoordVbo = gl.createBuffer();
-                gl.bindBuffer(WebGLRenderingContext.ARRAY_BUFFER, texCoordVbo);
-                gl.bufferData(WebGLRenderingContext.ARRAY_BUFFER, this.texCoords, WebGLRenderingContext.STATIC_DRAW);
+                gl.bindBuffer(gl.ARRAY_BUFFER, texCoordVbo);
+                gl.bufferData(gl.ARRAY_BUFFER, this.texCoords, gl.STATIC_DRAW);
                 dc.frameStatistics.incrementVboLoadCount(1);
                 gpuResourceCache.putResource(this.texCoordVboCacheKey, texCoordVbo, this.texCoords.length * 4 / 2);
             }
@@ -1553,8 +1552,8 @@ define([
             var indicesVbo = gpuResourceCache.resourceForKey(this.indicesVboCacheKey);
             if (!indicesVbo) {
                 indicesVbo = gl.createBuffer();
-                gl.bindBuffer(WebGLRenderingContext.ELEMENT_ARRAY_BUFFER, indicesVbo);
-                gl.bufferData(WebGLRenderingContext.ELEMENT_ARRAY_BUFFER, this.indices, WebGLRenderingContext.STATIC_DRAW);
+                gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indicesVbo);
+                gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, this.indices, gl.STATIC_DRAW);
                 dc.frameStatistics.incrementVboLoadCount(1);
                 gpuResourceCache.putResource(this.indicesVboCacheKey, indicesVbo, this.indices.length * 2);
             }
@@ -1562,8 +1561,8 @@ define([
             var indicesNorthVbo = gpuResourceCache.resourceForKey(this.indicesNorthVboCacheKey);
             if (!indicesNorthVbo) {
                 indicesNorthVbo = gl.createBuffer();
-                gl.bindBuffer(WebGLRenderingContext.ELEMENT_ARRAY_BUFFER, indicesNorthVbo);
-                gl.bufferData(WebGLRenderingContext.ELEMENT_ARRAY_BUFFER, this.indicesNorth, WebGLRenderingContext.STATIC_DRAW);
+                gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indicesNorthVbo);
+                gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, this.indicesNorth, gl.STATIC_DRAW);
                 dc.frameStatistics.incrementVboLoadCount(1);
                 gpuResourceCache.putResource(this.indicesNorthVboCacheKey, indicesNorthVbo, this.indicesNorth.length * 2);
             }
@@ -1571,8 +1570,8 @@ define([
             var indicesSouthVbo = gpuResourceCache.resourceForKey(this.indicesSouthVboCacheKey);
             if (!indicesSouthVbo) {
                 indicesSouthVbo = gl.createBuffer();
-                gl.bindBuffer(WebGLRenderingContext.ELEMENT_ARRAY_BUFFER, indicesSouthVbo);
-                gl.bufferData(WebGLRenderingContext.ELEMENT_ARRAY_BUFFER, this.indicesSouth, WebGLRenderingContext.STATIC_DRAW);
+                gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indicesSouthVbo);
+                gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, this.indicesSouth, gl.STATIC_DRAW);
                 dc.frameStatistics.incrementVboLoadCount(1);
                 gpuResourceCache.putResource(this.indicesSouthVboCacheKey, indicesSouthVbo, this.indicesSouth.length * 2);
             }
@@ -1580,8 +1579,8 @@ define([
             var indicesWestVbo = gpuResourceCache.resourceForKey(this.indicesWestVboCacheKey);
             if (!indicesWestVbo) {
                 indicesWestVbo = gl.createBuffer();
-                gl.bindBuffer(WebGLRenderingContext.ELEMENT_ARRAY_BUFFER, indicesWestVbo);
-                gl.bufferData(WebGLRenderingContext.ELEMENT_ARRAY_BUFFER, this.indicesWest, WebGLRenderingContext.STATIC_DRAW);
+                gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indicesWestVbo);
+                gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, this.indicesWest, gl.STATIC_DRAW);
                 dc.frameStatistics.incrementVboLoadCount(1);
                 gpuResourceCache.putResource(this.indicesWestVboCacheKey, indicesWestVbo, this.indicesWest.length * 2);
             }
@@ -1589,8 +1588,8 @@ define([
             var indicesEastVbo = gpuResourceCache.resourceForKey(this.indicesEastVboCacheKey);
             if (!indicesEastVbo) {
                 indicesEastVbo = gl.createBuffer();
-                gl.bindBuffer(WebGLRenderingContext.ELEMENT_ARRAY_BUFFER, indicesEastVbo);
-                gl.bufferData(WebGLRenderingContext.ELEMENT_ARRAY_BUFFER, this.indicesEast, WebGLRenderingContext.STATIC_DRAW);
+                gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indicesEastVbo);
+                gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, this.indicesEast, gl.STATIC_DRAW);
                 dc.frameStatistics.incrementVboLoadCount(1);
                 gpuResourceCache.putResource(this.indicesEastVboCacheKey, indicesEastVbo, this.indicesEast.length * 2);
             }
@@ -1598,8 +1597,8 @@ define([
             var indicesLoresNorthVbo = gpuResourceCache.resourceForKey(this.indicesLoresNorthVboCacheKey);
             if (!indicesLoresNorthVbo) {
                 indicesLoresNorthVbo = gl.createBuffer();
-                gl.bindBuffer(WebGLRenderingContext.ELEMENT_ARRAY_BUFFER, indicesLoresNorthVbo);
-                gl.bufferData(WebGLRenderingContext.ELEMENT_ARRAY_BUFFER, this.indicesLoresNorth, WebGLRenderingContext.STATIC_DRAW);
+                gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indicesLoresNorthVbo);
+                gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, this.indicesLoresNorth, gl.STATIC_DRAW);
                 dc.frameStatistics.incrementVboLoadCount(1);
                 gpuResourceCache.putResource(this.indicesLoresNorthVboCacheKey, indicesLoresNorthVbo, this.indicesLoresNorth.length * 2);
             }
@@ -1607,8 +1606,8 @@ define([
             var indicesLoresSouthVbo = gpuResourceCache.resourceForKey(this.indicesLoresSouthVboCacheKey);
             if (!indicesLoresSouthVbo) {
                 indicesLoresSouthVbo = gl.createBuffer();
-                gl.bindBuffer(WebGLRenderingContext.ELEMENT_ARRAY_BUFFER, indicesLoresSouthVbo);
-                gl.bufferData(WebGLRenderingContext.ELEMENT_ARRAY_BUFFER, this.indicesLoresSouth, WebGLRenderingContext.STATIC_DRAW);
+                gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indicesLoresSouthVbo);
+                gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, this.indicesLoresSouth, gl.STATIC_DRAW);
                 dc.frameStatistics.incrementVboLoadCount(1);
                 gpuResourceCache.putResource(this.indicesLoresSouthVboCacheKey, indicesLoresSouthVbo, this.indicesLoresSouth.length * 2);
             }
@@ -1616,8 +1615,8 @@ define([
             var indicesLoresWestVbo = gpuResourceCache.resourceForKey(this.indicesLoresWestVboCacheKey);
             if (!indicesLoresWestVbo) {
                 indicesLoresWestVbo = gl.createBuffer();
-                gl.bindBuffer(WebGLRenderingContext.ELEMENT_ARRAY_BUFFER, indicesLoresWestVbo);
-                gl.bufferData(WebGLRenderingContext.ELEMENT_ARRAY_BUFFER, this.indicesLoresWest, WebGLRenderingContext.STATIC_DRAW);
+                gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indicesLoresWestVbo);
+                gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, this.indicesLoresWest, gl.STATIC_DRAW);
                 dc.frameStatistics.incrementVboLoadCount(1);
                 gpuResourceCache.putResource(this.indicesLoresWestVboCacheKey, indicesLoresWestVbo, this.indicesLoresWest.length * 2);
             }
@@ -1625,8 +1624,8 @@ define([
             var indicesLoresEastVbo = gpuResourceCache.resourceForKey(this.indicesLoresEastVboCacheKey);
             if (!indicesLoresEastVbo) {
                 indicesLoresEastVbo = gl.createBuffer();
-                gl.bindBuffer(WebGLRenderingContext.ELEMENT_ARRAY_BUFFER, indicesLoresEastVbo);
-                gl.bufferData(WebGLRenderingContext.ELEMENT_ARRAY_BUFFER, this.indicesLoresEast, WebGLRenderingContext.STATIC_DRAW);
+                gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indicesLoresEastVbo);
+                gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, this.indicesLoresEast, gl.STATIC_DRAW);
                 dc.frameStatistics.incrementVboLoadCount(1);
                 gpuResourceCache.putResource(this.indicesLoresEastVboCacheKey, indicesLoresEastVbo, this.indicesLoresEast.length * 2);
             }
@@ -1634,8 +1633,8 @@ define([
             var outlineIndicesVbo = gpuResourceCache.resourceForKey(this.outlineIndicesVboCacheKey);
             if (!outlineIndicesVbo) {
                 outlineIndicesVbo = gl.createBuffer();
-                gl.bindBuffer(WebGLRenderingContext.ELEMENT_ARRAY_BUFFER, outlineIndicesVbo);
-                gl.bufferData(WebGLRenderingContext.ELEMENT_ARRAY_BUFFER, this.outlineIndices, WebGLRenderingContext.STATIC_DRAW);
+                gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, outlineIndicesVbo);
+                gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, this.outlineIndices, gl.STATIC_DRAW);
                 dc.frameStatistics.incrementVboLoadCount(1);
                 gpuResourceCache.putResource(this.outlineIndicesVboCacheKey, outlineIndicesVbo, this.outlineIndices.length * 2);
             }
@@ -1643,8 +1642,8 @@ define([
             var wireframeIndicesVbo = gpuResourceCache.resourceForKey(this.wireframeIndicesVboCacheKey);
             if (!wireframeIndicesVbo) {
                 wireframeIndicesVbo = gl.createBuffer();
-                gl.bindBuffer(WebGLRenderingContext.ELEMENT_ARRAY_BUFFER, wireframeIndicesVbo);
-                gl.bufferData(WebGLRenderingContext.ELEMENT_ARRAY_BUFFER, this.wireframeIndices, WebGLRenderingContext.STATIC_DRAW);
+                gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, wireframeIndicesVbo);
+                gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, this.wireframeIndices, gl.STATIC_DRAW);
                 dc.frameStatistics.incrementVboLoadCount(1);
                 gpuResourceCache.putResource(this.wireframeIndicesVboCacheKey, wireframeIndicesVbo, this.wireframeIndices.length * 2);
             }

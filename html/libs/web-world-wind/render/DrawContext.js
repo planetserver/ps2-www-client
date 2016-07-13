@@ -4,7 +4,7 @@
  */
 /**
  * @exports DrawContext
- * @version $Id: DrawContext.js 3319 2015-07-15 20:45:54Z dcollins $
+ * @version $Id: DrawContext.js 3351 2015-07-28 22:03:20Z dcollins $
  */
 define([
         '../error/ArgumentError',
@@ -153,6 +153,12 @@ define([
             this.currentProgram = null;
 
             /**
+             * The list of surface renderables.
+             * @type {Array}
+             */
+            this.surfaceRenderables = [];
+
+            /**
              * Indicates whether this draw context is in ordered rendering mode.
              * @type {Boolean}
              */
@@ -163,6 +169,12 @@ define([
              * @type {Array}
              */
             this.orderedRenderables = [];
+
+            /**
+             * The list of screen renderables.
+             * @type {Array}
+             */
+            this.screeRenderables = [];
 
             // Internal. Intentionally not documented. Provides ordinal IDs to ordered renderables.
             this.orderedRenderablesCounter = 0; // Number
@@ -352,8 +364,10 @@ define([
         DrawContext.prototype.reset = function () {
             // Reset the draw context's internal properties.
             this.screenCreditController.clear();
+            this.surfaceRenderables = []; // clears the surface renderables array
             this.orderedRenderingMode = false;
             this.orderedRenderables = []; // clears the ordered renderables array
+            this.screenRenderables = [];
             this.orderedRenderablesCounter = 0;
 
             // Advance the per-frame timestamp.
@@ -429,17 +443,12 @@ define([
          * default WebGL framebuffer is made active.
          */
         DrawContext.prototype.bindFramebuffer = function (framebuffer) {
-            var gl = this.currentGlContext;
-
-            if (framebuffer) {
-                framebuffer.bindFramebuffer(this);
-            } else {
-                gl.bindFramebuffer(WebGLRenderingContext.FRAMEBUFFER, null);
+            if (this.currentFramebuffer != framebuffer) {
+                this.currentGlContext.bindFramebuffer(this.currentGlContext.FRAMEBUFFER,
+                    framebuffer ? framebuffer.framebufferId : null);
+                this.currentFramebuffer = framebuffer;
             }
-
-            this.currentFramebuffer = framebuffer;
         };
-
 
         /**
          * Binds a specified WebGL program. This function also makes the program the current program.
@@ -447,15 +456,10 @@ define([
          * bound program is unbound.
          */
         DrawContext.prototype.bindProgram = function (program) {
-            var gl = this.currentGlContext;
-
-            if (program) {
-                program.bind(gl);
-            } else {
-                gl.useProgram(null);
+            if (this.currentProgram != program) {
+                this.currentGlContext.useProgram(program ? program.programId : null);
+                this.currentProgram = program;
             }
-
-            this.currentProgram = program;
         };
 
         /**
@@ -472,13 +476,12 @@ define([
                         "The specified program constructor is null or undefined."));
             }
 
-            var gl = this.currentGlContext,
-                program = this.gpuResourceCache.resourceForKey(programConstructor.key);
+            var program = this.gpuResourceCache.resourceForKey(programConstructor.key);
             if (program) {
                 this.bindProgram(program);
             } else {
                 try {
-                    program = new programConstructor(gl);
+                    program = new programConstructor(this.currentGlContext);
                     this.bindProgram(program);
                     this.gpuResourceCache.putResource(programConstructor.key, program, program.size);
                 } catch (e) {
@@ -490,16 +493,64 @@ define([
         };
 
         /**
+         * Adds a surface renderable to this draw context's surface renderable list.
+         * @param {SurfaceRenderable} surfaceRenderable The surface renderable to add. May be null, in which case the
+         * current surface renderable list remains unchanged.
+         */
+        DrawContext.prototype.addSurfaceRenderable = function (surfaceRenderable) {
+            if (surfaceRenderable) {
+                this.surfaceRenderables.push(surfaceRenderable);
+            }
+        };
+
+        /**
+         * Returns the surface renderable at the head of the surface renderable list without removing it from the list.
+         * @returns {SurfaceRenderable} The first surface renderable in this draw context's surface renderable list, or
+         * null if the surface renderable list is empty.
+         */
+        DrawContext.prototype.peekSurfaceRenderable = function () {
+            if (this.surfaceRenderables.length > 0) {
+                return this.surfaceRenderables[this.surfaceRenderables.length - 1];
+            } else {
+                return null;
+            }
+        };
+
+        /**
+         * Returns the surface renderable at the head of the surface renderable list and removes it from the list.
+         * @returns {SurfaceRenderable} The first surface renderable in this draw context's surface renderable list, or
+         * null if the surface renderable list is empty.
+         */
+        DrawContext.prototype.popSurfaceRenderable = function () {
+            if (this.surfaceRenderables.length > 0) {
+                return this.surfaceRenderables.pop();
+            } else {
+                return null;
+            }
+        };
+
+        /**
+         * Reverses the surface renderable list in place. After this function completes, the functions
+         * peekSurfaceRenderable and popSurfaceRenderable return renderables in the order in which they were added to
+         * the surface renderable list.
+         */
+        DrawContext.prototype.reverseSurfaceRenderables = function () {
+            this.surfaceRenderables.reverse();
+        };
+
+        /**
          * Adds an ordered renderable to this draw context's ordered renderable list.
          * @param {OrderedRenderable} orderedRenderable The ordered renderable to add. May be null, in which case the
          * current ordered renderable list remains unchanged.
+         * @param {Number} eyeDistance An optional argument indicating the ordered renderable's eye distance.
+         * If this parameter is not specified then the ordered renderable must have an eyeDistance property.
          */
-        DrawContext.prototype.addOrderedRenderable = function (orderedRenderable) {
+        DrawContext.prototype.addOrderedRenderable = function (orderedRenderable, eyeDistance) {
             if (orderedRenderable) {
                 var ore = {
                     orderedRenderable: orderedRenderable,
                     insertionOrder: this.orderedRenderablesCounter++,
-                    eyeDistance: orderedRenderable.eyeDistance,
+                    eyeDistance: eyeDistance || orderedRenderable.eyeDistance,
                     globeStateKey: this.globeStateKey
                 };
 
@@ -507,7 +558,11 @@ define([
                     ore.globeOffset = this.globe.offset;
                 }
 
-                this.orderedRenderables.push(ore);
+                if (ore.eyeDistance === 0) {
+                    this.screenRenderables.push(ore);
+                } else {
+                    this.orderedRenderables.push(ore);
+                }
             }
         };
 
@@ -569,6 +624,27 @@ define([
         };
 
         /**
+         * Returns the ordered renderable at the head of the ordered renderable list and removes it from the list.
+         * @returns {OrderedRenderable} The first ordered renderable in this draw context's ordered renderable list, or
+         * null if the ordered renderable list is empty.
+         */
+        DrawContext.prototype.nextScreenRenderable = function () {
+            if (this.screenRenderables.length > 0) {
+                var ore = this.screenRenderables.shift();
+                this.globeStateKey = ore.globeStateKey;
+
+                if (this.globe.continuous) {
+                    // Restore the globe state to that when the ordered renderable was created.
+                    this.globe.offset = ore.globeOffset;
+                }
+
+                return ore.orderedRenderable;
+            } else {
+                return null;
+            }
+        };
+
+        /**
          * Sorts the ordered renderable list from nearest to the eye point to farthest from the eye point.
          */
         DrawContext.prototype.sortOrderedRenderables = function () {
@@ -609,8 +685,8 @@ define([
             var glPickPoint = this.navigatorState.convertPointToViewport(pickPoint, new Vec2(0, 0)),
                 colorBytes = new Uint8Array(4);
 
-            this.currentGlContext.readPixels(glPickPoint[0], glPickPoint[1], 1, 1, WebGLRenderingContext.RGBA,
-                WebGLRenderingContext.UNSIGNED_BYTE, colorBytes);
+            this.currentGlContext.readPixels(glPickPoint[0], glPickPoint[1], 1, 1, this.currentGlContext.RGBA,
+                this.currentGlContext.UNSIGNED_BYTE, colorBytes);
 
             if (this.clearColor.equalsBytes(colorBytes)) {
                 return null;
@@ -633,13 +709,13 @@ define([
                 uniqueColors = {},
                 color,
                 blankColor = new Color(0, 0, 0, 0),
-                packAlignment = gl.getParameter(WebGLRenderingContext.PACK_ALIGNMENT);
+                packAlignment = gl.getParameter(gl.PACK_ALIGNMENT);
 
-            gl.pixelStorei(WebGLRenderingContext.PACK_ALIGNMENT, 1); // read byte aligned
+            gl.pixelStorei(gl.PACK_ALIGNMENT, 1); // read byte aligned
             this.currentGlContext.readPixels(pickRectangle.x, pickRectangle.y,
                 pickRectangle.width, pickRectangle.height,
-                WebGLRenderingContext.RGBA, WebGLRenderingContext.UNSIGNED_BYTE, colorBytes);
-            gl.pixelStorei(WebGLRenderingContext.PACK_ALIGNMENT, packAlignment); // restore the pack alignment
+                gl.RGBA, gl.UNSIGNED_BYTE, colorBytes);
+            gl.pixelStorei(gl.PACK_ALIGNMENT, packAlignment); // restore the pack alignment
 
             for (var i = 0, len = pickRectangle.width * pickRectangle.height; i < len; i++) {
                 var k = i * 4;
@@ -910,9 +986,9 @@ define([
                 points[i] = 1;
 
                 vboId = gl.createBuffer();
-                gl.bindBuffer(WebGLRenderingContext.ARRAY_BUFFER, vboId);
-                gl.bufferData(WebGLRenderingContext.ARRAY_BUFFER, points, WebGLRenderingContext.STATIC_DRAW);
-                gl.bindBuffer(WebGLRenderingContext.ARRAY_BUFFER, null);
+                gl.bindBuffer(gl.ARRAY_BUFFER, vboId);
+                gl.bufferData(gl.ARRAY_BUFFER, points, gl.STATIC_DRAW);
+                gl.bindBuffer(gl.ARRAY_BUFFER, null);
                 this.frameStatistics.incrementVboLoadCount(1);
 
                 this.gpuResourceCache.putResource(DrawContext.unitCubeKey, vboId, points.length * 4);
@@ -1018,9 +1094,9 @@ define([
                 elems[i] = 3;
 
                 vboId = gl.createBuffer();
-                gl.bindBuffer(WebGLRenderingContext.ELEMENT_ARRAY_BUFFER, vboId);
-                gl.bufferData(WebGLRenderingContext.ELEMENT_ARRAY_BUFFER, elems, WebGLRenderingContext.STATIC_DRAW);
-                gl.bindBuffer(WebGLRenderingContext.ELEMENT_ARRAY_BUFFER, null);
+                gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, vboId);
+                gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, elems, gl.STATIC_DRAW);
+                gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, null);
                 this.frameStatistics.incrementVboLoadCount(1);
 
                 this.gpuResourceCache.putResource(DrawContext.unitCubeElementsKey, vboId, elems.length * 2);
@@ -1052,9 +1128,9 @@ define([
                 points[7] = 0;
 
                 vboId = gl.createBuffer();
-                gl.bindBuffer(WebGLRenderingContext.ARRAY_BUFFER, vboId);
-                gl.bufferData(WebGLRenderingContext.ARRAY_BUFFER, points, WebGLRenderingContext.STATIC_DRAW);
-                gl.bindBuffer(WebGLRenderingContext.ARRAY_BUFFER, null);
+                gl.bindBuffer(gl.ARRAY_BUFFER, vboId);
+                gl.bufferData(gl.ARRAY_BUFFER, points, gl.STATIC_DRAW);
+                gl.bindBuffer(gl.ARRAY_BUFFER, null);
                 this.frameStatistics.incrementVboLoadCount(1);
 
                 this.gpuResourceCache.putResource(DrawContext.unitQuadKey, vboId, points.length * 4);
@@ -1091,9 +1167,9 @@ define([
                 points[11] = 0;
 
                 vboId = gl.createBuffer();
-                gl.bindBuffer(WebGLRenderingContext.ARRAY_BUFFER, vboId);
-                gl.bufferData(WebGLRenderingContext.ARRAY_BUFFER, points, WebGLRenderingContext.STATIC_DRAW);
-                gl.bindBuffer(WebGLRenderingContext.ARRAY_BUFFER, null);
+                gl.bindBuffer(gl.ARRAY_BUFFER, vboId);
+                gl.bufferData(gl.ARRAY_BUFFER, points, gl.STATIC_DRAW);
+                gl.bindBuffer(gl.ARRAY_BUFFER, null);
                 this.frameStatistics.incrementVboLoadCount(1);
 
                 this.gpuResourceCache.putResource(DrawContext.unitQuadKey3, vboId, points.length * 4);

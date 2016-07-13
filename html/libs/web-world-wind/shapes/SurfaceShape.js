@@ -411,6 +411,10 @@ define([
 
         // Internal function. Intentionally not documented.
         SurfaceShape.prototype.render = function(dc) {
+            if (!this.enabled) {
+                return;
+            }
+
             this.layer = dc.currentLayer;
 
             this.prepareBoundaries(dc);
@@ -840,7 +844,7 @@ define([
 
             // Fill the interior of the shape.
             if (!this._isInteriorInhibited && attributes.drawInterior) {
-                ctx2D.fillStyle = isPicking ? this.pickColor.toHexString(false) : attributes.interiorColor.toHexString(false);
+                ctx2D.fillStyle = isPicking ? this.pickColor.toRGBAString() : attributes.interiorColor.toRGBAString();
 
                 for (idx = 0, len = this._interiorGeometry.length; idx < len; idx += 1) {
                     idxPath = 0;
@@ -868,7 +872,7 @@ define([
             // Draw the outline of the shape.
             if (attributes.drawOutline && attributes.outlineWidth > 0) {
                 ctx2D.lineWidth = 4 * attributes.outlineWidth;
-                ctx2D.strokeStyle = isPicking ? this.pickColor.toHexString(false) : attributes.outlineColor.toHexString(false);
+                ctx2D.strokeStyle = isPicking ? this.pickColor.toRGBAString() : attributes.outlineColor.toRGBAString();
 
                 var pattern = this._attributes.outlineStipplePattern,
                     factor = this._attributes.outlineStippleFactor;

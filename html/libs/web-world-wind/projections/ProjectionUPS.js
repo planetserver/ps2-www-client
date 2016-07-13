@@ -120,12 +120,12 @@ define([
                     lat = 0;
                 }
 
-                sp = Math.sin(lat * poleFactor);//sin phi
-                t = Math.sqrt(((1 - sp) / (1 + sp)) * Math.pow((1 + ecc * sp) / (1 - ecc * sp), ecc));//15-9a
-                r = 2 * globe.equatorialRadius * k0 * t / s;//21-33
+                sp = Math.sin(lat * poleFactor);
+                t = Math.sqrt(((1 - sp) / (1 + sp)) * Math.pow((1 + ecc * sp) / (1 - ecc * sp), ecc));
+                r = 2 * globe.equatorialRadius * k0 * t / s;
 
-                result[0] = r * Math.sin(lon);//21-30
-                result[1] = -r * Math.cos(lon) * poleFactor;//21-31
+                result[0] = r * Math.sin(lon);
+                result[1] = -r * Math.cos(lon) * poleFactor;
                 result[2] = elevation;
             }
 

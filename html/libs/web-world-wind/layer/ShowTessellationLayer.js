@@ -4,7 +4,7 @@
  */
 /**
  * @exports ShowTessellationLayer
- * @version $Id: ShowTessellationLayer.js 3136 2015-06-02 17:14:24Z dcollins $
+ * @version $Id: ShowTessellationLayer.js 3345 2015-07-28 20:28:35Z dcollins $
  */
 define([
         '../shaders/BasicProgram',
@@ -94,7 +94,6 @@ define([
 
             } finally {
                 tessellator.endRendering(dc);
-                dc.bindProgram(null);
             }
         };
 

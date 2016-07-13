@@ -100,10 +100,10 @@ define([
                 result[2] = elevation;
             } else {
                 var northSouthFactor = this.north ? -1 : 1,
-                    a = globe.equatorialRadius * (Math.PI / 2 + latitude * Angle.DEGREES_TO_RADIANS * northSouthFactor);//25-6
+                    a = globe.equatorialRadius * (Math.PI / 2 + latitude * Angle.DEGREES_TO_RADIANS * northSouthFactor);
 
-                result[0] = a * Math.sin(longitude * Angle.DEGREES_TO_RADIANS);//25-3, 25-7
-                result[1] = a * Math.cos(longitude * Angle.DEGREES_TO_RADIANS) * northSouthFactor;//25-4, 25-8
+                result[0] = a * Math.sin(longitude * Angle.DEGREES_TO_RADIANS);
+                result[1] = a * Math.cos(longitude * Angle.DEGREES_TO_RADIANS) * northSouthFactor;
                 result[2] = elevation;
             }
 

@@ -4,7 +4,7 @@
  */
 /**
  * @exports BoundingBox
- * @version $Id: BoundingBox.js 3136 2015-06-02 17:14:24Z dcollins $
+ * @version $Id: BoundingBox.js 3345 2015-07-28 20:28:35Z dcollins $
  */
 define([
         '../error/ArgumentError',
@@ -489,26 +489,25 @@ define([
                 program.loadModelviewProjection(gl, matrix);
 
                 // Setup to draw the geometry when the eye point is inside or outside the box.
-                gl.disable(WebGLRenderingContext.CULL_FACE);
+                gl.disable(gl.CULL_FACE);
 
                 // Bind the shared unit cube vertex buffer and element buffer.
-                gl.bindBuffer(WebGLRenderingContext.ARRAY_BUFFER, dc.unitCubeBuffer());
-                gl.bindBuffer(WebGLRenderingContext.ELEMENT_ARRAY_BUFFER, dc.unitCubeElements());
+                gl.bindBuffer(gl.ARRAY_BUFFER, dc.unitCubeBuffer());
+                gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, dc.unitCubeElements());
                 gl.enableVertexAttribArray(program.vertexPointLocation);
-                gl.vertexAttribPointer(program.vertexPointLocation, 3, WebGLRenderingContext.FLOAT, false, 0, 0);
+                gl.vertexAttribPointer(program.vertexPointLocation, 3, gl.FLOAT, false, 0, 0);
 
                 // Draw bounding box fragments that are below the terrain.
                 program.loadColorComponents(gl, 0, 1, 0, 0.6);
-                gl.drawElements(WebGLRenderingContext.LINES, 24, WebGLRenderingContext.UNSIGNED_SHORT, 72);
+                gl.drawElements(gl.LINES, 24, gl.UNSIGNED_SHORT, 72);
                 program.loadColorComponents(gl, 1, 1, 1, 0.3);
-                gl.drawElements(WebGLRenderingContext.TRIANGLES, 36, WebGLRenderingContext.UNSIGNED_SHORT, 0);
+                gl.drawElements(gl.TRIANGLES, 36, gl.UNSIGNED_SHORT, 0);
 
             } finally {
                 // Restore World Wind's default WebGL state.
-                gl.enable(WebGLRenderingContext.CULL_FACE);
-                gl.bindBuffer(WebGLRenderingContext.ARRAY_BUFFER, null);
-                gl.bindBuffer(WebGLRenderingContext.ELEMENT_ARRAY_BUFFER, null);
-                dc.bindProgram(null);
+                gl.enable(gl.CULL_FACE);
+                gl.bindBuffer(gl.ARRAY_BUFFER, null);
+                gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, null);
             }
         };
 
