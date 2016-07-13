@@ -114,8 +114,11 @@ body {
     outline: none;
 }
 
-#service-navbar .navbar-brand.service-logo {
-    margin-left: 1px;
+#service-navbar .navbar-brand.link-to-moon {
+    margin-left: 0px;
+}
+#service-navbar .navbar-brand.link-to-mars {
+    margin-left: 0px;
 }
 
 #service-navbar .navbar-brand > img {
