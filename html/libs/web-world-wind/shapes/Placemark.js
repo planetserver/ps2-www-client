@@ -140,7 +140,7 @@ define([
              * </ul>
              * @default WorldWind.ABSOLUTE
              */
-            this.altitudeMode = WorldWind.ABSOLUTE;
+            this.altitudeMode = WorldWind.CLAMP_TO_GROUND;
 
             /**
              * Indicates whether this placemark has visual priority over other shapes in the scene.
