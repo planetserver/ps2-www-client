@@ -39,10 +39,11 @@ function CheckedDataSetConstructor(coverageID, Easternmost_longitude, Maximum_la
 }
 
 // when page loads then load all footprints
+var getAllCoverageData = "request=getAllCoverages&type=" + clientName;
 $.ajax({
     type: "get",
     url: "http://access.planetserver.eu:8080/ps2/" + "dataset",
-    data: "request=getAllCoverages&type=mars",
+    data: getAllCoverageData,
     dataType: 'json',
     cache: false,
     async: false, // this needs time to query all footprints from database and load to WWW then the problem with cache is done.
@@ -72,10 +73,11 @@ function getFootPrintsContainingPointLeftClick(shapesArray, attributesObj, check
     //alert(shapes.length);
     // only load images when click on footprints (and when click to select new footprints)
     var isUpdateCheckedFootPrintsArray = false;
+    var getCoveragesContainingPointData = "request=getCoveragesContainingPoint&type=" + clientName + "&latPoint=" + latitude + "&longPoint=" + longitude;
     $.ajax({
         type: "get",
         url: "http://access.planetserver.eu:8080/ps2/" + "dataset",
-        data: "request=getCoveragesContainingPoint&type=mars&latPoint=" + latitude + "&longPoint=" + longitude,
+        data: getCoveragesContainingPointData,
         dataType: 'json',
         cache: false,
         async: false,
@@ -83,7 +85,7 @@ function getFootPrintsContainingPointLeftClick(shapesArray, attributesObj, check
 	    if(data.length === 0) {
 	      return;
 	    } else {
-            	console.log("Get footprints containing point:" + " request=getCoveragesContainingPoint&type=mars&latPoint=" + latitude + "&longPoint=" + longitude);
+            	console.log("Get footprints containing point:" + getCoveragesContainingPointData);
 	    }
 
             $.each(data, function(key, val) {
@@ -181,15 +183,16 @@ function getFootPrintsContainingPointRightClick(shapesArray, attributesObj, chec
     // clear the containedFootPrintsArray and get the news one from footprint.js
     containedFootPrintsArray = [];
 
+    var getCoveragesContainingPointData = "request=getCoveragesContainingPoint&type=" + clientName + "&latPoint=" + latitude + "&longPoint=" + longitude
     $.ajax({
         type: "get",
         url: "http://access.planetserver.eu:8080/ps2/" + "dataset",
-        data: "request=getCoveragesContainingPoint&type=mars&latPoint=" + latitude + "&longPoint=" + longitude,
+        data: getCoveragesContainingPointData,
         dataType: 'json',
         cache: false,
         async: false,
         success: function(data) {
-            console.log("Get footprints containing point for right click:" + " request=getCoveragesContainingPoint&type=mars&latPoint=" + latitude + "&longPoint=" + longitude);
+            console.log("Get footprints containing point for right click:" + getCoveragesContainingPointData);
             $.each(data, function(key, val) {
                 var dataSetFootPrint = new CheckedDataSetConstructor(val.coverageID, val.Easternmost_longitude, val.Maximum_latitude, val.Minimum_latitude, val.Westernmost_longitude, val.latList, val.longList, latitude, longitude, false, false);
                 console.log("mememe: " + val.coverageID);
@@ -230,14 +233,17 @@ function removeCheckedFootPrint(coverageID) {
     for (var i = 0; i < checkedFootPrintsArray.length; i++) {
         if (checkedFootPrintsArray[i].coverageID === coverageID) {
 
-            //clear the old loaded image first
-            renderLayer[i].removeAllRenderables();
+            if (renderLayer.length > 0) {
+                //clear the old loaded image first
+                renderLayer[i].removeAllRenderables();
+
+                // remove render layer which contains footprint also
+                renderLayer.splice(i, 1);
+            }
 
             // remove coverageID from checkedFootPrintsArray
             checkedFootPrintsArray.splice(i, 1);
 
-            // remove render layer which contains footprint also
-            renderLayer.splice(i, 1);
 
             // Change footprint to unchecked footprint
             for (j = 0; j < shapes.length; j++) {
@@ -249,6 +255,19 @@ function removeCheckedFootPrint(coverageID) {
             break;
         }
     }
+
+    // Remove all the tiling footprints of coverageID (moon client)
+    for (var i = renderLayerTiles.length; i--;) {
+        if (renderLayerTiles[i]._displayName === coverageID) {
+            // clear the tiles loaded image first
+            renderLayerTiles[i].removeAllRenderables();
+
+            // remove the footprints tile
+            renderLayerTiles.splice(i, 1);
+        }
+    }
+
+    updateCheckedFootPrintsDropdownBox();
 }
 
 function replaceAll(template, target, replacement) {
@@ -295,13 +314,15 @@ function removeAllSelectedFootPrints() {
     // remove the blue color first
     for (var i = 0; i < checkedFootPrintsArray.length; i++) {
 
-        //clear the old loaded image first
-        renderLayer[i].removeAllRenderables();
+        if (renderLayer.length > 0) {
+            //clear the old loaded image first
+            renderLayer[i].removeAllRenderables();
+        }
 
         //alert(renderLayer[i]);
 
         // Change footprint to unchecked footprint
-        for (j = 0; j < shapes.length; j++) {
+        for (var j = 0; j < shapes.length; j++) {
             if (shapes[j]._displayName === checkedFootPrintsArray[i].coverageID) {
 
                 // uncheck footprints by setting to red color
@@ -310,8 +331,15 @@ function removeAllSelectedFootPrints() {
         }
     }
 
+    // clear all the temporary tilings footprints (moon client)
+    for (var i = 0; i < renderLayerTiles.length; i++) {
+        renderLayerTiles[i].removeAllRenderables();
+    }
+
     // then clear array
     checkedFootPrintsArray = [];
+
+    renderLayerTiles = [];
 
     // clear the dropdown box
     updateCheckedFootPrintsDropdownBox();

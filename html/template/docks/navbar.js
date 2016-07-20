@@ -12,7 +12,7 @@ $(function () {
                     .append($("<div>", {class: "navbar-header pull-left"})
                         .append($("<a>", {class: "navbar-brand earthserver-logo", href: "http://www.earthserver.eu"})
                             .append($("<img>", {class: "img-responsive", src: "html/images/logos/earthserver_logo.png", alt: "EarthServer Logo"}))
-                        ).append($("<a>", {class: "navbar-brand link-to-moon", href: "http://access.planetserver.eu/moon"})
+                        ).append($("<a>", {class: "navbar-brand link-to-moon", href: "#moon"})
                             .append($("<img>", {class: "img-responsive", alt: "Service Logo", src: "/html/images/moon_logo.png"}))
                         ).append($("<a>", {class: "navbar-brand link-to-mars", href:"#"})
                             .append($("<img>", {class: "img-responsive", alt: "Service Logo", src: "/html/images/mars_logo.png"}))

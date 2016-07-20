@@ -71,14 +71,24 @@ define([
              * @type {Number}
              * @default 6378137.0 meters
              */
-            this.equatorialRadius = 3396190;
+            // check if URL contains "moon"
+	    var url = window.location.href;
+	    if (url.includes("moon")) {
+	    	this.equatorialRadius = 1737400;
+            } else {
+            	this.equatorialRadius = 3396190;
+	    }
 
             /**
              * This globe's polar radius.
              * @type {Number}
              * @default 6356752.3 meters
              */
-            this.polarRadius = 3396190;
+	    if (url.includes("moon")) {
+		this.polarRadius = 1737400;
+	    } else {
+           	this.polarRadius = 3396190;
+	    }
 
             /**
              * This globe's eccentricity squared.

@@ -3,7 +3,7 @@
 * and later on can be called in service.js by function add*Panel (e.g: addAvailableBaseMapsPanel)
 * And main-dock.js also need to call function from file *-panel.js (e.g: select-panel.js)
 * then inside each "add panels" function below, it can initialize the object of panel-function above (e.g: $("<div>").selectPanel({... )
-* So from 1 widget selectPanel (drop down box), it can be used to create many other drop down boxex with their own data.
+* So from 1 widget selectPanel (drop down box), it can be used to create many other drop down boxes with their own data.
 * (e.g: addProjectionSelectPanel() will use projectionNames array as data
      and addAvailableBaseMapsPanel() will use baseMapNames array as data)
 ***/

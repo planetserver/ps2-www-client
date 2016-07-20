@@ -10,10 +10,24 @@ projectionNames = [
     "South Gnomonic"
 ];
 
-baseMapNames = [
-   "Viking Mosaic",
-    "MOLA Colored"
-];
+
+// check if URL contains "moon"
+var url = window.location.href;
+
+baseMapNames = null;
+
+if (url.includes("moon")) {
+	baseMapNames = [
+	   "Moon",
+   	   "LOLA color"
+	];
+} else {
+	baseMapNames = [
+	   "Viking Mosaic",
+	    "MOLA Colored"
+	];
+}
+
 
 customWCPSQueries = [
     {

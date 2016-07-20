@@ -4,6 +4,11 @@ var wcpsQueriesJSON = ""; // array to store wcpsQueries from server
 var DEFAULT_BANDS = 438;
 var SUBMENU_BANDS = 73;
 
+if (clientName === "moon") {
+    DEFAULT_BANDS = 85;
+    SUBMENU_BANDS = 17;
+}
+
 // when combine with WCPS custom queries will need to stretch it with Python web service
 var stretch = false;
 var isAllBandsCustomWCPSQueries = 0;
@@ -17,6 +22,13 @@ var redBandDefault = "(int)(255 / (max((data.band_233 != 65535) * data.band_233)
 var blueBandDefault = "(int)(255 / (max((data.band_78 != 65535) * data.band_78) - min(data.band_78))) * (data.band_78 - min(data.band_78))";
 var greenBandDefault = "(int)(255 / (max((data.band_13 != 65535) * data.band_13) - min(data.band_13))) * (data.band_13 - min(data.band_13))";
 var alphaBandDefault = "(data.band_100 != 65535) * 255";
+
+if (clientName === "moon") {
+    redBandDefault = "(int)(255 / (max((data.band_10 != 65535) * data.band_10) - min(data.band_10))) * (data.band_10 - min(data.band_10))";
+    blueBandDefault = "(int)(255 / (max((data.band_78 != 65535) * data.band_78) - min(data.band_78))) * (data.band_78 - min(data.band_78))";
+    greenBandDefault = "(int)(255 / (max((data.band_13 != 65535) * data.band_13) - min(data.band_13))) * (data.band_13 - min(data.band_13))";
+    alphaBandDefault = "(data.band_85 != 65535) * 255";
+}
 
 // return the value of Red/Green/Blue band on clicked coordinate
 var wcpsQueryRGBValueTemplate = 'for data in ($COVERAGE_ID) return encode({ $QUERY }, "csv")';
@@ -99,7 +111,11 @@ window.queryRGBValue = function(coverageID, longitude, latitude, rgbQueryArray) 
     }
 
     // Get value of band combinations
-    var wcpsQuery = wcpsQueryRGBValueTemplate.replace("$COVERAGE_ID", coverageID.toLowerCase()).replace("$QUERY", tmp);
+    if (clientName === "mars") {
+        coverageID = coverageID.toLowerCase();
+    }
+
+    var wcpsQuery = wcpsQueryRGBValueTemplate.replace("$COVERAGE_ID", coverageID).replace("$QUERY", tmp);
 
     console.log(ps2WCPSEndPoint + wcpsQuery);
 
@@ -741,8 +757,12 @@ $("#btnSubmitRGBCombination").click(function(e) {
             '{'
             // insert bands here
             +
-            "$RGB_BANDS" +
-            '  alpha: (data.band_100 != 65535) * 255 }, "png", "nodata=null")';
+            "$RGB_BANDS";
+        if (clientName === "mars") {
+            WCPS_TEMPLATE = WCPS_TEMPLATE + '  alpha: (data.band_100 != 65535) * 255 }, "png", "nodata=null")';
+        } else {
+            WCPS_TEMPLATE = WCPS_TEMPLATE + '  alpha: (data.band_85 != 65535) * 255 }, "png", "nodata=null")';
+        }
 
         var RED_BAND = 'Red:   (int)(255 / (max((data.band_$RED_BAND != 65535) * data.band_$RED_BAND) - min(data.band_$RED_BAND))) * (data.band_$RED_BAND - min(data.band_$RED_BAND));'
         var GREEN_BAND = 'Green: (int)(255 / (max((data.band_$GREEN_BAND != 65535) * data.band_$GREEN_BAND) - min(data.band_$GREEN_BAND))) * (data.band_$GREEN_BAND - min(data.band_$GREEN_BAND));'
@@ -849,17 +869,27 @@ $("#btnSubmitRGBCombination").click(function(e) {
 
                     // replace $COVERAGE_ID with selected coverageID and load WCPS combination on checked footprint
                     WCPS_TEMPLATE_QUERY = replaceAll(WCPS_TEMPLATE, "$COVERAGE_ID", selectedFootPrintsArray[i].coverageID.toLowerCase());
-                    if(isAllBandsCustomWCPSQueries === 3) {
-                        // current encode in PNG has problem when gdalinfo does not ignore NODATA ( = 0 ) then need to use tiff as it will
-                        // calculate correctly
-                        stretch = true;
-                        WCPS_TEMPLATE_QUERY = WCPS_TEMPLATE_QUERY.replace("png", "tiff");
-                        console.log("Stretched WCPS query: " + WCPS_TEMPLATE_QUERY);
+                    
+                    // with mars, don't need to subset the WCPS query
+                    if (clientName === "mars") {
+                        if(isAllBandsCustomWCPSQueries === 3) {
+                            // current encode in PNG has problem when gdalinfo does not ignore NODATA ( = 0 ) then need to use tiff as it will
+                            // calculate correctly
+                            stretch = true;
+                            WCPS_TEMPLATE_QUERY = WCPS_TEMPLATE_QUERY.replace("png", "tiff");
+                            console.log("Stretched WCPS query: " + WCPS_TEMPLATE_QUERY);
+                        }
+
+                        console.log("WCPS query: " + WCPS_TEMPLATE_QUERY);
+
+                        loadRGBCombinationsMars(WCPS_TEMPLATE_QUERY, selectedFootPrintsArray[i].coverageID.toLowerCase(), stretch);
+                    } else {
+                        // moon client, need to subset the WCPS query
+                        var index = getIndexOfCoveragesArray(checkedFootPrintsArray, selectedFootPrintsArray[i].coverageID);
+                        // create WCPS queries with the subsettings
+                        loadRGBCombinationsMoon(selectedFootPrintsArray[i], index, stretch);
                     }
-
-                    console.log("WCPS query: " + WCPS_TEMPLATE_QUERY);
-
-                    loadRGBCombinations(WCPS_TEMPLATE_QUERY, selectedFootPrintsArray[i].coverageID.toLowerCase(), stretch);
+                    
                 }
             }
         }

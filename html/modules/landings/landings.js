@@ -6,7 +6,6 @@
  * @version $Id: BasicExample.js 3320 2015-07-15 20:53:05Z dcollins $
  */
 /* Global variables */
-
 ps2EndPoint = "http://access.planetserver.eu/";
 ps2WCPSEndPoint = "http://access.planetserver.eu:8080/rasdaman/ows?service=WCS&version=2.0.1&request=ProcessCoverages&query=";
 ps2StretchWCPSEndPoint = "http://access.planetserver.eu:8090/python?wcpsQuery=";
@@ -26,6 +25,9 @@ leftClickFootPrintsArray = []; // store all the footprints when left click (each
 shapesLayer = ""; // layer contains all footprints shapes
 
 renderLayer = [];
+
+// add the tile footprints in moon client when load multi temporary footprints
+renderLayerTiles = [];
 
 isInitMenuContext = false;
 
@@ -66,6 +68,8 @@ drawLon = "";
 clickedLatitude = 0;
 clickedLongitude = 0;
 
+MOON_TILE_NUMBER = 3;
+
 // which dock is allowed to open (default chartDock is opened then to open another dock, such as radioDock, need to close chartDock first)
 currentOpenDock = "";
 
@@ -83,6 +87,18 @@ placeMarkersBandRatio = [{
     longitude: "",
     layer: null
 }];
+
+var clientName = "mars";
+
+$(function() {
+    var url = window.location.href;
+    if (url.includes("moon")) {
+        clientName = "moon";
+    } else {
+        clientName = "mars";
+    }
+});
+
 
 function getQueryVariable(variable) {
     var query = window.location.search.substring(1);
@@ -140,20 +156,41 @@ requirejs(['../../config/config',
         WorldWind.Logger.setLoggingLevel(WorldWind.Logger.LEVEL_WARNING);
         wwd = new WorldWind.WorldWindow("canvasOne");
 
-        var layers = [{
-            // this is colorful base map
-            layer: new WorldWind.BMNGLayer("MOLA_color"),
-            enabled: false
-        }, {
-            // this is dark base map
-            layer: new WorldWind.BMNGLayer("mars_wgs84"),
-            enabled: true
-        }];
+        var layers = null;
+
+        var baseMapName = "";
+
+        if (clientName === "mars") {
+            // Mars
+            layers = [{
+                // this is colorful base map
+                layer: new WorldWind.BMNGLayer("mars_MOLA_color"),
+                enabled: false
+            }, {
+                // this is dark base map
+                layer: new WorldWind.BMNGLayer("mars_wgs84"),
+                enabled: true
+            }];
+
+            baseMapName = "mars_wgs84";
+        } else {
+            // Moon
+            layers = [{
+                // this is colorful base map
+                layer: new WorldWind.BMNGLayer("moon_LOLA_color"),
+                enabled: false
+            }, {
+                // this is dark base map
+                layer: new WorldWind.BMNGLayer("moon_wgs84"),
+                enabled: true
+            }];
+
+            baseMapName = "moon_wgs84";
+        }
+
 
         // Only load 1 base map at start
         var baseMapLayer = layers[1].layer;
-        var baseMapName = "Viking Mosaic";
-
         var baseMapIndex = 0;
 
         wwd.insertLayer(0, baseMapLayer);
@@ -164,21 +201,40 @@ requirejs(['../../config/config',
             var selectedBaseMapName = $(this).children().html();
             var isLoadedBaseMap = true;
 
-            // colorful base map
-            if (selectedBaseMapName === "MOLA Colored") {
-                if (baseMapName !== selectedBaseMapName) {
-                    index = 0;
-                    baseMapName = "MOLA Colored";
-                    isLoadedBaseMap = false;
-                }
-            } else if (selectedBaseMapName === "Viking Mosaic") {
-                if (baseMapName !== selectedBaseMapName) {
-                    index = 1;
-                    baseMapName = "Viking Mosaic";
-                    isLoadedBaseMap = false;
-                }
+            if (clientName === "mars") {
+                // colorful base map
+                if (selectedBaseMapName === "MOLA Colored") {
+                    if (baseMapName !== selectedBaseMapName) {
+                        index = 0;
+                        baseMapName = "MOLA Colored";
+                        isLoadedBaseMap = false;
+                    }
+                } else if (selectedBaseMapName === "Viking Mosaic") {
+                    if (baseMapName !== selectedBaseMapName) {
+                        index = 1;
+                        baseMapName = "Viking Mosaic";
+                        isLoadedBaseMap = false;
+                    }
 
+                }
+            } else if (clientName === "moon") {
+                if (selectedBaseMapName === "LOLA color") {
+                    if (baseMapName !== selectedBaseMapName) {
+                        index = 0;
+                        baseMapName = "LOLA color";
+                        isLoadedBaseMap = false;
+                    }
+                } else if (selectedBaseMapName === "Moon") {
+                    if (baseMapName !== selectedBaseMapName) {
+                        index = 1;
+                        baseMapName = "Moon";
+                        isLoadedBaseMap = false;
+                    }
+
+                }
             }
+
+
 
             // no load the same base map again
             if (!isLoadedBaseMap) {
@@ -266,11 +322,11 @@ requirejs(['../../config/config',
                     // Generate a link to access to coverageID and/or Latitude and Longitude
                     var link = ps2EndPoint + "index.html?";
 
-                    if(leftClickFootPrintsArray.length !== 0) {
+                    if (leftClickFootPrintsArray.length !== 0) {
                         link = link + "covName=" + leftClickFootPrintsArray[0].coverageID;
                     }
 
-                    if(clickedLatitude != "" && clickedLongitude != "") {
+                    if (clickedLatitude != "" && clickedLongitude != "") {
                         link = link + "&lat=" + clickedLatitude;
                         link = link + "&lon=" + clickedLongitude;
                     }
@@ -292,7 +348,7 @@ requirejs(['../../config/config',
                     handlePlaceMarkerLayer();
 
                     // If click outside of footprint then not draw chart
-                    if(leftClickFootPrintsArray.length === 0) {
+                    if (leftClickFootPrintsArray.length === 0) {
                         return;
                     }
 
@@ -305,7 +361,7 @@ requirejs(['../../config/config',
                     if (pickList.objects[1] != null) {
 
                         // no draw anything if not selected chart dock
-                        if(currentOpenDock === "") {
+                        if (currentOpenDock === "") {
                             return;
                         }
 
@@ -397,7 +453,7 @@ requirejs(['../../config/config',
 
             // Remove the old layers first
             //wwd.removeLayer(imagesLayer);
-            if(imagesLayer == null) {
+            if (imagesLayer == null) {
                 imagesLayer = new WorldWind.RenderableLayer("");
                 // Add the new one
                 wwd.insertLayer(3, imagesLayer);
@@ -408,9 +464,9 @@ requirejs(['../../config/config',
                 var coverageID = checkedFootPrintsArray[i].coverageID.toLowerCase();
 
                 // only load default image on the new checked footprints in newClickedFootPrintsArray
-                if(checkedFootPrintsArray.length > 1 && newClickedFootPrintsArray.indexOf(coverageID) === -1) {
+                if (checkedFootPrintsArray.length > 1 && newClickedFootPrintsArray.indexOf(coverageID) === -1) {
                     // Check if the existing footprint has loaded any image first
-                    if( checkedFootPrintsArray[i].isLoadedImage ) {
+                    if (checkedFootPrintsArray[i].isLoadedImage) {
                         continue;
                     }
                 };
@@ -436,29 +492,35 @@ requirejs(['../../config/config',
 
                 checkedFootPrintsArray[i].isLoadedImage = true;
                 // If just use http://access.planetserver.eu:8080/rasdaman/ows?query it will have error NULL
-                // Load default bands for all footprintss
-                var WCPSLoadImage = ps2WCPSEndPoint + 'for data in (' + coverageID + ') return encode( { red: ' + redBandDefault + '; green: ' + greenBandDefault + '; blue: ' + blueBandDefault + ' ; alpha: ' + alphaBandDefault + '}, "png", "nodata=null")';
-                var surfaceImage = new WorldWind.SurfaceImage(new WorldWind.Sector(checkedFootPrintsArray[i].Minimum_latitude, checkedFootPrintsArray[i].Maximum_latitude, minlong, maxlong), WCPSLoadImage);
+                // Load default bands for all footprints
+                if (clientName === "mars") {
+                    var WCPSLoadImage = ps2WCPSEndPoint + 'for data in (' + coverageID + ') return encode( { red: ' + redBandDefault + '; green: ' + greenBandDefault + '; blue: ' + blueBandDefault + ' ; alpha: ' + alphaBandDefault + '}, "png", "nodata=null")';
+                    var surfaceImage = new WorldWind.SurfaceImage(new WorldWind.Sector(checkedFootPrintsArray[i].Minimum_latitude, checkedFootPrintsArray[i].Maximum_latitude, minlong, maxlong), WCPSLoadImage);
 
 
-                console.log("Load default image on footprint: " + coverageID);
+                    console.log("Load default image on footprint: " + coverageID);
 
-                renderLayer[i] = new WorldWind.RenderableLayer("");
-                renderLayer[i].addRenderable(surfaceImage);
+                    renderLayer[i] = new WorldWind.RenderableLayer("");
+                    renderLayer[i].addRenderable(surfaceImage);
 
-                // Add the loaded image in images layer
-                imagesLayer.addRenderable(renderLayer[i]);
-
+                    // Add the loaded image in images layer
+                    imagesLayer.addRenderable(renderLayer[i]);
+                } else if (clientName === "moon") {
+                    // create WCPS queries by subsettings then load in another footprints
+                    var WCPSLoadImageTemplate = 'http://access.planetserver.eu:8080/rasdaman/ows?service=WCS&version=2.0.1&request=ProcessCoverages&query=for data in ( $coverageID ) return encode( { red: ((int)(255 / (max(((data).band_10 != 65535) * (data).band_10) - min((data).band_10))) * ((data).band_10 - min((data).band_10)))[N( $minN$newN )]; green: ((int)(255 / (max(((data).band_13 != 65535) * (data).band_13) - min((data).band_13))) * ((data).band_13 - min((data).band_13)))[N( $minN$newN )]; blue: ((int)(255 / (max(((data).band_78 != 65535) * (data).band_78) - min((data).band_78))) * ((data).band_78 - min((data).band_78)))[N( $minN$newN )] ; alpha: (((data).band_85 != 65535) * 255)[N( $minN$newN )]}, "png", "nodata=null")';
+                    loadSubsettingsWCPSQuery(WCPSLoadImageTemplate, i, minlong, maxlong);
+                }
             }
         }
 
         // this function will load a RGB combination image from rgbcombination.js to selected footprint from selected comboBox
-        window.loadRGBCombinations = function(WCPSLoadImage, coverageID, stretch) {
+        // mars client
+        window.loadRGBCombinationsMars = function(WCPSLoadImage, coverageID, stretch) {
             // If stretch is true then need to use Python stretch.py to stretch
             //alert(WCPSLoadImage);
             WCPSLoadImage = ps2WCPSEndPoint + WCPSLoadImage;
 
-            if(stretch) {
+            if (stretch) {
                 // Use Python web service to stretch WCPS queries
                 WCPSLoadImage = ps2StretchWCPSEndPoint + WCPSLoadImage;
             }
@@ -497,6 +559,115 @@ requirejs(['../../config/config',
             }
         }
 
+        // load the RGB combinations result with subsetting 
+        // moon client
+        window.loadRGBCombinationsMoon = function(selectedFootPrintObj, index, stretch) {
+
+            var WCPS_TEMPLATE = 'for data in ( $COVERAGE_ID ) return encode( ' +
+                                '{'
+                                // insert bands here
+                                + "$RGB_BANDS"
+                                + '  alpha: ((data.band_85 != 65535) * 255)[N( $minN$newN )] }, "png", "nodata=null")';
+            var redBand = selectedFootPrintObj.redBand;
+            var greenBand = selectedFootPrintObj.greenBand;
+            var blueBand = selectedFootPrintObj.blueBand;
+
+            var maxlong;
+            var minlong;
+            // only load RGB Combinations to the selected footprint from selected comboBox
+            maxlong = checkedFootPrintsArray[index].Easternmost_longitude; //assign maxlong from the checked footprint
+            minlong = checkedFootPrintsArray[index].Westernmost_longitude; //assign minlong from the checked footprint
+            if (checkedFootPrintsArray[index].Easternmost_longitude > 180) { //long in www spans from -180 to 180, if its bigger than 180 = -360
+                maxlong = checkedFootPrintsArray[index].Easternmost_longitude - 360;
+                //  console.log("max lon: " + maxlong);
+            }
+            if (checkedFootPrintsArray[index].Westernmost_longitude > 180) {
+                minlong = checkedFootPrintsArray[index].Westernmost_longitude - 360;
+                //  console.log("min lon: " + minlong);
+            } else {
+                maxlong = checkedFootPrintsArray[index].Easternmost_longitude; //if long is in between -180/180 then assgin the original longs
+                minlong = checkedFootPrintsArray[index].Westernmost_longitude;
+            }
+
+            // a template WCPS queries with subsettings
+            var WCPSLoadImageTemplate = WCPS_TEMPLATE;
+            WCPSLoadImageTemplate = WCPSLoadImageTemplate.replace("$COVERAGE_ID", checkedFootPrintsArray[index].coverageID);
+            var redBand = "Red: " + "(" + selectedFootPrintObj.redBand + ")[N( $minN$newN )];";
+            var greenBand = "Green: " + "(" + selectedFootPrintObj.greenBand + ")[N( $minN$newN )];";
+            var blueBand = "Blue: " + "(" + selectedFootPrintObj.blueBand + ")[N( $minN$newN )];";
+
+            var RGB_BANDS = redBand + " " + greenBand + " " + blueBand;
+            WCPSLoadImageTemplate = WCPSLoadImageTemplate.replace("$RGB_BANDS", RGB_BANDS);
+
+            if (stretch) {
+                // use Python web service to stretch WCPS queries
+                WCPSLoadImageTemplate = ps2StretchWCPSEndPoint + WCPSLoadImageTemplate;
+            } else {
+                WCPSLoadImageTemplate = ps2WCPSEndPoint + WCPSLoadImageTemplate;
+            }
+
+            // clear the title footprints temporary of the coverageID
+            for (var i = 0; i < renderLayerTiles.length; i++) {
+                var layer = renderLayerTiles[i];
+                if (layer._displayName === checkedFootPrintsArray[index].coverageID) {
+                    layer.removeAllRenderables();
+                }
+            }
+
+            // Load the WCPS queries by subsettings
+            loadSubsettingsWCPSQuery(WCPSLoadImageTemplate, index, minlong, maxlong);
+        }
+
+        // Create multiple WCPS queries by subsettings
+        // moon client
+        window.loadSubsettingsWCPSQuery = function(WCPSLoadImageTemplate, index, minlong, maxlong) {
+            // this is N
+            var minLatN = checkedFootPrintsArray[index].Minimum_latitude;
+            var maxLatN = checkedFootPrintsArray[index].Maximum_latitude;
+            var stepLat = (maxLatN - minLatN) / MOON_TILE_NUMBER;
+            var newLatN = minLatN + stepLat;
+
+            var r = 1737400;
+            // this is Lat
+            var rho = (Math.PI / 180);
+            var minN = minLatN * r * rho;
+            var maxN = maxLatN * r * rho;
+
+            // var minN = checkedFootPrintsArray[i].Minimum_latitude;
+            // var maxN = checkedFootPrintsArray[i].Maximum_latitude;
+            var step = (maxN - minN) / MOON_TILE_NUMBER;
+            var newN = minN + step;
+
+
+            for (var l = 0; l < MOON_TILE_NUMBER; l++) {
+                var minNnewN = minN + ":" + newN;
+
+                var WCPSLoadImage = WCPSLoadImageTemplate;
+                WCPSLoadImage = replaceAll(WCPSLoadImage, "$coverageID", checkedFootPrintsArray[index].coverageID);
+                WCPSLoadImage = replaceAll(WCPSLoadImage, "$minN$newN", minNnewN);
+
+                console.log(WCPSLoadImage);
+
+                var surfaceImage = new WorldWind.SurfaceImage(new WorldWind.Sector(minLatN, newLatN, minlong, maxlong), WCPSLoadImage);
+                console.log("Load default image on footprint: " + coverageID);
+
+                var layer = new WorldWind.RenderableLayer("");
+                // All of these temporary layers belonged to the coverageID
+                layer._displayName = checkedFootPrintsArray[index].coverageID;
+                layer.addRenderable(surfaceImage);
+
+                renderLayerTiles.push(layer);
+
+                // Add the loaded image in images layer
+                imagesLayer.addRenderable(layer);
+                minN = newN;
+                newN = minN + step;
+
+                minLatN = newLatN;
+                newLatN = minLatN + stepLat;
+            }
+        }
+
 
         /* This function is used to draw chart when user click in 1 point and get all the values of bands */
         var queryBuilder = function(latitude, longitude, covID, east, west) {
@@ -506,7 +677,13 @@ requirejs(['../../config/config',
             drawLat = latitude;
             drawLon = longitude;
 
-            var r = 3396190;
+            var r = null;
+            if (clientName === "mars") {
+                r = 3396190;
+            } else {
+                r = 1737400;
+            }
+            
             var cosOf0 = 1;
             var rho = (Math.PI / 180);
             var N = latitude * r * rho;
@@ -532,7 +709,7 @@ requirejs(['../../config/config',
             }
 
             // Get the selected Coverage ID RGB bands and query to get the values
-            if(currentOpenDock === "mainChartDock") {
+            if (currentOpenDock === "mainChartDock") {
 
                 //update the title of the chart with name and lat long
                 $("#service-container .right-dock.plot-dock .panel-title").text("Coverage Name: " + covID);
@@ -588,7 +765,7 @@ requirejs(['../../config/config',
                 Landings_removePlaceMarker(placemarkLayer);
 
                 // if band ratio dock is opened then store the latitude, longitude for the numerator or denominator
-                if($("#numeratorBandRatioDock").is(':checked')) {
+                if ($("#numeratorBandRatioDock").is(':checked')) {
                     // numerator
                     placeMarkersBandRatio[0].latitude = latitude;
                     placeMarkersBandRatio[0].longitude = longitude;
@@ -615,9 +792,16 @@ requirejs(['../../config/config',
                 }
             }
 
-
-            var query = "http://access.planetserver.eu:8080/rasdaman/ows?query=for%20c%20in%20(" + covID.toLowerCase() + ")%20return%20encode(c[%20N(" +
+            // Mars use the lower case footprint, Moon is the upper case
+            var query = "";
+            if (clientName === "mars") {
+                query = "http://access.planetserver.eu:8080/rasdaman/ows?query=for%20c%20in%20(" + covID.toLowerCase() + ")%20return%20encode(c[%20N(" +
                 N + ":" + N + "),%20E(" + E + ":" + E + ")%20],%20%22csv%22)";
+            } else {
+                query = "http://access.planetserver.eu:8080/rasdaman/ows?query=for%20c%20in%20(" + covID + ")%20return%20encode(c[%20N(" +
+                N + ":" + N + "),%20E(" + E + ":" + E + ")%20],%20%22csv%22)";
+            }
+           
 
             console.log("WCPS get bands value at clicked coordinate: " + query);
             Chart_getQueryResponseAndSetChart(query);
@@ -683,10 +867,10 @@ requirejs(['../../config/config',
 
         // Generate a link to access to coverageID and/or Latitude and Longitude
         var link = ps2EndPoint + "index.html?";
-        if(coverageID != "") {
+        if (coverageID != "") {
             link = link + "covName=" + coverageID;
         }
-        if(latitude != "" && longitude != "") {
+        if (latitude != "" && longitude != "") {
             link = link + "&lat=" + latitude;
             link = link + "&lon=" + longitude;
         }
@@ -700,10 +884,9 @@ requirejs(['../../config/config',
 
 
         //go to CoverageID given in the URL
-        if(coverageID !== "") {
+        if (coverageID !== "") {
             moveToCoverageID(coverageID);
-        }
-        else {
+        } else {
             // go to Latitude, Longitude in the URL
             moveToLocation(latitude, longitude, range);
         }
@@ -725,13 +908,13 @@ requirejs(['../../config/config',
         // Move to longitude, Latitude and Range
         function moveToLocation(latitude, longitude, range) {
 
-            if(range != "") {
-                if(range.toString().indexOf("e") > -1) {
+            if (range != "") {
+                if (range.toString().indexOf("e") > -1) {
                     wwd.navigator.range = range;
                 } else {
                     //alert(range.toString().charAt(0) + "e" + (Math.round(range).toString().length - 1));
-                   // wwd.navigator.range = (range.charAt(0) + "e" + (Math.round(range).toString().length - 1)).toString();
-                   wwd.navigator.range = 4e6;
+                    // wwd.navigator.range = (range.charAt(0) + "e" + (Math.round(range).toString().length - 1)).toString();
+                    wwd.navigator.range = 4e6;
                 }
             }
 
@@ -752,7 +935,7 @@ requirejs(['../../config/config',
                 //wwd.removeLayer(placemarkLayer);
                 placemarkLayer.removeRenderable(placemark);
                 placemarkLayer.addRenderable(placemark);
-                
+
             } else {
                 placemarkLayer = new WorldWind.RenderableLayer("Placemarks");
                 placemarkLayer.addRenderable(placemark);
@@ -767,14 +950,14 @@ requirejs(['../../config/config',
 
         $(mainChartID).click(function() {
             // If the dock is closed then click to open
-            if( $(mainChartID).hasClass("open") ) {
+            if ($(mainChartID).hasClass("open")) {
                 currentOpenDock = "mainChartDock";
                 console.log("Hide the band ratio chart");
 
-                if(placeMarkersBandRatio[0].layer != null) {
+                if (placeMarkersBandRatio[0].layer != null) {
                     placeMarkersBandRatio[0].layer.enabled = false;
                 }
-                if(placeMarkersBandRatio[1].layer != null) {
+                if (placeMarkersBandRatio[1].layer != null) {
                     placeMarkersBandRatio[1].layer.enabled = false;
                 }
             } else {
@@ -787,15 +970,15 @@ requirejs(['../../config/config',
 
         $(bandRatioChartID).click(function() {
             // If the dock is closed then click to open
-            if( $(bandRatioChartID).hasClass("open") ) {
+            if ($(bandRatioChartID).hasClass("open")) {
                 currentOpenDock = "bandRatioDock";
 
                 console.log("Show the band ratio chart");
-                if(placeMarkersBandRatio[0].layer != null) {
+                if (placeMarkersBandRatio[0].layer != null) {
                     placeMarkersBandRatio[0].layer.enabled = true;
                 }
 
-                if(placeMarkersBandRatio[1].layer != null) {
+                if (placeMarkersBandRatio[1].layer != null) {
                     placeMarkersBandRatio[1].layer.enabled = true;
                 }
 
@@ -805,11 +988,11 @@ requirejs(['../../config/config',
                 currentOpenDock = "";
 
                 console.log("Hide the band ratio chart");
-                if(placeMarkersBandRatio[0].layer != null) {
+                if (placeMarkersBandRatio[0].layer != null) {
                     placeMarkersBandRatio[0].layer.enabled = false;
                 }
 
-                if(placeMarkersBandRatio[1].layer != null) {
+                if (placeMarkersBandRatio[1].layer != null) {
                     placeMarkersBandRatio[1].layer.enabled = false;
                 }
             }
@@ -817,7 +1000,7 @@ requirejs(['../../config/config',
             //alert(currentOpenDock);
         });
 
-        
+
 
 
     });
@@ -851,7 +1034,7 @@ function Landings_addMultiplePlaceMarkers(layerIndex, placeMarkersArray) {
     // create a new layer
     var layer = new WorldWind.RenderableLayer("mainChartsPlaceMarkersLayer");
 
-    for(var i = 0; i < placeMarkersArray.length; i++) {
+    for (var i = 0; i < placeMarkersArray.length; i++) {
         var obj = placeMarkersArray[i];
 
         var placemark = new WorldWind.Placemark(new WorldWind.Position(obj.latitude, obj.longitude, 1e2), true, null);
@@ -862,7 +1045,7 @@ function Landings_addMultiplePlaceMarkers(layerIndex, placeMarkersArray) {
         layer.addRenderable(placemark);
     }
 
-     // Marker layer
+    // Marker layer
     wwd.insertLayer(layerIndex, layer);
 
     return layer;
@@ -870,7 +1053,7 @@ function Landings_addMultiplePlaceMarkers(layerIndex, placeMarkersArray) {
 
 // when to show the placemark icon on the clicked point
 function handlePlaceMarkerLayer() {
-    if(placemarkLayer == null) {
+    if (placemarkLayer == null) {
         placemarkLayer = new WorldWind.RenderableLayer("Placemarks");
         placemarkLayer.addRenderable(placemark);
 
@@ -879,29 +1062,29 @@ function handlePlaceMarkerLayer() {
     } else {
 
         // Check which dock is opened
-        if(currentOpenDock === "mainChartDock") {
+        if (currentOpenDock === "mainChartDock") {
             var chartIndex = placeMarkersArray.length;
             // Check if it is add chart or update chart
-            if($("#radioBtnAddChartMainChart").is(':checked')) {
+            if ($("#radioBtnAddChartMainChart").is(':checked')) {
                 // Add chart, then create a place marker for the new line in main chart                
-                if(!MainChart_isAddedALineChart) {
+                if (!MainChart_isAddedALineChart) {
                     // if any line chart is not drawn, then just remove the previous one, no add the place marker
                     placemarkLayer.removeRenderable(placemark);
 
                     addPlaceMarker(CLICKED_ICON_PATH + "1.png");
                 } else {
                     // a line chart is drawn, then can add the place marker
-                    if(chartIndex < MAXIMUM_LINECHARTS) {                        
+                    if (chartIndex < MAXIMUM_LINECHARTS) {
                         var iconPath = CLICKED_ICON_PATH + (chartIndex + 1) + ".png";
                         addPlaceMarker(iconPath);
                     }
-                } 
+                }
             } else {
                 // Update chart, then remove the previous clicked place marker and add the new place marker
                 placemarkLayer.removeRenderable(placemark);
 
                 // 0 is for spectral library
-                if(chartIndex == 0) {
+                if (chartIndex == 0) {
                     chartIndex = 1;
                 }
                 var iconPath = CLICKED_ICON_PATH + (chartIndex) + ".png";
@@ -925,11 +1108,15 @@ function handlePlaceMarkerLayer() {
         // Only add new place marker if it is allowed
         if(placeMarkersArray.length < MAXIMUM_LINECHARTS) {
             placemarkLayer.addRenderable(placemark);
-        } */                       
+        } */
     }
 
     wwd.redraw();
 }
+
+function replaceAll(template, target, replacement) {
+    return template.split(target).join(replacement);
+};
 
 // Add the place marker at clicked position
 function addPlaceMarker(iconPath) {
