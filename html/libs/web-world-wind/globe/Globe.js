@@ -73,7 +73,7 @@ define([
              */
             // check if URL contains "moon"
 	    var url = window.location.href;
-	    if (url.includes("moon")) {
+	    if (url.indexOf("moon") > -1) {
 	    	this.equatorialRadius = 1737400;
             } else {
             	this.equatorialRadius = 3396190;
@@ -84,7 +84,7 @@ define([
              * @type {Number}
              * @default 6356752.3 meters
              */
-	    if (url.includes("moon")) {
+	    if (url.indexOf("moon") > -1) {
 		this.polarRadius = 1737400;
 	    } else {
            	this.polarRadius = 3396190;

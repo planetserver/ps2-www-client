@@ -16,7 +16,7 @@ var url = window.location.href;
 
 baseMapNames = null;
 
-if (url.includes("moon")) {
+if (url.indexOf("moon") > -1) {
 	baseMapNames = [
 	   "Moon",
    	   "LOLA color"

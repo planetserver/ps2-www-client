@@ -92,7 +92,7 @@ var clientName = "mars";
 
 $(function() {
     var url = window.location.href;
-    if (url.includes("moon")) {
+    if (url.indexOf("moon") > -1) {
         clientName = "moon";
     } else {
         clientName = "mars";

@@ -1,4 +1,15 @@
 $(function () {
+    var url = window.location.href;
+    var moonClientURL = "http://access.planetserver.eu/moon/";
+    var marClientURL = "http://access.planetserver.eu/";
+    var moonClient = "#";
+    var marClient = "#";
+    if (url.indexOf("moon") > -1) {
+        marClient = marClientURL;
+    } else {
+	moonClient = moonClientURL;
+    }
+	
     $.widget("earthserver.navbar", {
         options: {
             serviceLogo: undefined,
@@ -12,9 +23,9 @@ $(function () {
                     .append($("<div>", {class: "navbar-header pull-left"})
                         .append($("<a>", {class: "navbar-brand earthserver-logo", href: "http://www.earthserver.eu"})
                             .append($("<img>", {class: "img-responsive", src: "html/images/logos/earthserver_logo.png", alt: "EarthServer Logo"}))
-                        ).append($("<a>", {class: "navbar-brand link-to-moon", href: "#moon"})
+                        ).append($("<a>", {class: "navbar-brand link-to-moon", href: moonClient})
                             .append($("<img>", {class: "img-responsive", alt: "Service Logo", src: "/html/images/moon_logo.png"}))
-                        ).append($("<a>", {class: "navbar-brand link-to-mars", href:"#"})
+                        ).append($("<a>", {class: "navbar-brand link-to-mars", href: marClient})
                             .append($("<img>", {class: "img-responsive", alt: "Service Logo", src: "/html/images/mars_logo.png"}))
                         )
                     ).append($("<div>", {class: "navbar-header pull-right"})
