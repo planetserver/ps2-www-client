@@ -32,11 +32,15 @@ define([
              * @returns {String} The suffix for the specified mime type, or null if the mime type is not recognized.
              */
             suffixForMimeType: function (mimeType) {
+
                 if (mimeType === "image/png")
                     return "png";
 
                 if (mimeType === "image/jpeg")
                     return "jpg";
+
+		if (mimeType === "application/bil" || mimeType === "image/bil") 
+                    return "bil"; 
 
                 if (mimeType === "application/bil16")
                     return "bil";

@@ -587,6 +587,8 @@ define([
                 if (!url)
                     return;
 
+                console.log(url);
+
                 xhr.open("GET", url, true);
                 xhr.responseType = 'arraybuffer';
                 xhr.onreadystatechange = function () {
@@ -598,7 +600,8 @@ define([
                         if (xhr.status === 200) {
                             if (contentType === elevationModel.retrievalImageFormat
                                 || contentType === "text/plain"
-                                || contentType === "application/octet-stream") {
+                                || contentType === "application/octet-stream"
+                                || contentType === "image/bil") {
                                 Logger.log(Logger.LEVEL_INFO, "Elevations retrieval succeeded: " + url);
                                 elevationModel.loadElevationImage(tile, xhr);
                                 elevationModel.absentResourceList.unmarkResourceAbsent(tile.imagePath);
@@ -656,7 +659,9 @@ define([
         ElevationModel.prototype.loadElevationImage = function (tile, xhr) {
             var elevationImage = new ElevationImage(tile.imagePath, tile.sector, tile.tileWidth, tile.tileHeight);
 
-            if (this.retrievalImageFormat == "application/bil16") {
+            console.log(this.retrievalImageFormat);
+
+            if (this.retrievalImageFormat == "application/bil16" || this.retrievalImageFormat == "image/bil") {
                 elevationImage.imageData = new Int16Array(xhr.response);
                 elevationImage.size = elevationImage.imageData.length * 2;
             } else if (this.retrievalImageFormat == "application/bil32") {

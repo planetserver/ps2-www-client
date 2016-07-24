@@ -27,15 +27,18 @@ define([
          */
         var EarthElevationModel = function () {
             ElevationModel.call(this,
-                Sector.FULL_SPHERE, new Location(45, 45), 12, "application/bil16", "EarthElevations256", 256, 256);
+                Sector.FULL_SPHERE, new Location(45, 45), 12, "image/bil", "tiles_test", 256, 256);
 
             this.displayName = "Earth Elevation Model";
             this.minElevation = -11000; // Depth of Marianas Trench, in meters
             this.maxElevation = 8850; // Height of Mt. Everest
             this.pixelIsPoint = false; // World Wind WMS elevation layers return pixel-as-area images
 
-            this.urlBuilder = new WmsUrlBuilder("http://worldwind26.arc.nasa.gov/elev",
-                "GEBCO,aster_v2,USGS-NED", "", "1.3.0");
+            /*this.urlBuilder = new WmsUrlBuilder("http://worldwind26.arc.nasa.gov/elev1",
+                                "GEBCO,aster_v2,USGS-NED", "", "1.3.0");*/
+            var testEndPoint = "http://access.planetserver.eu:8080/geoserver/WWW_DEM_10km_1file/wms";
+            var layer = "WWW_DEM_10km_1file:tiles_test";
+            this.urlBuilder = new WmsUrlBuilder(testEndPoint, layer, "", "1.1.0");
         };
 
         EarthElevationModel.prototype = Object.create(ElevationModel.prototype);
