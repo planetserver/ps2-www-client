@@ -587,7 +587,6 @@ define([
                 if (!url)
                     return;
 
-                console.log(url);
 
                 xhr.open("GET", url, true);
                 xhr.responseType = 'arraybuffer';
@@ -603,6 +602,7 @@ define([
                                 || contentType === "application/octet-stream"
                                 || contentType === "image/bil") {
                                 Logger.log(Logger.LEVEL_INFO, "Elevations retrieval succeeded: " + url);
+                                console.log(url);
                                 elevationModel.loadElevationImage(tile, xhr);
                                 elevationModel.absentResourceList.unmarkResourceAbsent(tile.imagePath);
 
