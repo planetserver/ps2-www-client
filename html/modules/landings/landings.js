@@ -119,6 +119,11 @@ var qsParam = {
     covID: getQueryVariable("covName")
 };
 
+// default it only allow 7 seconds to load libraries, it will wait until all libaries load with out set seconds
+requirejs.config({
+    waitSeconds: 0
+});
+
 // Load dependent libraries
 requirejs(['../../config/config',
         '../../libs/web-world-wind/WorldWind',
