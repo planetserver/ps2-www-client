@@ -454,6 +454,16 @@ requirejs(['../../config/config',
         */
         var imagesLayer = null;
 
+        // Check to update WCPS query when load RGB combinations
+        function updateDownloadWCPSQuery(coverageID, wcpsQueryLink) {
+            for (var j = 0; j < checkedFootPrintsArray.length; j++) {
+                if (checkedFootPrintsArray[j].coverageID.toLowerCase() === coverageID.toLowerCase()) {
+                    checkedFootPrintsArray[j].wcpsQuery = wcpsQueryLink;
+                    return;
+                }
+            }
+        }
+
         window.accessCheckedFootPrintsArray = function(newClickedFootPrintsArray) {
 
             // Remove the old layers first
@@ -510,10 +520,18 @@ requirejs(['../../config/config',
 
                     // Add the loaded image in images layer
                     imagesLayer.addRenderable(renderLayer[i]);
+
+                    // Add footprint and query to download option in menu context
+                    updateDownloadWCPSQuery(coverageID, WCPSLoadImage);
                 } else if (clientName === "moon") {
                     // create WCPS queries by subsettings then load in another footprints
                     var WCPSLoadImageTemplate = 'http://access.planetserver.eu:8080/rasdaman/ows?service=WCS&version=2.0.1&request=ProcessCoverages&query=for data in ( $coverageID ) return encode( { red: ((int)(255 / (max(((data).band_10 != 65535) * (data).band_10) - min((data).band_10))) * ((data).band_10 - min((data).band_10)))[N( $minN$newN )]; green: ((int)(255 / (max(((data).band_13 != 65535) * (data).band_13) - min((data).band_13))) * ((data).band_13 - min((data).band_13)))[N( $minN$newN )]; blue: ((int)(255 / (max(((data).band_78 != 65535) * (data).band_78) - min((data).band_78))) * ((data).band_78 - min((data).band_78)))[N( $minN$newN )] ; alpha: (((data).band_85 != 65535) * 255)[N( $minN$newN )]}, "png", "nodata=null")';
                     loadSubsettingsWCPSQuery(WCPSLoadImageTemplate, i, minlong, maxlong);
+
+                    // Add footprint and query to download option in menu context
+                    var WCPSLoadImage = 'http://access.planetserver.eu:8080/rasdaman/ows?service=WCS&version=2.0.1&request=ProcessCoverages&query=for data in ( $coverageID ) return encode( { red: ((int)(255 / (max(((data).band_10 != 65535) * (data).band_10) - min((data).band_10))) * ((data).band_10 - min((data).band_10))); green: ((int)(255 / (max(((data).band_13 != 65535) * (data).band_13) - min((data).band_13))) * ((data).band_13 - min((data).band_13))); blue: ((int)(255 / (max(((data).band_78 != 65535) * (data).band_78) - min((data).band_78))) * ((data).band_78 - min((data).band_78))) ; alpha: (((data).band_85 != 65535) * 255)}, "png", "nodata=null")';
+                    WCPSLoadImage = WCPSLoadImage.replace("$coverageID", coverageID.toUpperCase());
+                    updateDownloadWCPSQuery(coverageID, WCPSLoadImage);
                 }
             }
         }
@@ -558,6 +576,10 @@ requirejs(['../../config/config',
                     renderLayer[i].addRenderable(rgbcombinationSurfaceImage);
 
 
+                    // Add footprint and query to download option in menu context
+                    updateDownloadWCPSQuery(coverageID, WCPSLoadImage);
+
+
                     console.log("Load new RGB Combinations on selected footprint.");
                     break;
                 }
@@ -594,9 +616,11 @@ requirejs(['../../config/config',
                 minlong = checkedFootPrintsArray[index].Westernmost_longitude;
             }
 
+            var coverageID = checkedFootPrintsArray[index].coverageID;
+
             // a template WCPS queries with subsettings
             var WCPSLoadImageTemplate = WCPS_TEMPLATE;
-            WCPSLoadImageTemplate = WCPSLoadImageTemplate.replace("$COVERAGE_ID", checkedFootPrintsArray[index].coverageID);
+            WCPSLoadImageTemplate = WCPSLoadImageTemplate.replace("$COVERAGE_ID", coverageID);
             var redBand = "Red: " + "(" + selectedFootPrintObj.redBand + ")[N( $minN$newN )];";
             var greenBand = "Green: " + "(" + selectedFootPrintObj.greenBand + ")[N( $minN$newN )];";
             var blueBand = "Blue: " + "(" + selectedFootPrintObj.blueBand + ")[N( $minN$newN )];";
@@ -621,6 +645,12 @@ requirejs(['../../config/config',
 
             // Load the WCPS queries by subsettings
             loadSubsettingsWCPSQuery(WCPSLoadImageTemplate, index, minlong, maxlong);
+
+            // no need to subset the WCPS query when download
+            var WCPSLoadImage = replaceAll(WCPSLoadImageTemplate, "[N( $minN$newN )]", "");
+
+            // Add footprint and query to download option in menu context
+            updateDownloadWCPSQuery(coverageID, WCPSLoadImage);
         }
 
         // Create multiple WCPS queries by subsettings

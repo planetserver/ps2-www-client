@@ -20,7 +20,7 @@ function DataSetConstructor(coverageID, Easternmost_longitude, Maximum_latitude,
     this.isLoadedImage = isLoadedImage;
 }
 
-function CheckedDataSetConstructor(coverageID, Easternmost_longitude, Maximum_latitude, Minimum_latitude, Westernmost_longitude, latList, longList, latClickedPoint, longClickedPoint, shapeObj) {
+function CheckedDataSetConstructor(coverageID, Easternmost_longitude, Maximum_latitude, Minimum_latitude, Westernmost_longitude, latList, longList, latClickedPoint, longClickedPoint, shapeObj, wcpsQuery) {
     this.coverageID = coverageID;
     this.Easternmost_longitude = Easternmost_longitude;
     this.Maximum_latitude = Maximum_latitude;
@@ -36,6 +36,9 @@ function CheckedDataSetConstructor(coverageID, Easternmost_longitude, Maximum_la
 
     // store the shape object to set attribute of shape faster
     this.shapeObj = shapeObj;
+
+    // WCPS query to download
+    this.wcpsQuery = wcpsQuery;
 }
 
 // when page loads then load all footprints
@@ -89,7 +92,7 @@ function getFootPrintsContainingPointLeftClick(shapesArray, attributesObj, check
 	    }
 
             $.each(data, function(key, val) {
-                var dataSetFootPrint = new CheckedDataSetConstructor(val.coverageID, val.Easternmost_longitude, val.Maximum_latitude, val.Minimum_latitude, val.Westernmost_longitude, val.latList, val.longList, latitude, longitude, null);
+                var dataSetFootPrint = new CheckedDataSetConstructor(val.coverageID, val.Easternmost_longitude, val.Maximum_latitude, val.Minimum_latitude, val.Westernmost_longitude, val.latList, val.longList, latitude, longitude, null, "");
 
                 // Get the last clicked coverageID to draw the chart when clicking on loaded image
                 lastCovID = val.coverageID;
@@ -194,7 +197,7 @@ function getFootPrintsContainingPointRightClick(shapesArray, attributesObj, chec
         success: function(data) {
             console.log("Get footprints containing point for right click:" + getCoveragesContainingPointData);
             $.each(data, function(key, val) {
-                var dataSetFootPrint = new CheckedDataSetConstructor(val.coverageID, val.Easternmost_longitude, val.Maximum_latitude, val.Minimum_latitude, val.Westernmost_longitude, val.latList, val.longList, latitude, longitude, false, false);
+                var dataSetFootPrint = new CheckedDataSetConstructor(val.coverageID, val.Easternmost_longitude, val.Maximum_latitude, val.Minimum_latitude, val.Westernmost_longitude, val.latList, val.longList, latitude, longitude, false, false, "");
                 console.log("mememe: " + val.coverageID);
 
                 // Get the last clicked coverageID to draw the chart when clicking on loaded image
@@ -214,17 +217,14 @@ function getFootPrintsContainingPointRightClick(shapesArray, attributesObj, chec
 // in checked footprints table, user uncheck row then remove this row and uncheck the footprint also
 window.removeCheckedFootPrintRow = function(checkboxObj) {
     //var r = confirm("Do you want to uncheck this footprint?");
-    r = true;
-    if (r == true) {
-        // call this function from Footprints.js to update the content of checked table
-        var coverageID = checkboxObj.value;
+    // call this function from Footprints.js to update the content of checked table
+    var coverageID = checkboxObj.value;
 
-        // remove this coverageID from checkedFootPrintsArray
-        removeCheckedFootPrint(coverageID);
+    // remove this coverageID from checkedFootPrintsArray
+    removeCheckedFootPrint(coverageID);
 
-        // update the content of selected dropdown box
-        updateCheckedFootPrintsDropdownBox();
-    }
+    // update the content of selected dropdown box
+    updateCheckedFootPrintsDropdownBox();    
 }
 
 // this function will remove the checkedCoverage same ID with coverageID and change attribute of this coverage to unchecked
