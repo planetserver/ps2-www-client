@@ -32,8 +32,8 @@ class PythonWebHandler(BaseHTTPRequestHandler):
 		try:
 			uri = stretchHandler.parseURI(self.path);
 			self.wfile.write(uri);
-		except:
-			print ""
+		except Exception,e:
+			print e
 		return
 
 try:
