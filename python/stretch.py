@@ -1,6 +1,5 @@
 #!/usr/bin/python
 import urllib2
-import urllib
 import sys
 import os
 import collections
@@ -125,12 +124,9 @@ class StretchHandler:
 
 	# Get WCPS query (localhost:8090/python/stretch?wcpsQuery=WCPS_QUERY
 	def parseURI(self, URI):
-		self.wcpsQuery = URI.partition("query=")[2];
-		url = 'http://localhost:8080/rasdaman/ows/wcps'
-		print "\n query: " + self.wcpsQuery
-		data = urllib.urlencode({ "query": self.wcpsQuery } )
-		request = urllib2.Request(url, data)
-		response = urllib2.urlopen(request, timeout=150)
+		self.wcpsQuery = URI.partition("wcpsQuery=")[2];
+		request = urllib2.Request(self.wcpsQuery, headers={"Accept-Encoding": "gzip"})
+		response = urllib2.urlopen(request, timeout=30)
 
 		# handle with GDAL, get some information (it must use "/vsimem/" or it cannot read file)
 		mmap_name = "/vsimem/" + uuid4().get_hex()
