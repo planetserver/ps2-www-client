@@ -174,7 +174,7 @@ function MainChart_approximateSpectralValues(spectralDataProviderChart0, spectra
 
 
 $(function() {
-    // clear all the drawn charts, not the spectral library chart
+    // clear all the drawn charts, with the spectral library charts
     $("#btnClearChartsMultipleCharts").click(function() {
         if(!MainChart_isAddedALineChart) {
             alert("Please click on a footprint to retrieve the spectra first!");
@@ -182,7 +182,7 @@ $(function() {
         }
 
         // If a line chart is drawn
-        var ret = confirm("Do you want to remove all clicked spectra?");
+        var ret = confirm("Do you want to remove all charts?");
         if(ret) {
             // remove the data provider array for chart
             dataProviderChartsArray = [];
@@ -193,8 +193,9 @@ $(function() {
             // remove the place marker array
             placeMarkersArray = [];
 
-            // remove the drawn line charts by remove all the data, expect the spectral line chart
+            // remove the drawn line charts by remove all the data, and the spectral line charts
             MainChart_valuesClickedCoordinateArray = null;
+            selectedProductValuesSpectralLibrary = null;
             var floatsArray = [];
             MainChart_implementChart(floatsArray, selectedProductValuesSpectralLibrary);
 
@@ -436,8 +437,26 @@ function MainChart_implementChart(floatsArray, spectralFloatsArray) {
     chart.write(chartDivID);*/
 
 
-    drawChart(combinedArray);
+    // before drawing chart, it will select only values inside the range text box
+    var range = $("#txtRangeChartsMainChart").val();
+    if (range.includes("-")) {
+        var rangeArray = range.split("-");
+        var min = rangeArray[0];
+        var max = rangeArray[1];
 
+        var selectedCombinedArray = [];
+
+        for (var i = 0; i < combinedArray.length; i++) {
+            var wavelength = parseFloat(combinedArray[i].wavelength);
+            if (wavelength >= min && wavelength <= max) {
+                selectedCombinedArray.push(combinedArray[i]);
+            }
+        }
+
+        drawChart(selectedCombinedArray);    
+    } else {
+        alert("The range of charts need to be in format: number-number, e.g: 1-4");
+    }
 }
 
 
