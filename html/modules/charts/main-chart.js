@@ -17,12 +17,24 @@ var chartColors = ["#FAF306", "#7EF10A", "#9B59B6", "#5499C7", "#48C9B0", "#58D6
 // when select add a new chart, it will add to dataProviderChartsArray (but not add if it is spectral library, it will only update)
 var isAddNewLineChart = true;
 
+// This array has all objects for drawing chart with default range charts (i.e: 1-4 in wavelength)
+var defaultCombinedArrayCharts = null;
+
 // store the clicked coordinates to add the place markers
 placeMarkersArray = [];
 
 
 // check if a line chart is drawn
 MainChart_isAddedALineChart = false;
+
+// Handle change event of range charts text box (only after drawing chart)
+$('#txtRangeChartsMainChart').keypress(function (e) {
+    var key = e.which;
+    if(key == 13)  // the enter key code
+    {
+        filterRangeCharts();
+    }
+});
 
 
 // find in arrayLineChart1 a wavelength which is as same as wavelengthValue or is the smaller one but approximate this value
@@ -371,6 +383,9 @@ function MainChart_implementChart(floatsArray, spectralFloatsArray) {
 
     console.log(combinedArray);
 
+    // this is a defaultCombinedArrayCharts for wavelength (1-4)
+    defaultCombinedArrayCharts = combinedArray;
+
     // Draw 2 charts from clicked coordinate and product spectral library
     /*var chart = AmCharts.makeChart("#" + chartDivID, {
         "type": "xy",
@@ -436,7 +451,12 @@ function MainChart_implementChart(floatsArray, spectralFloatsArray) {
     chart.invalidateSize();
     chart.write(chartDivID);*/
 
+    filterRangeCharts();
 
+}
+
+// only draw values from range charts text box (default is wavelength from: 1-4)
+function filterRangeCharts() {
     // before drawing chart, it will select only values inside the range text box
     var range = $("#txtRangeChartsMainChart").val();
     if (range.includes("-")) {
@@ -446,14 +466,14 @@ function MainChart_implementChart(floatsArray, spectralFloatsArray) {
 
         var selectedCombinedArray = [];
 
-        for (var i = 0; i < combinedArray.length; i++) {
-            var wavelength = parseFloat(combinedArray[i].wavelength);
+        for (var i = 0; i < defaultCombinedArrayCharts.length; i++) {
+            var wavelength = parseFloat(defaultCombinedArrayCharts[i].wavelength);
             if (wavelength >= min && wavelength <= max) {
-                selectedCombinedArray.push(combinedArray[i]);
+                selectedCombinedArray.push(defaultCombinedArrayCharts[i]);
             }
         }
 
-        drawChart(selectedCombinedArray);    
+        drawChart(selectedCombinedArray);
     } else {
         alert("The range of charts need to be in format: number-number, e.g: 1-4");
     }
