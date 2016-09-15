@@ -5,7 +5,7 @@ xAxisArray = [];
 
 $(document).ready(function() {
     // change here with "ps2EndPoint" later
-    var csvFile = "http://localhost:8080" + "/html/data/x_axis.csv"
+    var csvFile = ps2EndPoint + "/html/data/x_axis.csv"
     // load the x_axis for charts from file
     $.ajax({
             type: "GET",
