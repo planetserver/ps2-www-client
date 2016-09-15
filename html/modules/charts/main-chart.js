@@ -94,71 +94,11 @@ function MainChart_getQueryResponseAndSetChart(query) {
 }
 
 
-// Object constructor for data line
-function SpectralDataConstructorLine(wavelength, reflectance) {
-    this.wavelength = wavelength;
-    this.reflectance = reflectance;
-}
 
 function PlaceMarkerConstructor(latitude, longitude, iconPath) {
     this.latitude = latitude;
     this.longitude = longitude;
     this.iconPath = iconPath;
-}
-
-// From clicked chart values, parse it and calculate the coresspondent wavelength
-function MainChart_handleClickedChartValues(floatsArray) {
-    // combine array values from clicked coordinate and spectral library
-    var spectralDataProviderChart = [];
-
-    // This is for the clicked coordinate from WCPS
-    var xDist = 3.00913242 / floatsArray.length; // Value for setting the equidistance Band wavelength which should be between 1 and 4
-    var xPrev = 1.0; // Value used for storing the Band wavelength of the previous Band
-    var Ymin = Infinity,
-        Ymax = -Infinity; // Values for getting the minimum and maximum out of the array
-
-    for (var i = 0; i < floatsArray.length; i++) {
-        // Only get points with valid value
-        var relectance = floatsArray[i];
-
-        var spectralObj = new SpectralDataConstructorLine(parseFloat(xPrev).toFixed(3), relectance);
-        spectralDataProviderChart.push(spectralObj);
-
-        if (Ymin > floatsArray[i]) { // Getting the minimum of value to draw chart
-            Ymin = floatsArray[i];
-        } else if (Ymax < floatsArray[i]) { // Getting the maximum of value to draw chart
-            Ymax = floatsArray[i];
-        }
-
-        // If point value is valid or not valid still need to calculate the X coordinate for it.
-        xPrev = xPrev + xDist; // Setting the correct X-axis wavelength of the current Band/point
-    }
-
-    return spectralDataProviderChart;
-}
-
-
-// Create array of object from spectral data values
-function MainChart_handleSpectralChartValues(spectralFloatsArray) {
-    // Store the data for the line 0
-    var spectralLibraryDataProviderChart = [];
-
-    // This is for the spectral library of product from category
-    // only when select product dropdown in spectral library spectralFloatsArray will have values to draw second line chart
-    if(spectralFloatsArray != null) {
-
-        for (var i = 0; i < spectralFloatsArray.length; i++) {
-            // Only get points with valid value
-            var relectance = spectralFloatsArray[i];
-
-            // wavelength is selected wavelength from spectral library
-            var wavelength = selectedWaveLengthSpectralLibrary[i];
-            var spectralObj = new SpectralDataConstructorLine(parseFloat(wavelength).toFixed(3), relectance);
-            spectralLibraryDataProviderChart.push(spectralObj);
-        }
-    }
-
-    return spectralLibraryDataProviderChart;
 }
 
 
@@ -293,12 +233,12 @@ function MainChart_CombineDataProviders(spectralDataProviderChartMatched) {
 function MainChart_implementChart(isChangeSpectralLibrary, floatsArray, spectralFloatsArray) {
 
     // Store the data for spectral chart (if drawn a clicked chart then the spectralFloatsArray is null and vice versa)
-    var spectralLibraryDataProviderChart = MainChart_handleSpectralChartValues(spectralFloatsArray);
+    var spectralLibraryDataProviderChart = Chart_handleSpectralChartValues(spectralFloatsArray);
 
     // Store the data for multiple clicked charts
 
-    // get chart data values from clicked chart values (450 values)
-    var spectralDataProviderChart = MainChart_handleClickedChartValues(floatsArray);
+    // get chart data values from clicked chart values (438 values)
+    var spectralDataProviderChart = Chart_handleClickedChartValues(floatsArray);
 
     // Check if it is update current line chart or add new chart
     if ($("#radioBtnAddChartMainChart").is(':checked')) {

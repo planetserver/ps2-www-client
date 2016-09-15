@@ -5,6 +5,8 @@ $(document).ready(function() {
     var availableRegions = [];
     var selectedValue = "region";
 
+    var availableCoverageIDs = [];
+
     $.ajax({
         type: "GET",
         url: ps2EndPoint + "html/data/region-goto.json",
@@ -37,6 +39,18 @@ $(document).ready(function() {
             selectedValue = "region";
         } else if (value === "coverageID") {
             // load the autocomple text on the text box for "coverageID"
+            // check if all the footprints's IDs were loaded to an array for auto complete
+
+            if (availableCoverageIDs.length === 0) {
+                // All footprints are possible
+                for (var i = 0; i < allFootPrintsArray.length; i++) {
+                    availableCoverageIDs.push(allFootPrintsArray[i].coverageID);
+                }
+
+                console.log("Loaded footprints's IDs for autocomplete: " + availableCoverageIDs.length);
+            }
+
+            // then load the footprint's IDs from the input text
             loadAutoCompleteCoverageID();
             selectedValue = "coverageID";
         } else {
@@ -45,13 +59,6 @@ $(document).ready(function() {
             selectedValue = "latlon";
         }
     });
-
-
-    // All footprints are possible
-    var availableCoverageIDs = [];
-    for (var i = 0; i < allFootPrintsArray.length; i++) {
-        availableCoverageIDs.push(allFootPrintsArray[i].coverageID);
-    }
 
     // Get the range when scroll
     $('body').bind('mousewheel', function(e) {
@@ -106,7 +113,7 @@ $(document).ready(function() {
     }
 
 
-    // Handle button goto 
+    // Handle button goto
     $("#btnGoto").on("click", function() {
         if (selectedValue === "region") {
             // goto region

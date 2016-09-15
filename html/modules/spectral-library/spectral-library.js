@@ -40,7 +40,7 @@ $(document).ready(function() {
             })(i);
         }
 
-        // Then load to category dropdownbox in mainChartDock (this is called after ajax event is finished)
+        // Then load to category dropdownbox in mainChartDock and ratio-dock (this is called after ajax event is finished)
         $(document).ajaxStop(function() {
             if(isLoadedAllSpectralLibrary === false) {
                 console.log("Loaded all spectral library.");
@@ -56,7 +56,10 @@ $(document).ready(function() {
                     // upper first character
                     tmp = tmp.replace("$DATA", spectralLibraryArray[i].name);
                     tmp = tmp.replace("$NAME", titleCase(spectralLibraryArray[i].name));
+                    // main chart
                     $("#dropDownCategorySpectralLibrary").append(tmp);
+                    // ratio-chart
+                    $("#dropDownCategorySpectralLibraryRatioChart").append(tmp);
                 }
             }
         });
@@ -64,13 +67,24 @@ $(document).ready(function() {
     });
 
 
+    // -------- Dropdown Category ----------
 
-    // set selected dropdown box value
+    // when change in dropdown category, it will load data to dropdownProduct
+    // main chart
     $("#dropDownCategorySpectralLibrary").on('click', 'li a', function() {
+        loadProductDataByCategory($(this), "dropDownProductSpectralLibrary");
+    });
 
-        var selectedValue = $(this).data('value');
-        $(this).parents(".dropdown").find('.btn').html("Categories: " + $(this).text() + ' <span class="caret"></span>');
-        $(this).parents(".dropdown").find('.btn').val(selectedValue);
+    // ratio-chart
+    $("#dropDownCategorySpectralLibraryRatioChart").on('click', 'li a', function() {
+        loadProductDataByCategory($(this), "dropDownProductSpectralLibraryRatioChart");
+    });
+
+    // load products sepectral values by category into the dropDownProductID
+    function loadProductDataByCategory(categoryObj, dropDownProductID) {
+        var selectedValue = categoryObj.data('value');
+        categoryObj.parents(".dropdown").find('.btn').html("Categories: " + categoryObj.text() + ' <span class="caret"></span>');
+        categoryObj.parents(".dropdown").find('.btn').val(selectedValue);
 
         // Change the button html of dropDownProoductSpectralLibrary to default
         $("#btnProductSpectralLibrary").html("Spectral Library Products");
@@ -109,7 +123,7 @@ $(document).ready(function() {
                             tmp = tmp.replace("$CHART_VALUE", obj[key]);
                             // upper first character
                             tmp = tmp.replace("$NAME", titleCase(key));
-                            $("#dropDownProductSpectralLibrary").append(tmp);
+                            $("#" + dropDownProductID).append(tmp);
                         }
                     }
                 }
@@ -120,7 +134,10 @@ $(document).ready(function() {
                 break;
             }
         }
-    });
+    }
+
+
+    //  ------ Dropdown Product ----------
 
     // product dropdown click
     $("#dropDownProductSpectralLibrary").on('click', 'li a', function() {

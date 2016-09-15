@@ -586,7 +586,7 @@ requirejs(['../../config/config',
             }
         }
 
-        // load the RGB combinations result with subsetting 
+        // load the RGB combinations result with subsetting
         // moon client
         window.loadRGBCombinationsMoon = function(selectedFootPrintObj, index, stretch) {
 
@@ -718,7 +718,7 @@ requirejs(['../../config/config',
             } else {
                 r = 1737400;
             }
-            
+
             var cosOf0 = 1;
             var rho = (Math.PI / 180);
             var N = latitude * r * rho;
@@ -748,7 +748,7 @@ requirejs(['../../config/config',
 
                 //update the title of the chart with name and lat long
                 $("#service-container .right-dock.plot-dock .panel-title").text("Coverage Name: " + covID);
-                $("#service-container .right-dock.plot-dock .panel-title.panel-subtitle").text("Latitude: " + String(latitude.toFixed(2)) + ", Longitude: " + String(longitude.toFixed(2)));
+                $("#service-container .right-dock.plot-dock .panel-title.panel-subtitle").text("Latitude: " + String(parseFloat(latitude).toFixed(5)) + ", Longitude: " + String(parseFloat(longitude).toFixed(5)));
 
                 var rgbValues = '<hr style="margin-top: -30px;"> <div style="text-align: center; margin-top: -10px; color: white;" id="divRGBValues"> </div>';
 
@@ -836,7 +836,7 @@ requirejs(['../../config/config',
                 query = "http://access.planetserver.eu:8080/rasdaman/ows?query=for%20c%20in%20(" + covID + ")%20return%20encode(c[%20N(" +
                 N + ":" + N + "),%20E(" + E + ":" + E + ")%20],%20%22csv%22)";
             }
-           
+
 
             console.log("WCPS get bands value at clicked coordinate: " + query);
             Chart_getQueryResponseAndSetChart(query);
@@ -1101,7 +1101,7 @@ function handlePlaceMarkerLayer() {
             var chartIndex = placeMarkersArray.length;
             // Check if it is add chart or update chart
             if ($("#radioBtnAddChartMainChart").is(':checked')) {
-                // Add chart, then create a place marker for the new line in main chart                
+                // Add chart, then create a place marker for the new line in main chart
                 if (!MainChart_isAddedALineChart) {
                     // if any line chart is not drawn, then just remove the previous one, no add the place marker
                     placemarkLayer.removeRenderable(placemark);
@@ -1139,7 +1139,7 @@ function handlePlaceMarkerLayer() {
             // and remove the update chart only, not all the clicked points
             placemarkLayer.removeAllRenderables();
         }
-        
+
         // Only add new place marker if it is allowed
         if(placeMarkersArray.length < MAXIMUM_LINECHARTS) {
             placemarkLayer.addRenderable(placemark);
