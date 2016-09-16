@@ -1102,7 +1102,7 @@ function handlePlaceMarkerLayer() {
             // Check if it is add chart or update chart
             if ($("#radioBtnAddChartMainChart").is(':checked')) {
                 // Add chart, then create a place marker for the new line in main chart
-                if (!MainChart_isAddedALineChart) {
+                if (!isAddedALineChartMainChart) {
                     // if any line chart is not drawn, then just remove the previous one, no add the place marker
                     placemarkLayer.removeRenderable(placemark);
 
