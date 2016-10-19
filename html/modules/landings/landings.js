@@ -443,7 +443,7 @@ requirejs(['../../config/config',
                             }
                         }
 
-                        queryBuilder(clickedLatitude, clickedLongitude, lastCovID, checkedFootPrintsArray[index].Easternmost_longitude, checkedFootPrintsArray[index].Westernmost_longitude);
+                        queryBuilder(clickedLatitude, clickedLongitude, lastCovID, checkedFootPrintsArray[index].Easternmost_longitude, checkedFootPrintsArray[index].Westernmost_longitude, checkedFootPrintsArray[index].centroid_longitude);
                     }
                 });
             }
@@ -705,7 +705,7 @@ requirejs(['../../config/config',
 
 
         /* This function is used to draw chart when user click in 1 point and get all the values of bands */
-        var queryBuilder = function(latitude, longitude, covID, east, west) {
+        var queryBuilder = function(latitude, longitude, covID, east, west, centroid_longitude) {
 
             // Set the fileName when export to this value
             drawCoverageID = covID;
@@ -719,6 +719,7 @@ requirejs(['../../config/config',
                 r = 1737400;
             }
 
+            // convert from degrees (latitude, longitude) to meters (E, N)
             var cosOf0 = 1;
             var rho = (Math.PI / 180);
             var N = latitude * r * rho;
@@ -727,7 +728,7 @@ requirejs(['../../config/config',
             if (latitude >= 65.0) { // coverages above 65° are stored in polar stereographic with the centerlongitude as the long0.
 
                 var lat0 = 90;
-                var lon0 = (west - ((west - east) / 2)) - 360;
+                var lon0 = centroid_longitude;
                 var k = 2 / (1 + Math.sin(lat0 * rho) * Math.sin(latitude * rho) + Math.cos(lat0 * rho) * Math.cos(latitude * rho) * Math.cos(longitude * rho - lon0 * rho));
                 N = r * k * (Math.cos(lat0 * rho) * Math.sin(latitude * rho) - Math.sin(lat0 * rho) * Math.cos(latitude * rho) * Math.cos(longitude * rho - lon0 * rho));
                 E = r * k * Math.cos(latitude * rho) * Math.sin(longitude * rho - lon0 * rho);
@@ -737,7 +738,7 @@ requirejs(['../../config/config',
             if (latitude <= -65.0) { // coverages below -65° are stored in polar stereographic with the centerlongitude as the long0.
 
                 var lat0 = -90;
-                var lon0 = (west - ((west - east) / 2)) - 360;
+                var lon0 = centroid_longitude;
                 var k = 2 / (1 + Math.sin(lat0 * rho) * Math.sin(latitude * rho) + Math.cos(lat0 * rho) * Math.cos(latitude * rho) * Math.cos(longitude * rho - lon0 * rho));
                 N = r * k * (Math.cos(lat0 * rho) * Math.sin(latitude * rho) - Math.sin(lat0 * rho) * Math.cos(latitude * rho) * Math.cos(longitude * rho - lon0 * rho));
                 E = r * k * Math.cos(latitude * rho) * Math.sin(longitude * rho - lon0 * rho);
