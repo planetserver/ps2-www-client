@@ -18,9 +18,9 @@ var availableWCPSQueries = []; // store all the WCPS queries from JSON
 var selectedFootPrintsArray = []; // store the selected footprints from dropDownSelectedFootPrints
 
 // RGB Bands default for all footprints from WCPS Query
-var redBandDefault = "(int)(255 / (max((data.band_233 != 65535) * data.band_233) - min(data.band_233))) * (data.band_233 - min(data.band_233))";
-var blueBandDefault = "(int)(255 / (max((data.band_78 != 65535) * data.band_78) - min(data.band_78))) * (data.band_78 - min(data.band_78))";
-var greenBandDefault = "(int)(255 / (max((data.band_13 != 65535) * data.band_13) - min(data.band_13))) * (data.band_13 - min(data.band_13))";
+var redBandDefault = "(int)((255 / (max((data.band_233 != 65535) * data.band_233) - min(data.band_233))) * (data.band_233 - min(data.band_233)))";
+var blueBandDefault = "(int)((255 / (max((data.band_78 != 65535) * data.band_78) - min(data.band_78))) * (data.band_78 - min(data.band_78)))";
+var greenBandDefault = "(int)((255 / (max((data.band_13 != 65535) * data.band_13) - min(data.band_13))) * (data.band_13 - min(data.band_13)))";
 var alphaBandDefault = "(data.band_100 != 65535) * 255";
 
 if (clientName === "moon") {
@@ -869,7 +869,7 @@ $("#btnSubmitRGBCombination").click(function(e) {
 
                     // replace $COVERAGE_ID with selected coverageID and load WCPS combination on checked footprint
                     WCPS_TEMPLATE_QUERY = replaceAll(WCPS_TEMPLATE, "$COVERAGE_ID", selectedFootPrintsArray[i].coverageID.toLowerCase());
-                    
+
                     // with mars, don't need to subset the WCPS query
                     if (clientName === "mars") {
                         if(isAllBandsCustomWCPSQueries === 3) {
@@ -889,7 +889,7 @@ $("#btnSubmitRGBCombination").click(function(e) {
                         // create WCPS queries with the subsettings
                         loadRGBCombinationsMoon(selectedFootPrintsArray[i], index, stretch);
                     }
-                    
+
                 }
             }
         }
