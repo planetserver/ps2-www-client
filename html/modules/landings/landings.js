@@ -525,11 +525,11 @@ requirejs(['../../config/config',
                     updateDownloadWCPSQuery(coverageID, WCPSLoadImage);
                 } else if (clientName === "moon") {
                     // create WCPS queries by subsettings then load in another footprints
-                    var WCPSLoadImageTemplate = 'http://access.planetserver.eu:8080/rasdaman/ows?service=WCS&version=2.0.1&request=ProcessCoverages&query=for data in ( $coverageID ) return encode( { red: ((int)(255 / (max(((data).band_10 != 65535) * (data).band_10) - min((data).band_10))) * ((data).band_10 - min((data).band_10)))[N( $minN$newN )]; green: ((int)(255 / (max(((data).band_13 != 65535) * (data).band_13) - min((data).band_13))) * ((data).band_13 - min((data).band_13)))[N( $minN$newN )]; blue: ((int)(255 / (max(((data).band_78 != 65535) * (data).band_78) - min((data).band_78))) * ((data).band_78 - min((data).band_78)))[N( $minN$newN )] ; alpha: (((data).band_85 != 65535) * 255)[N( $minN$newN )]}, "png", "nodata=null")';
+                    var WCPSLoadImageTemplate = 'http://access.planetserver.eu:8080/rasdaman/ows?service=WCS&version=2.0.1&request=ProcessCoverages&query=for data in ( $coverageID ) return encode( { red: ((int)(255 / (max((data).band_10) - min((data).band_10))) * ((data).band_10 - min((data).band_10)))[N( $minN$newN )]; green: ((int)(255 / (max((data).band_13) - min((data).band_13))) * ((data).band_13 - min((data).band_13)))[N( $minN$newN )]; blue: ((int)(255 / (max((data).band_78) - min((data).band_78))) * ((data).band_78 - min((data).band_78)))[N( $minN$newN )] ; alpha: (((data).band_85 > 0) * 255)[N( $minN$newN )]}, "png", "nodata=65535")';
                     loadSubsettingsWCPSQuery(WCPSLoadImageTemplate, i, minlong, maxlong);
 
                     // Add footprint and query to download option in menu context
-                    var WCPSLoadImage = 'http://access.planetserver.eu:8080/rasdaman/ows?service=WCS&version=2.0.1&request=ProcessCoverages&query=for data in ( $coverageID ) return encode( { red: ((int)(255 / (max(((data).band_10 != 65535) * (data).band_10) - min((data).band_10))) * ((data).band_10 - min((data).band_10))); green: ((int)(255 / (max(((data).band_13 != 65535) * (data).band_13) - min((data).band_13))) * ((data).band_13 - min((data).band_13))); blue: ((int)(255 / (max(((data).band_78 != 65535) * (data).band_78) - min((data).band_78))) * ((data).band_78 - min((data).band_78))) ; alpha: (((data).band_85 != 65535) * 255)}, "png", "nodata=null")';
+                    var WCPSLoadImage = 'http://access.planetserver.eu:8080/rasdaman/ows?service=WCS&version=2.0.1&request=ProcessCoverages&query=for data in ( $coverageID ) return encode( { red: ((int)(255 / (max((data).band_10) - min((data).band_10))) * ((data).band_10 - min((data).band_10))); green: ((int)(255 / (max((data).band_13) - min((data).band_13))) * ((data).band_13 - min((data).band_13))); blue: ((int)(255 / (max((data).band_78) - min((data).band_78))) * ((data).band_78 - min((data).band_78))) ; alpha: (((data).band_85 > 0) * 255)}, "png", "nodata=65535")';
                     WCPSLoadImage = WCPSLoadImage.replace("$coverageID", coverageID.toUpperCase());
                     updateDownloadWCPSQuery(coverageID, WCPSLoadImage);
                 }
@@ -594,7 +594,7 @@ requirejs(['../../config/config',
                                 '{'
                                 // insert bands here
                                 + "$RGB_BANDS"
-                                + '  alpha: ((data.band_85 != 65535) * 255)[N( $minN$newN )] }, "png", "nodata=null")';
+                                + '  alpha: ((data.band_85 > 0) * 255)[N( $minN$newN )] }, "png", "nodata=65535")';
             var redBand = selectedFootPrintObj.redBand;
             var greenBand = selectedFootPrintObj.greenBand;
             var blueBand = selectedFootPrintObj.blueBand;
