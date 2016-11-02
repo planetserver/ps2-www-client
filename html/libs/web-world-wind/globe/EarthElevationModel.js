@@ -37,9 +37,9 @@ define([
 
                   /*this.urlBuilder = new WmsUrlBuilder("http://worldwind26.arc.nasa.gov/elev1",
                                       "GEBCO,aster_v2,USGS-NED", "", "1.3.0");*/
-                  //var testEndPoint = "http://access.planetserver.eu:8080/geoserver/WWW_DEM_10km_1file/wms";
+                  //var testEndPoint = "http://access.planetserver.eu:8083/geoserver/WWW_DEM_10km_1file/wms";
                   //var layer = "WWW_DEM_10km_1file:tiles_test";
-                  var testEndPoint = "http://access.planetserver.eu:8080/geoserver/lunar_global/wms";
+                  var testEndPoint = "http://access.planetserver.eu:8083/geoserver/lunar_global/wms";
                   var layer = "lunar_global:tiles_cut";
                   this.urlBuilder = new WmsUrlBuilder(testEndPoint, layer, "", "1.1.0");
 
@@ -51,9 +51,9 @@ define([
 
                   /*this.urlBuilder = new WmsUrlBuilder("http://worldwind26.arc.nasa.gov/elev1",
                                       "GEBCO,aster_v2,USGS-NED", "", "1.3.0");*/
-                  //var testEndPoint = "http://access.planetserver.eu:8080/geoserver/WWW_DEM_10km_1file/wms";
+                  //var testEndPoint = "http://access.planetserver.eu:8083/geoserver/WWW_DEM_10km_1file/wms";
                   //var layer = "WWW_DEM_10km_1file:tiles_test";
-                  var testEndPoint = "http://access.planetserver.eu:8080/geoserver/global_dem/wms";
+                  var testEndPoint = "http://access.planetserver.eu:8083/geoserver/global_dem/wms";
                   var layer = "global_dem:tiles_cut";
                   this.urlBuilder = new WmsUrlBuilder(testEndPoint, layer, "", "1.1.0");
                 }
