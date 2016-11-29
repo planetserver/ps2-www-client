@@ -526,7 +526,7 @@ requirejs(['../../config/config',
                 } else if (clientName === "moon") {
                     // create WCPS queries by subsettings then load in another footprints
                     var WCPSLoadImageTemplate = 'http://access.planetserver.eu:8080/rasdaman/ows?service=WCS&version=2.0.1&request=ProcessCoverages&query=for data in ( $coverageID ) return encode( { red: (float)(((int)(255 / (max((data).band_10) - min((data).band_10))) * ((data).band_10 - min((data).band_10))))[N( $minN$newN )]; green: (float)(((int)(255 / (max((data).band_13) - min((data).band_13))) * ((data).band_13 - min((data).band_13))))[N( $minN$newN )]; blue: (float)(((int)(255 / (max((data).band_78) - min((data).band_78))) * ((data).band_78 - min((data).band_78))))[N( $minN$newN )] ; alpha: (float)((((data).band_85 > 0) * 255))[N( $minN$newN )]}, "png", "nodata=65535")';
-                    loadSubsettingsWCPSQuery(WCPSLoadImageTemplate, i, minlong, maxlong);
+                    loadSubsettingsWCPSQuery(WCPSLoadImageTemplate, i);
 
                     // Add footprint and query to download option in menu context
                     var WCPSLoadImage = 'http://access.planetserver.eu:8080/rasdaman/ows?service=WCS&version=2.0.1&request=ProcessCoverages&query=for data in ( $coverageID ) return encode( { red: (float)(((int)(255 / (max((data).band_10) - min((data).band_10))) * ((data).band_10 - min((data).band_10)))); green: (float)(((int)(255 / (max((data).band_13) - min((data).band_13))) * ((data).band_13 - min((data).band_13)))); blue: (float)(((int)(255 / (max((data).band_78) - min((data).band_78))) * ((data).band_78 - min((data).band_78)))) ; alpha: (float)((((data).band_85 > 0) * 255))}, "png", "nodata=65535")';
@@ -644,7 +644,7 @@ requirejs(['../../config/config',
             }
 
             // Load the WCPS queries by subsettings
-            loadSubsettingsWCPSQuery(WCPSLoadImageTemplate, index, minlong, maxlong);
+            loadSubsettingsWCPSQuery(WCPSLoadImageTemplate, index);
 
             // no need to subset the WCPS query when download
             var WCPSLoadImage = replaceAll(WCPSLoadImageTemplate, "[N( $minN$newN )]", "");
@@ -655,26 +655,49 @@ requirejs(['../../config/config',
 
         // Create multiple WCPS queries by subsettings
         // moon client
-        window.loadSubsettingsWCPSQuery = function(WCPSLoadImageTemplate, index, minlong, maxlong) {
+        window.loadSubsettingsWCPSQuery = function(WCPSLoadImageTemplate, index) {
+            // Need to fetch the max E, N from PS2server to calculate the partitions for N axis in WCPS queries
+            var coverageID = checkedFootPrintsArray[index].coverageID;
+
+            var lowerCorner = "";
+            var upperCorner = "";
+
+            $.ajax({
+                url: 'http://access.planetserver.eu:8080/rasdaman/ows?service=WCS&version=2.0.1&request=DescribeCoverage&coverageID=' + coverageID,
+                async: false,
+                dataType: "xml",
+                success: function(xml) {
+                    lowerCorner = $(xml).find("lowerCorner").text();
+                    upperCorner = $(xml).find("upperCorner").text();
+
+                }
+            });
+
+
+            var minE = parseFloat(lowerCorner.split(" ")[0]);
+            var minN = parseFloat(lowerCorner.split(" ")[1]) + 0.001;
+            var maxE = parseFloat(upperCorner.split(" ")[0]);
+            var maxN = parseFloat(upperCorner.split(" ")[1]) - 0.001;
+
+            // need to convert meters to degrees
+            var minLong = convertMeterToDegree(minE);
+            var maxLong = convertMeterToDegree(maxE);
+            var minLat = convertMeterToDegree(minN);
+            var maxLat = convertMeterToDegree(maxN);
+
+
             // this is N
-            var minLatN = checkedFootPrintsArray[index].Minimum_latitude;
-            var maxLatN = checkedFootPrintsArray[index].Maximum_latitude;
-            var stepLat = (maxLatN - minLatN) / MOON_TILE_NUMBER;
-            var newLatN = minLatN + stepLat;
+            var stepN = (maxN - minN) / MOON_TILE_NUMBER;
+            var newN = minN + stepN;
 
-            var r = 1737400;
+
             // this is Lat
-            var rho = (Math.PI / 180);
-            var minN = minLatN * r * rho;
-            var maxN = maxLatN * r * rho;
-
-            // var minN = checkedFootPrintsArray[i].Minimum_latitude;
-            // var maxN = checkedFootPrintsArray[i].Maximum_latitude;
-            var step = (maxN - minN) / MOON_TILE_NUMBER;
-            var newN = minN + step;
+            var stepLat = (maxLat - minLat) / MOON_TILE_NUMBER;
+            var newLat = minLat + stepLat;
 
 
             for (var l = 0; l < MOON_TILE_NUMBER; l++) {
+                // meters
                 var minNnewN = minN + ":" + newN;
 
                 var WCPSLoadImage = WCPSLoadImageTemplate;
@@ -683,7 +706,7 @@ requirejs(['../../config/config',
 
                 console.log(WCPSLoadImage);
 
-                var surfaceImage = new WorldWind.SurfaceImage(new WorldWind.Sector(minLatN, newLatN, minlong, maxlong), WCPSLoadImage);
+                var surfaceImage = new WorldWind.SurfaceImage(new WorldWind.Sector(minLat, newLat, minLong, maxLong), WCPSLoadImage);
                 console.log("Load default image on footprint: " + coverageID);
 
                 var layer = new WorldWind.RenderableLayer("");
@@ -696,10 +719,11 @@ requirejs(['../../config/config',
                 // Add the loaded image in images layer
                 imagesLayer.addRenderable(layer);
                 minN = newN;
-                newN = minN + step;
+                newN = minN + stepN;
 
-                minLatN = newLatN;
-                newLatN = minLatN + stepLat;
+                /// degrees
+                minLat = newLat;
+                newLat = minLat + stepLat;
             }
         }
 
@@ -1162,4 +1186,13 @@ function addPlaceMarker(iconPath) {
     placemark.attributes = placemarkAttributes;
 
     placemarkLayer.addRenderable(placemark);
+}
+
+
+// Convert the coordinate from meter to degree (for Moon data)
+function convertMeterToDegree(meterCoordinate) {
+    var r = 1737400;
+    var rho = (Math.PI / 180);
+    var degreeCoordinate = meterCoordinate / (r * rho);
+    return degreeCoordinate;
 }
