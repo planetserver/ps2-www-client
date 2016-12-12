@@ -40,3 +40,5 @@ Developer: Bang Pham Huu, Tsvetan Rankov.
 
 PlanetServer alumni, friends and past collaborators: Jelmer Oosthoek, Federico Cantini, Dominik Kundel, Valentine Chiwome, Software Engineering Italia.
 
+[![DOI](https://zenodo.org/badge/42648924.svg)](https://zenodo.org/badge/latestdoi/42648924)
+
