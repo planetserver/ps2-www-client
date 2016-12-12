@@ -205,7 +205,7 @@ $(document).ready(function() {
             alert("Latitude must be float value!");
             return false;
         } else if (latitude > 90 || latitude < -90) {
-            alert("Latitude must be between (-90:90) degree.");
+            alert("Latitude must be between (-90:90) degrees.");
             return false;
         }
         return true;
@@ -216,8 +216,8 @@ $(document).ready(function() {
         if (isNaN(longitude) || longitude === "") {
             alert("Longitude must be float value!");
             return false;
-        } else if (longitude > 180 || longitude < -180) {
-            alert("Longitude must be between (-180:180) degree.");
+        } else if (longitude > 360 || longitude < 0) {
+            alert("Longitude must be between (0:360) degrees.");
             return false;
         }
         return true;
