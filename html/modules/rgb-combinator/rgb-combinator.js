@@ -4,7 +4,7 @@ var wcpsQueriesJSON = ""; // array to store wcpsQueries from server
 var DEFAULT_BANDS = 438;
 var SUBMENU_BANDS = 73;
 
-if (clientName === "moon") {
+if (clientName === MOON_CLIENT) {
     DEFAULT_BANDS = 85;
     SUBMENU_BANDS = 17;
 }
@@ -23,7 +23,7 @@ var blueBandDefault = "(float)((int)(255 / (max( data.band_78) - min(data.band_7
 var greenBandDefault = "(float)((int)(255 / (max( data.band_13) - min(data.band_13))) * (data.band_13 - min(data.band_13)))";
 var alphaBandDefault = "(float)((data.band_100 > 0) * 255)";
 
-if (clientName === "moon") {
+if (clientName === MOON_CLIENT) {
     redBandDefault = "(float)((int)(255 / (max( data.band_10) - min(data.band_10))) * (data.band_10 - min(data.band_10)))";
     blueBandDefault = "(float)((int)(255 / (max(data.band_78) - min(data.band_78))) * (data.band_78 - min(data.band_78)))";
     greenBandDefault = "(float)((int)(255 / (max(data.band_13) - min(data.band_13))) * (data.band_13 - min(data.band_13)))";
@@ -267,10 +267,10 @@ function loadWCPSQueriesJSON() {
     var menuItemsLength = menuItems.length; // length of menuItems
 
     // Add all the WCPS queries for each menuItem to array
-    for (i = 0; i < menuItemsLength; i++) {
+    for (var i = 0; i < menuItemsLength; i++) {
         var subMenuItems = menuItems[i].array;
 
-        for (j = 0; j < subMenuItems.length; j++) {
+        for (var j = 0; j < subMenuItems.length; j++) {
             availableWCPSQueries.push(subMenuItems[j].name);
         }
     }
@@ -325,7 +325,7 @@ loadDropDownWCPSBands = function() {
         '<button type="button" class="btn btn-danger btn-xs" id="wcps_band_$MENU_ITEM_INDEX_$MENU_SUBITEM_INDEX_red" style="margin-left:10px;">Red</button>' +
         '<button type="button" class="btn btn-success btn-xs" id="wcps_band_$MENU_ITEM_INDEX_$MENU_SUBITEM_INDEX_green">Green</button>' +
         '<button type="button" class="btn btn-primary btn-xs" id="wcps_band_$MENU_ITEM_INDEX_$MENU_SUBITEM_INDEX_blue">Blue</button>' +
-        '<button type="button" style="margin-left:10px;" id="wcps_band_$MENU_ITEM_INDEX_$MENU_SUBITEM_INDEX_view_query" class="rgb_wcps_view_query btn btn-info btn-xs" data-title="WCPS query content" data-toggle="clickover" data-content="$WCPS_QUERY" data-placement="right" data-container="body"><span class="glyphicon glyphicon-info-sign"></span>WCPS</button>' +
+        '<button type="button" style="margin-left:10px;" id="wcps_band_$MENU_ITEM_INDEX_$MENU_SUBITEM_INDEX_view_query" class="rgb_wcps_view_query btn btn-info btn-xs" data-title="$DESCRIPTION" data-toggle="clickover" data-content="$WCPS_QUERY" data-placement="right" data-container="body"><span class="glyphicon glyphicon-info-sign"></span>WCPS</button>' +
         '</div>' +
         '</a>' +
         '</li>' +
@@ -343,7 +343,7 @@ loadDropDownWCPSBands = function() {
     return; */
 
 
-    for (i = 0; i < menuItemsLength; i++) {
+    for (var i = 0; i < menuItemsLength; i++) {
         var MAX_BAND_OF_ITEM = (i + 1) * SUBMENU_BANDS; // 1 * 50 = 50, 2 * 50 = 100;
         var MIN_BAND_OF_ITEM = (i) * SUBMENU_BANDS // 1, 51
 
@@ -358,13 +358,16 @@ loadDropDownWCPSBands = function() {
 
         var subMenuItems = menuItems[i].array;
 
-        for (j = 0; j < subMenuItems.length; j++) {
+        for (var j = 0; j < subMenuItems.length; j++) {
             // Band index = min band of item
 
             var subMenuItemRow = "";
             subMenuItemRow = replaceAll(dropDownRowSubItemTemplate, "$WCPS_BAND_NAME", subMenuItems[j].name);
             subMenuItemRow = replaceAll(subMenuItemRow, "$MENU_ITEM_INDEX", i);
             subMenuItemRow = replaceAll(subMenuItemRow, "$MENU_SUBITEM_INDEX", j);
+
+                        // description for the custom WCPS query
+            subMenuItemRow = replaceAll(subMenuItemRow, "$DESCRIPTION", subMenuItems[j].description);        
 
             // replace WCPS query in sub menu item
             subMenuItemRow = replaceAll(subMenuItemRow, "$WCPS_QUERY", subMenuItems[j].query);
@@ -715,9 +718,9 @@ function getBandWCPSQuery(simpleBandTemplate, targetName, bandName) {
 
         var isExist = false;
         // traverse the menuItems and subMenuItems to get the WCPS query of subMenuItem which is same as bandName
-        for (i = 0; i < menuItemsLength; i++) {
+        for (var i = 0; i < menuItemsLength; i++) {
             var subMenuItems = menuItems[i].array;
-            for (j = 0; j < subMenuItems.length; j++) {
+            for (var j = 0; j < subMenuItems.length; j++) {
                 // not need to type upper case
                 if (bandName.toLowerCase() === subMenuItems[j].name.toLowerCase()) {
 

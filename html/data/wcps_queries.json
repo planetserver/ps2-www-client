@@ -5,14 +5,17 @@
       "array": [
         {
           "name": "BD1435",
+	  "description": "WCPS description default",
           "query": "(float)((int)( 255 / ( max((1 - (data.band_67 / ((1 - (0.62494055)) * data.band_58 + (0.62494055) * data.band_73)))) - min((1 - (data.band_67 / ((1 - (0.62494055)) * data.band_58 + (0.62494055) * data.band_73)))) )) * ( ((1 - (data.band_67 / ((1 - (0.62494055)) * data.band_58 + (0.62494055) * data.band_73)))) - min((1 - (data.band_67 / ((1 - (0.62494055)) * data.band_58 + (0.62494055) * data.band_73)))) ));"
         },
         {
           "name": "BD1500_2",
+	  "description": "WCPS description",
           "query": " (float)((int)( 255 / ( max((1 - (data.band_81 / ((1 - (0.357820228)) * data.band_57 + (0.357820228) * data.band_124)))) - min((1 - (data.band_81 / ((1 - (0.357820228)) * data.band_57 + (0.357820228) * data.band_124)))) )) * ( ((1 - (data.band_81 / ((1 - (0.357820228)) * data.band_57 + (0.357820228) * data.band_124)))) - min((1 - (data.band_81 / ((1 - (0.357820228)) * data.band_57 + (0.357820228) * data.band_124)))) ));"
         },
         {
           "name": "BD1900_2",
+	  "description": "WCPS description",
           "query": "(float)((int)( 255 / ( max((0.5 * (1 - ((data.band_142) / ((1 - (0.36346516)) * data.band_130 + (0.36346516) * data.band_163))) * 0.5 * (1 - ((data.band_151) / ((1 - (0.636167379)) * data.band_130 + (0.636167379) * data.band_163))))) - min((0.5 * (1 - ((data.band_142) / ((1 - (0.36346516)) * data.band_130 + (0.36346516) * data.band_163))) * 0.5 * (1 - ((data.band_151) / ((1 - (0.636167379)) * data.band_130 + (0.636167379) * data.band_163))))) )) * ( ((0.5 * (1 - ((data.band_142) / ((1 - (0.36346516)) * data.band_130 + (0.36346516) * data.band_163))) * 0.5 * (1 - ((data.band_151) / ((1 - (0.636167379)) * data.band_130 + (0.636167379) * data.band_163))))) - min((0.5 * (1 - ((data.band_142) / ((1 - (0.36346516)) * data.band_130 + (0.36346516) * data.band_163))) * 0.5 * (1 - ((data.band_151) / ((1 - (0.636167379)) * data.band_130 + (0.636167379) * data.band_163))))) ));  "
         }
       ]
@@ -22,14 +25,17 @@
       "array": [
         {
           "name": "SINDEX2",
+	  "description": "WCPS description",
           "query": "(float)((int) ( 255 / ( max((1 - ((1 - (0.607142857))*data.band_171 + (0.607142857)*data.band_213)/(data.band_197))) - min((1 - ((1 - (0.607142857))*data.band_171 + (0.607142857)*data.band_213)/(data.band_197))) )) * ( ((1 - ((1 - (0.607142857))*data.band_171 + (0.607142857)*data.band_213)/(data.band_197))) - min((1 - ((1 - (0.607142857))*data.band_171 + (0.607142857)*data.band_213)/(data.band_197))) ));"
         },
         {
           "name": "BD2100_2",
+	  "description": "WCPS description",
           "query": "(float)((int)( 255 / ( max((1 - ((data.band_173) / ((1 - (0.63125)) * data.band_142 + (0.63125) * data.band_191)))) - min((1 - ((data.band_173) / ((1 - (0.63125)) * data.band_142 + (0.63125) * data.band_191)))) )) * ( ((1 - ((data.band_173) / ((1 - (0.63125)) * data.band_142 + (0.63125) * data.band_191)))) - min((1 - ((data.band_173) / ((1 - (0.63125)) * data.band_142 + (0.63125) * data.band_191)))) ));"
         },
         {
           "name": "BD1900_2",
+	  "description": "WCPS description",
           "query": "(float)((int)( 255 / ( max((0.5 * (1 - ((data.band_142) / ((1 - (0.36346516)) * data.band_130 + (0.36346516) * data.band_163))) * 0.5 * (1 - ((data.band_151) / ((1 - (0.636167379)) * data.band_130 + (0.636167379) * data.band_163))))) - min((0.5 * (1 - ((data.band_142) / ((1 - (0.36346516)) * data.band_130 + (0.36346516) * data.band_163))) * 0.5 * (1 - ((data.band_151) / ((1 - (0.636167379)) * data.band_130 + (0.636167379) * data.band_163))))) )) * ( ((0.5 * (1 - ((data.band_142) / ((1 - (0.36346516)) * data.band_130 + (0.36346516) * data.band_163))) * 0.5 * (1 - ((data.band_151) / ((1 - (0.636167379)) * data.band_130 + (0.636167379) * data.band_163))))) - min((0.5 * (1 - ((data.band_142) / ((1 - (0.36346516)) * data.band_130 + (0.36346516) * data.band_163))) * 0.5 * (1 - ((data.band_151) / ((1 - (0.636167379)) * data.band_130 + (0.636167379) * data.band_163))))) ));  "
         }
       ]
@@ -39,14 +45,17 @@
       "array": [
         {
           "name": "BD2210_2",
+	  "description": "WCPS description",
           "query":"(float)((int)( 255 / ( max((1 - (data.band_185 / ((1 - (0.538461538)) * data.band_178 + (0.538461538) * data.band_191)))) - min((1 - (data.band_185 / ((1 - (0.538461538)) * data.band_178 + (0.538461538) * data.band_191)))) )) * ( ((1 - (data.band_185 / ((1 - (0.538461538)) * data.band_178 + (0.538461538) * data.band_191)))) - min((1 - (data.band_185 / ((1 - (0.538461538)) * data.band_178 + (0.538461538) * data.band_191)))) ));"
         },
         {
           "name": "BD2190",
+	  "description": "WCPS description",
           "query": "(float)((int)( 255 / ( max((1 - (data.band_181 / ((1 - (0.49988651)) * data.band_171 + (0.49988651) * data.band_191)))) - min((1 - (data.band_181 / ((1 - (0.49988651)) * data.band_171 + (0.49988651) * data.band_191)))) )) * ( ((1 - (data.band_181 / ((1 - (0.49988651)) * data.band_171 + (0.49988651) * data.band_191)))) - min((1 - (data.band_181 / ((1 - (0.49988651)) * data.band_171 + (0.49988651) * data.band_191)))) ));"
         },
         {
           "name": "BD2165",
+	  "description": "WCPS description",
           "query": "(float)((int)( 255 / ( max((1 - (data.band_178 / ((1 - (0.374881786)) * data.band_171 + (0.374881786) * data.band_188)))) - min((1 - (data.band_178 / ((1 - (0.374881786)) * data.band_171 + (0.374881786) * data.band_188)))) )) * ( ((1 - (data.band_178 / ((1 - (0.374881786)) * data.band_171 + (0.374881786) * data.band_188)))) - min((1 - (data.band_178 / ((1 - (0.374881786)) * data.band_171 + (0.374881786) * data.band_188)))) ));"
         }
       ]
@@ -56,14 +65,17 @@
       "array": [
         {
           "name": "OLINDEX3",
+	  "description": "WCPS description",
           "query":"(float)((int)( 255 / ( max((data.band_13 ) * 0.03 + (data.band_24 ) * 0.03 + (data.band_33 ) * 0.03 + (data.band_39 ) * 0.03 + (data.band_41) * 0.07 + (data.band_43) * 0.07 + (data.band_51) * 0.12 + (data.band_57) * 0.12 + (data.band_61) * 0.14 + (data.band_66) * 0.18 + (data.band_73) * 0.18) - min((data.band_13 ) * 0.03 + (data.band_24 ) * 0.03 + (data.band_33 ) * 0.03 + (data.band_39 ) * 0.03 + (data.band_41) * 0.07 + (data.band_43) * 0.07 + (data.band_51) * 0.12 + (data.band_57) * 0.12 + (data.band_61) * 0.14 + (data.band_66) * 0.18 + (data.band_73) * 0.18) )) * ( ((data.band_13 ) * 0.03 + (data.band_24 ) * 0.03 + (data.band_33 ) * 0.03 + (data.band_39 ) * 0.03 + (data.band_41) * 0.07 + (data.band_43) * 0.07 + (data.band_51) * 0.12 + (data.band_57) * 0.12 + (data.band_61) * 0.14 + (data.band_66) * 0.18 + (data.band_73) * 0.18) - min((data.band_13 ) * 0.03 + (data.band_24 ) * 0.03 + (data.band_33 ) * 0.03 + (data.band_39 ) * 0.03 + (data.band_41) * 0.07 + (data.band_43) * 0.07 + (data.band_51) * 0.12 + (data.band_57) * 0.12 + (data.band_61) * 0.14 + (data.band_66) * 0.18 + (data.band_73) * 0.18) ));"
         },
         {
           "name": "LCPINDEX2",
+	  "description": "WCPS description",
           "query": "(float)((int)( 255 / ( max((data.band_106) * 0.2 + (data.band_115) * 0.2 + (data.band_124) * 0.3 + (data.band_133) * 0.3) - min((data.band_106) * 0.2 + (data.band_115) * 0.2 + (data.band_124) * 0.3 + (data.band_133) * 0.3) )) * ( ((data.band_106) * 0.2 + (data.band_115) * 0.2 + (data.band_124) * 0.3 + (data.band_133) * 0.3) - min((data.band_106) * 0.2 + (data.band_115) * 0.2 + (data.band_124) * 0.3 + (data.band_133) * 0.3) ));"
         },
         {
           "name": "HCPINDEX2",
+	  "description": "WCPS description",
           "query": "(float)((int)( 255 / ( max((data.band_171) * 0.10 + (data.band_174) * 0.10 + (data.band_188) * 0.15 + (data.band_191) * 0.3 + (data.band_218) * 0.2 + (data.band_223) * 0.15) - min((data.band_171) * 0.10 + (data.band_174) * 0.10 + (data.band_188) * 0.15 + (data.band_191) * 0.3 + (data.band_218) * 0.2 + (data.band_223) * 0.15) )) * ( ((data.band_171) * 0.10 + (data.band_174) * 0.10 + (data.band_188) * 0.15 + (data.band_191) * 0.3 + (data.band_218) * 0.2 + (data.band_223) * 0.15) - min((data.band_171) * 0.10 + (data.band_174) * 0.10 + (data.band_188) * 0.15 + (data.band_191) * 0.3 + (data.band_218) * 0.2 + (data.band_223) * 0.15) ));"
         }
       ]
@@ -73,14 +85,17 @@
       "array": [
         {
           "name": "BD1900_2",
+	  "description": "WCPS description",
           "query":"(float)((int)( 255 / ( max((0.5 * (1 - ((data.band_142) / ((1 - (0.36346516)) * data.band_130 + (0.36346516) * data.band_163))) * 0.5 * (1 - ((data.band_151) / ((1 - (0.636167379)) * data.band_130 + (0.636167379) * data.band_163))))) - min((0.5 * (1 - ((data.band_142) / ((1 - (0.36346516)) * data.band_130 + (0.36346516) * data.band_163))) * 0.5 * (1 - ((data.band_151) / ((1 - (0.636167379)) * data.band_130 + (0.636167379) * data.band_163))))) )) * ( ((0.5 * (1 - ((data.band_142) / ((1 - (0.36346516)) * data.band_130 + (0.36346516) * data.band_163))) * 0.5 * (1 - ((data.band_151) / ((1 - (0.636167379)) * data.band_130 + (0.636167379) * data.band_163))))) - min((0.5 * (1 - ((data.band_142) / ((1 - (0.36346516)) * data.band_130 + (0.36346516) * data.band_163))) * 0.5 * (1 - ((data.band_151) / ((1 - (0.636167379)) * data.band_130 + (0.636167379) * data.band_163))))) ));"
         },
         {
           "name": "MIN2200",
+	  "description": "WCPS description",
           "query": "(float)((int)( 255 / ( max((1 - ((data.band_178)/((1 - 0.199835775) * (data.band_171) + (0.199835775) * (data.band_206))))) - min((1 - ((data.band_178)/((1 - 0.199835775) * (data.band_171) + (0.199835775) * (data.band_206))))) )) * ( ((1 - ((data.band_178)/((1 - 0.199835775) * (data.band_171) + (0.199835775) * (data.band_206))))) - min((1 - ((data.band_178)/((1 - 0.199835775) * (data.band_171) + (0.199835775) * (data.band_206))))) ));"
         },
         {
           "name": "D2300",
+	  "description": "WCPS description",
           "query": "(float)((int)( 255 / ( max((1 - ((((data.band_197)/((data.band_233 - data.band_125)/(2.530 - 1.815)) * 2.290 + (data.band_233 - ((data.band_233 - data.band_125)/(2.530 - 1.815)) * 2.530)) + ((data.band_201)/((data.band_233 - data.band_125)/(2.530 - 1.815)) * 2.320 + (data.band_233 - ((data.band_233 - data.band_125)/(2.530 - 1.815)) * 2.530)) + ((data.band_203)/((data.band_233 - data.band_125)/(2.530 - 1.815)) * 2.330 + (data.band_233 - ((data.band_233 - data.band_125)/(2.530 - 1.815)) * 2.530))) / (((data.band_171)/((data.band_233 - data.band_125)/(2.530 - 1.815)) * 2.120 + (data.band_233 - ((data.band_233 - data.band_125)/(2.530 - 1.815)) * 2.530)) + ((data.band_179)/((data.band_233 - data.band_125)/(2.530 - 1.815)) * 2.170 + (data.band_233 - ((data.band_233 - data.band_125)/(2.530 - 1.815)) * 2.530)) + ((data.band_185)/((data.band_233 - data.band_125)/(2.530 - 1.815)) * 2.210 + (data.band_233 - ((data.band_233 - data.band_125)/(2.530 - 1.815)) * 2.530)))))) - min((1 - ((((data.band_197)/((data.band_233 - data.band_125)/(2.530 - 1.815)) * 2.290 + (data.band_233 - ((data.band_233 - data.band_125)/(2.530 - 1.815)) * 2.530)) + ((data.band_201)/((data.band_233 - data.band_125)/(2.530 - 1.815)) * 2.320 + (data.band_233 - ((data.band_233 - data.band_125)/(2.530 - 1.815)) * 2.530)) + ((data.band_203)/((data.band_233 - data.band_125)/(2.530 - 1.815)) * 2.330 + (data.band_233 - ((data.band_233 - data.band_125)/(2.530 - 1.815)) * 2.530))) / (((data.band_171)/((data.band_233 - data.band_125)/(2.530 - 1.815)) * 2.120 + (data.band_233 - ((data.band_233 - data.band_125)/(2.530 - 1.815)) * 2.530)) + ((data.band_179)/((data.band_233 - data.band_125)/(2.530 - 1.815)) * 2.170 + (data.band_233 - ((data.band_233 - data.band_125)/(2.530 - 1.815)) * 2.530)) + ((data.band_185)/((data.band_233 - data.band_125)/(2.530 - 1.815)) * 2.210 + (data.band_233 - ((data.band_233 - data.band_125)/(2.530 - 1.815)) * 2.530)))))) )) * ( ((1 - ((((data.band_197)/((data.band_233 - data.band_125)/(2.530 - 1.815)) * 2.290 + (data.band_233 - ((data.band_233 - data.band_125)/(2.530 - 1.815)) * 2.530)) + ((data.band_201)/((data.band_233 - data.band_125)/(2.530 - 1.815)) * 2.320 + (data.band_233 - ((data.band_233 - data.band_125)/(2.530 - 1.815)) * 2.530)) + ((data.band_203)/((data.band_233 - data.band_125)/(2.530 - 1.815)) * 2.330 + (data.band_233 - ((data.band_233 - data.band_125)/(2.530 - 1.815)) * 2.530))) / (((data.band_171)/((data.band_233 - data.band_125)/(2.530 - 1.815)) * 2.120 + (data.band_233 - ((data.band_233 - data.band_125)/(2.530 - 1.815)) * 2.530)) + ((data.band_179)/((data.band_233 - data.band_125)/(2.530 - 1.815)) * 2.170 + (data.band_233 - ((data.band_233 - data.band_125)/(2.530 - 1.815)) * 2.530)) + ((data.band_185)/((data.band_233 - data.band_125)/(2.530 - 1.815)) * 2.210 + (data.band_233 - ((data.band_233 - data.band_125)/(2.530 - 1.815)) * 2.530)))))) - min((1 - ((((data.band_197)/((data.band_233 - data.band_125)/(2.530 - 1.815)) * 2.290 + (data.band_233 - ((data.band_233 - data.band_125)/(2.530 - 1.815)) * 2.530)) + ((data.band_201)/((data.band_233 - data.band_125)/(2.530 - 1.815)) * 2.320 + (data.band_233 - ((data.band_233 - data.band_125)/(2.530 - 1.815)) * 2.530)) + ((data.band_203)/((data.band_233 - data.band_125)/(2.530 - 1.815)) * 2.330 + (data.band_233 - ((data.band_233 - data.band_125)/(2.530 - 1.815)) * 2.530))) / (((data.band_171)/((data.band_233 - data.band_125)/(2.530 - 1.815)) * 2.120 + (data.band_233 - ((data.band_233 - data.band_125)/(2.530 - 1.815)) * 2.530)) + ((data.band_179)/((data.band_233 - data.band_125)/(2.530 - 1.815)) * 2.170 + (data.band_233 - ((data.band_233 - data.band_125)/(2.530 - 1.815)) * 2.530)) + ((data.band_185)/((data.band_233 - data.band_125)/(2.530 - 1.815)) * 2.210 + (data.band_233 - ((data.band_233 - data.band_125)/(2.530 - 1.815)) * 2.530)))))) ));"
         }
       ]
@@ -90,14 +105,17 @@
       "array": [
         {
           "name": "BD1900H",
+	  "description": "WCPS description",
           "query":"(float)((int)( 255 / ( max((1 - (((data.band_139 + data.band_140)/2) / ((data.band_132 + data.band_133 + data.band_134)/3) + ((data.band_170 + data.band_171 + data.band_172)/3)))) - min((1 - (((data.band_139 + data.band_140)/2) / ((data.band_132 + data.band_133 + data.band_134)/3) + ((data.band_170 + data.band_171 + data.band_172)/3)))) )) * ( ((1 - (((data.band_139 + data.band_140)/2) / ((data.band_132 + data.band_133 + data.band_134)/3) + ((data.band_170 + data.band_171 + data.band_172)/3)))) - min((1 - (((data.band_139 + data.band_140)/2) / ((data.band_132 + data.band_133 + data.band_134)/3) + ((data.band_170 + data.band_171 + data.band_172)/3)))) ));"
         },
         {
           "name": "BD2200",
+	  "description": "WCPS description",
           "query": "(float)((int)( 255 / ( max((1 - ((2*((data.band_182 + data.band_183 + data.band_184)/3)) / ((data.band_173 + data.band_174 + data.band_175)/3) + ((data.band_191 + data.band_192)/2)))) - min((1 - ((2*((data.band_182 + data.band_183 + data.band_184)/3)) / ((data.band_173 + data.band_174 + data.band_175)/3) + ((data.band_191 + data.band_192)/2)))) )) * ( ((1 - ((2*((data.band_182 + data.band_183 + data.band_184)/3)) / ((data.band_173 + data.band_174 + data.band_175)/3) + ((data.band_191 + data.band_192)/2)))) - min((1 - ((2*((data.band_182 + data.band_183 + data.band_184)/3)) / ((data.band_173 + data.band_174 + data.band_175)/3) + ((data.band_191 + data.band_192)/2)))) ));"
         },
         {
           "name": "D2300",
+	  "description": "WCPS description",
           "query": "(float)((int)( 255 / ( max((1 - ((((data.band_197)/((data.band_233 - data.band_125)/(2.530 - 1.815)) * 2.290 + (data.band_233 - ((data.band_233 - data.band_125)/(2.530 - 1.815)) * 2.530)) + ((data.band_201)/((data.band_233 - data.band_125)/(2.530 - 1.815)) * 2.320 + (data.band_233 - ((data.band_233 - data.band_125)/(2.530 - 1.815)) * 2.530)) + ((data.band_203)/((data.band_233 - data.band_125)/(2.530 - 1.815)) * 2.330 + (data.band_233 - ((data.band_233 - data.band_125)/(2.530 - 1.815)) * 2.530))) / (((data.band_171)/((data.band_233 - data.band_125)/(2.530 - 1.815)) * 2.120 + (data.band_233 - ((data.band_233 - data.band_125)/(2.530 - 1.815)) * 2.530)) + ((data.band_179)/((data.band_233 - data.band_125)/(2.530 - 1.815)) * 2.170 + (data.band_233 - ((data.band_233 - data.band_125)/(2.530 - 1.815)) * 2.530)) + ((data.band_185)/((data.band_233 - data.band_125)/(2.530 - 1.815)) * 2.210 + (data.band_233 - ((data.band_233 - data.band_125)/(2.530 - 1.815)) * 2.530)))))) - min((1 - ((((data.band_197)/((data.band_233 - data.band_125)/(2.530 - 1.815)) * 2.290 + (data.band_233 - ((data.band_233 - data.band_125)/(2.530 - 1.815)) * 2.530)) + ((data.band_201)/((data.band_233 - data.band_125)/(2.530 - 1.815)) * 2.320 + (data.band_233 - ((data.band_233 - data.band_125)/(2.530 - 1.815)) * 2.530)) + ((data.band_203)/((data.band_233 - data.band_125)/(2.530 - 1.815)) * 2.330 + (data.band_233 - ((data.band_233 - data.band_125)/(2.530 - 1.815)) * 2.530))) / (((data.band_171)/((data.band_233 - data.band_125)/(2.530 - 1.815)) * 2.120 + (data.band_233 - ((data.band_233 - data.band_125)/(2.530 - 1.815)) * 2.530)) + ((data.band_179)/((data.band_233 - data.band_125)/(2.530 - 1.815)) * 2.170 + (data.band_233 - ((data.band_233 - data.band_125)/(2.530 - 1.815)) * 2.530)) + ((data.band_185)/((data.band_233 - data.band_125)/(2.530 - 1.815)) * 2.210 + (data.band_233 - ((data.band_233 - data.band_125)/(2.530 - 1.815)) * 2.530)))))) )) * ( ((1 - ((((data.band_197)/((data.band_233 - data.band_125)/(2.530 - 1.815)) * 2.290 + (data.band_233 - ((data.band_233 - data.band_125)/(2.530 - 1.815)) * 2.530)) + ((data.band_201)/((data.band_233 - data.band_125)/(2.530 - 1.815)) * 2.320 + (data.band_233 - ((data.band_233 - data.band_125)/(2.530 - 1.815)) * 2.530)) + ((data.band_203)/((data.band_233 - data.band_125)/(2.530 - 1.815)) * 2.330 + (data.band_233 - ((data.band_233 - data.band_125)/(2.530 - 1.815)) * 2.530))) / (((data.band_171)/((data.band_233 - data.band_125)/(2.530 - 1.815)) * 2.120 + (data.band_233 - ((data.band_233 - data.band_125)/(2.530 - 1.815)) * 2.530)) + ((data.band_179)/((data.band_233 - data.band_125)/(2.530 - 1.815)) * 2.170 + (data.band_233 - ((data.band_233 - data.band_125)/(2.530 - 1.815)) * 2.530)) + ((data.band_185)/((data.band_233 - data.band_125)/(2.530 - 1.815)) * 2.210 + (data.band_233 - ((data.band_233 - data.band_125)/(2.530 - 1.815)) * 2.530)))))) - min((1 - ((((data.band_197)/((data.band_233 - data.band_125)/(2.530 - 1.815)) * 2.290 + (data.band_233 - ((data.band_233 - data.band_125)/(2.530 - 1.815)) * 2.530)) + ((data.band_201)/((data.band_233 - data.band_125)/(2.530 - 1.815)) * 2.320 + (data.band_233 - ((data.band_233 - data.band_125)/(2.530 - 1.815)) * 2.530)) + ((data.band_203)/((data.band_233 - data.band_125)/(2.530 - 1.815)) * 2.330 + (data.band_233 - ((data.band_233 - data.band_125)/(2.530 - 1.815)) * 2.530))) / (((data.band_171)/((data.band_233 - data.band_125)/(2.530 - 1.815)) * 2.120 + (data.band_233 - ((data.band_233 - data.band_125)/(2.530 - 1.815)) * 2.530)) + ((data.band_179)/((data.band_233 - data.band_125)/(2.530 - 1.815)) * 2.170 + (data.band_233 - ((data.band_233 - data.band_125)/(2.530 - 1.815)) * 2.530)) + ((data.band_185)/((data.band_233 - data.band_125)/(2.530 - 1.815)) * 2.210 + (data.band_233 - ((data.band_233 - data.band_125)/(2.530 - 1.815)) * 2.530)))))) ));"
         }
       ]
