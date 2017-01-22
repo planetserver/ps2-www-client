@@ -7,6 +7,7 @@
  */
 /* Global variables */
 ps2EndPoint = "http://access.planetserver.eu/";
+ps2GetCoverage = "http://access.planetserver.eu:8080/rasdaman/ows?service=WCS&version=2.0.1&request=GetCoverage&format=image/tiff&coverageId=";
 ps2WCPSEndPoint = "http://access.planetserver.eu:8080/rasdaman/ows?service=WCS&version=2.0.1&request=ProcessCoverages&query=";
 ps2StretchWCPSEndPoint = "http://access.planetserver.eu:8090/python?wcpsQuery=";
 
@@ -88,14 +89,18 @@ placeMarkersBandRatio = [{
     layer: null
 }];
 
-var clientName = "mars";
+MARS_CLIENT = "mars"
+MOON_CLIENT = "moon";
+
+
+clientName = MARS_CLIENT;
 
 $(function() {
     var url = window.location.href;
-    if (url.indexOf("moon") > -1) {
-        clientName = "moon";
+    if (url.indexOf(MOON_CLIENT) > -1) {
+        clientName = MOON_CLIENT;
     } else {
-        clientName = "mars";
+        clientName = MARS_CLIENT;
     }
 });
 

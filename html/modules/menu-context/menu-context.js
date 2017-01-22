@@ -199,8 +199,12 @@ $( document ).ready(function() {
 
 
     // bind download on click menu item
-    $("#menuContext").on("click", ".downloadImage", function(e) {
-       alert("You are downloading the image in PNG");
+    $("#menuContext").on("click", ".downloadGeoTiff", function(e) {
+       alert("You are downloading the Coverage in GeoTiff image format.");
+    });
+
+    $("#menuContext").on("click", ".downloadWcpsPng", function(e) {
+       alert("You are downloading the WCPS result in PNG image format.");
     });
     
 
@@ -285,8 +289,11 @@ $( document ).ready(function() {
         var unHightLightSubMenuItemTemplate = '<li><a href="#" id="menuContext_$COVERAGEID_unhightlight" class="menuContext_hightlight" data="$COVERAGEID"> <span class="glyphicon glyphicon-sort" style="color:green;"></span>Unlock On Footprint</a></li>';
         var unSelectSubMenuItemTemplate = '<li><a href="#" id="menuContext_$COVERAGEID_unselect" class="menuContext_select" data="$COVERAGEID"> <span class="glyphicon glyphicon-remove-circle" style="color:blue;"></span>Unselect Footprint </a></li>';
 
-        // download
-        var downloadSubMenuItemTemplate = "<li><a class='downloadImage' href='$WCPS_QUERY_LINK' target='_blank' download> <span class='glyphicon glyphicon-download-alt' style='color:orange;'></span>Download PNG</a></href>";
+        // download GeoTiff
+        var downloadGeoTiffSubMenuItemTemplate = "<li><a class='downloadGeoTiff' href='" + ps2GetCoverage + "$COVERAGEID' target='_blank' download> <span class='glyphicon glyphicon-download-alt' style='color:red;'></span>Download Coverage in GeoTiff</a></href>";
+
+        // download PNG
+        var downloadWcpsPngSubMenuItemTemplate = "<li><a class='downloadWcpsPng' href='$WCPS_QUERY_LINK' target='_blank' download> <span class='glyphicon glyphicon-download-alt' style='color:orange;'></span>Download WCPS resulut in PNG</a></href>";
 
         var menuContextItems = "";
 
@@ -314,10 +321,20 @@ $( document ).ready(function() {
                     menuContextSubItemFunctions += replaceAll(unHightLightSubMenuItemTemplate, "$COVERAGEID", coverageID);
                 }
 
-                // downloadable
+                // download GeoTiff (always)
+                // Mars, coverageId is lower case, moon coverage id is upper case
+                if (clientName == MARS_CLIENT) {
+                    menuContextSubItemFunctions += replaceAll(downloadGeoTiffSubMenuItemTemplate, "$COVERAGEID", coverageID.toLowerCase());    
+                } else {
+                    menuContextSubItemFunctions += replaceAll(downloadGeoTiffSubMenuItemTemplate, "$COVERAGEID", coverageID);    
+                }
+                
+
+
+                // downloadable PNG (only when WCPS query is loaded)
                 var wcpsQuery = checkCoverageIDDownloable(coverageID);
                 if (wcpsQuery !== false) {
-                    menuContextSubItemFunctions += replaceAll(downloadSubMenuItemTemplate, "$WCPS_QUERY_LINK", wcpsQuery);
+                    menuContextSubItemFunctions += replaceAll(downloadWcpsPngSubMenuItemTemplate, "$WCPS_QUERY_LINK", wcpsQuery);
                 }                 
 
             
