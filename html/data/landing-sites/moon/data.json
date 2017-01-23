@@ -1,0 +1,24 @@
+[
+    {
+        "name": "location 1",
+        "date": "xx/yy/zz",
+        "description": "landing site 1",
+        "latitude": "12",
+        "longitude": "23",
+        "type": "1"
+    }, {
+        "name": "location 2",
+        "date": "xx/yy/zz",
+        "description": "landing site 2",
+        "latitude": "13",
+        "longitude": "24",
+        "type": "2"
+    }, {
+        "name": "location 3",
+        "date": "xx/yy/zz",
+        "description": "landing site 3",
+        "latitude": "14",
+        "longitude": "25",
+        "type": "2"
+    }
+]

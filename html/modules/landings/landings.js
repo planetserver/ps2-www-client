@@ -11,6 +11,9 @@ ps2GetCoverage = "http://access.planetserver.eu:8080/rasdaman/ows?service=WCS&ve
 ps2WCPSEndPoint = "http://access.planetserver.eu:8080/rasdaman/ows?service=WCS&version=2.0.1&request=ProcessCoverages&query=";
 ps2StretchWCPSEndPoint = "http://access.planetserver.eu:8090/python?wcpsQuery=";
 
+
+wcpsQueriesJsonURL = "http://access.planetserver.eu/html/data/wcps_queries.json"
+
 checkedFootPrintsArray = []; // array of footprints that user choosed
 
 containedFootPrintsArray = []; // array of footprints which contain the point which user right click
@@ -142,6 +145,7 @@ requirejs(['../../config/config',
         '../charts/main-chart',
         '../charts/ratio-chart',
         '../goto/goto',
+        '../landing-sites/landing-sites',
         '../band-ratio/band-ratio',
         '../charts/chart',
         '../spectral-library/spectral-library'
@@ -158,6 +162,7 @@ requirejs(['../../config/config',
         main_chart,
         ratio_chart,
         go_to,
+        landing_sites,
         band_ratio,
         chart,
         spectral_library) {
