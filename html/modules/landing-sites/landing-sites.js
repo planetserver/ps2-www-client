@@ -10,7 +10,7 @@ var landingSitesLayer = null;
 // change to ps2EndPoint later
 var endPoint = "http://localhost:8080/";
 
-$(document).ready(function() {    
+$(document).ready(function() {
     var jsonFile = "";
     if (clientName === MARS_CLIENT) {
         // change here with "ps2EndPoint" later
@@ -39,17 +39,17 @@ $("#viewLandingSites").click(function(e) {
     console.log(landingSitesArray);
     if (isShow === false) {
         isShow = true;
-        $(this).text('Hide Landing Sites');     
+        $(this).text('Hide Landing Sites');
 
         // create list place markers
         addLandingSites();
 
     } else {
         isShow = false;
-        $(this).text('Show Landing Sites');  
+        $(this).text('Show Landing Sites');
         // remove layer
-        wwd.removeLayer(landingSitesLayer);   
-    }    
+        wwd.removeLayer(landingSitesLayer);
+    }
 });
 
 
@@ -64,13 +64,13 @@ function addLandingSites() {
         var placemark = new WorldWind.Placemark(new WorldWind.Position(obj.latitude, obj.longitude, 90000), true, null);
         placemark.label = "Name: " + obj.name + "\n"
                         + "Date: " + obj.date + "\n"
-                        + "Lat: " + obj.latitude + "\n"                        
+                        + "Lat: " + obj.latitude + "\n"
                         + "Lon: " + obj.longitude;
 
         var placemarkAttributes = new WorldWind.PlacemarkAttributes();
-        placemarkAttributes.imageScale = 4;                       
+        placemarkAttributes.imageScale = 4;
         placemarkAttributes.labelAttributes.color = WorldWind.Color.YELLOW;
-        placemarkAttributes.labelAttributes.scale = 2;       
+        placemarkAttributes.labelAttributes.scale = 2;
         placemarkAttributes.labelAttributes.depthTest = false;
         placemarkAttributes.leaderLineAttributes.outlineColor = WorldWind.Color.RED;
 
@@ -81,14 +81,12 @@ function addLandingSites() {
         } else {
             placemarkAttributes.imageSource = endPoint + "html/images/icons/landing-sites-3.png";
         }
-       
+
         placemark.attributes = placemarkAttributes;
 
         landingSitesLayer.addRenderable(placemark);
     }
 
     // Marker layer
-    wwd.insertLayer(10, landingSitesLayer);   
+    wwd.insertLayer(10, landingSitesLayer);
 }
-
-

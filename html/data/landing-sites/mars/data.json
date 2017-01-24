@@ -1,38 +1,75 @@
 [
     {
-        "name": "location 1",
-        "date": "xx/yy/zz",
-        "description": "landing site 1",
-        "latitude": "12",
-        "longitude": "23",
-        "type": "1"
+        "name": "Mars 2",
+        "date": "27 November 1971",
+        "latitude": "-45",
+        "longitude": "-47",
+        "type": "Lander"
     }, {
-        "name": "location 2",
-        "date": "xx/yy/zz",
-        "description": "landing site 2",
-        "latitude": "13",
-        "longitude": "24",
-        "type": "2"
+        "name": "Mars 3",
+        "date": "2 December 1971",
+        "latitude": "-45",
+        "longitude": "-158",
+        "type": "Lander"
     }, {
-        "name": "location 3",
-        "date": "xx/yy/zz",
-        "description": "landing site 3",
-        "latitude": "14",
-        "longitude": "25",
-        "type": "2"
+        "name": "Mars 6",
+        "date": "12 March 1974",
+        "latitude": "-23.90",
+        "longitude": "-19.42",
+        "type": "Lander"
     }, {
-        "name": "location 4",
-        "date": "xx/yy/zz",
-        "description": "landing site 4",
-        "latitude": "16",
-        "longitude": "28",
-        "type": "3"
+        "name": "Viking 1",
+        "date": "20 July 1976",
+        "latitude": "22.48",
+        "longitude": "-49.97",
+        "type": "Lander"
     }, {
-        "name": "location 5",
-        "date": "xx/yy/zz",
-        "description": "landing site 5",
-        "latitude": "19",
-        "longitude": "30",
-        "type": "2"
+        "name": "Mars Polar Lander",
+        "date": "3 December 1999",
+        "latitude": "-76.57",
+        "longitude": "165.2",
+        "type": "Lander"
+    }, {
+        "name": "Pathfinder",
+        "date": "4 July 1997",
+        "latitude": "19.33",
+        "longitude": "-33.55",
+        "type": "Lander"
+    }, {
+        "name": "Beagle 2",
+        "date": "25 December 2003",
+        "latitude": "10.6",
+        "longitude": "270",
+        "type": "Lander"
+    }, {
+        "name": "Spirit",
+        "date": "4 January 2004",
+        "latitude": "-14.571892",
+        "longitude": "175.47848",
+        "type": "Lander"
+    }, {
+        "name": "Opportunity",
+        "date": "25 January 2004",
+        "latitude": "-1.9462",
+        "longitude": "-5.5266",
+        "type": "Lander"
+    }, {
+        "name": "Phoenix",
+        "date": "25 May 2008",
+        "latitude": "68.218830",
+        "longitude": "234.250778 ",
+        "type": "Lander"
+    }, {
+        "name": "Curiosity",
+        "date": "6 Agust 2012",
+        "latitude": "-4.5895",
+        "longitude": "137.4417",
+        "type": "Lander"
+    }, {
+        "name": "Viking 2",
+        "date": "3 September 1976",
+        "latitude": "47.97",
+        "longitude": "255.74",
+        "type": "Lander"
     }
 ]
