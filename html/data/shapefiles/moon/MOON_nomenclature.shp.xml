@@ -1,0 +1,794 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE metadata SYSTEM "http://www.fgdc.gov/metadata/fgdc-std-001-1998.dtd"[]>
+<metadata>
+  <idinfo>
+    <citation>
+      <citeinfo>
+        <pubdate>20121002</pubdate>
+        <title>Planetary Nomentclature</title>
+        <geoform Sync="TRUE">vector digital data</geoform>
+        <pubinfo>
+          <pubplace>Flagstaff, AZ</pubplace>
+          <publish>United States Geological Survey (USGS)</publish>
+        </pubinfo>
+        <onlink>http://planetarynames.wr.usgs.gov/</onlink>
+        <ftname Sync="TRUE">Planetary_Nomenclature</ftname>
+        <origin>International Astronomical Union (IAU) and United States Geologic Survey (USGS)</origin>
+        <othercit>For current list of reference please see: http://planetarynames.wr.usgs.gov/site/References</othercit>
+      </citeinfo>
+    </citation>
+    <descript>
+      <abstract>Point file of planetary nomenclature features and attributes</abstract>
+      <purpose>Planetary nomenclature, like terrestrial nomenclature, is used to uniquely identify a feature on the surface of a planet or satellite so that the feature can be easily located, described, and discussed. This file is generate from the Gazetteer of Planetary Nomenclature and contains detailed information about all names of topographic and albedo features on planets and satellites (and some planetary ring and ring-gap systems) that the International Astronomical Union (IAU) has named and approved from its founding in 1919 through the present time.  </purpose>
+      <langdata Sync="TRUE">en</langdata>
+    </descript>
+    <timeperd>
+      <timeinfo>
+        <rngdates>
+          <begdate>1919</begdate>
+          <enddate>2012</enddate>
+        </rngdates>
+      </timeinfo>
+      <current>publication date</current>
+    </timeperd>
+    <status>
+      <progress>In work</progress>
+      <update>Weekly</update>
+    </status>
+    <spdom>
+      <bounding>
+        <westbc Sync="TRUE">0.000000</westbc>
+        <eastbc Sync="TRUE">360.000000</eastbc>
+        <northbc>90</northbc>
+        <southbc>-90</southbc>
+      </bounding>
+    </spdom>
+    <keywords>
+      <place>
+        <placekt>None</placekt>
+        <placekey>The Moon</placekey>
+        <placekey>Mars</placekey>
+        <placekey>Terrestrial Planets</placekey>
+      </place>
+      <theme>
+        <themekt>IAU</themekt>
+        <themekey>Nomenclature</themekey>
+      </theme>
+    </keywords>
+    <accconst>none</accconst>
+    <useconst>none</useconst>
+    <ptcontac>
+      <cntinfo>
+        <cntorgp>
+          <cntorg>United States Geological Survey (USGS)</cntorg>
+          <cntper>Jennifer Blue</cntper>
+        </cntorgp>
+        <cntpos>Geographer</cntpos>
+        <cntaddr>
+          <addrtype>mailing address</addrtype>
+          <address>2255 North Gemini Drive</address>
+          <city>Flagstaff</city>
+          <state>AZ</state>
+          <postal>86001</postal>
+          <country>USA</country>
+        </cntaddr>
+        <cntvoice>928 556 7126</cntvoice>
+        <cntfax>(703) 648-5548</cntfax>
+        <cntemail>jblue@usgs.gov</cntemail>
+        <hours>8:00 AM to 4:30 PM Pacific Time</hours>
+      </cntinfo>
+    </ptcontac>
+    <secinfo>
+      <secsys>none</secsys>
+      <secclass>Level 1: Public</secclass>
+      <sechandl>Public data is accessible to all requester categories, including the General Public, with limited to no restrictions.</sechandl>
+    </secinfo>
+    <native>PostGIS database</native>
+    <natvform Sync="TRUE">Shapefile</natvform>
+    <crossref>
+      <citeinfo>
+        <origin>United States Geologic Survey</origin>
+        <pubdate>1986</pubdate>
+        <title>Open-File Report 84-692 </title>
+        <edition>84-692</edition>
+        <othercit>Masursky, Harold and others</othercit>
+        <onlink>http://planetarynames.wr.usgs.gov/site/Page/History</onlink>
+      </citeinfo>
+    </crossref>
+    <datacred>International Astronomical Union (IAU) and United States Geologic Survey (USGS)</datacred>
+  </idinfo>
+  <dataqual>
+    <logic>Although we have attempted to check the accuracy of all data in this volume, we realize that some errors will remain in a work of this size. Readers noting errors or omissions are urged to communicate them to the USGS Astrogeology Science Center, Attention Jennifer Blue, Rm. 640, 2255 N. Gemini Drive, Flagstaff, Arizona 86001, or by e-mail: jblue@usgs.gov 
+</logic>
+    <complete>The database is always in flux and there are known registration issues depending on the planetary body.</complete>
+    <lineage>
+      <srcinfo>
+        <srcscale>5000000</srcscale>
+        <typesrc>online</typesrc>
+        <srctime>
+          <timeinfo>
+            <sngdate>
+              <caldate>20090723</caldate>
+            </sngdate>
+          </timeinfo>
+          <srccurr>publication date</srccurr>
+        </srctime>
+        <srccitea>Planetary Nomenclature</srccitea>
+        <srccontr>Please see <onlink>http://planetarynames.wr.usgs.gov/</onlink></srccontr>
+      </srcinfo>
+      <procstep>
+        <procdesc>When the first images of the surface of a planet or satellite are obtained, themes for naming features are chosen and names of a few important features are proposed, usually by members of the appropriate IAU task group. Later, as higher resolution images and maps become available, names for additional features may be requested by investigators mapping or describing specific surfaces or geological formations. Anyone may suggest that a specific name be considered by a task group, but there is no guarantee that the name will be accepted. Names successfully reviewed by a task group are submitted to the Working Group for Planetary System Nomenclature (WGPSN). Upon successful review by the members of the WGPSN, names are considered approved and can be used on maps and in publications. Approved names are immediately entered into the official IAU database, the Gazetteer of Planetary Nomenclature, and posted on its web site. Any objections to these names based on significant, substantive problems must be forwarded in writing or email to the IAU Division III President within three months from the time the name was placed on the web site. Approved names are also listed in the transactions of the IAU. </procdesc>
+        <procsv>PostGRIS</procsv>
+      </procstep>
+    </lineage>
+    <posacc>
+      <horizpa>
+        <horizpar>The horizontal accuracy can vary largely from planetary body to body. Since planetary control networks change regularly as new data is gather there it can be hard to keep pace with the latest control network. This is an ongoing task for the maintainers.</horizpar>
+      </horizpa>
+    </posacc>
+  </dataqual>
+  <spdoinfo>
+    <direct Sync="TRUE">Vector</direct>
+    <ptvctinf>
+      <esriterm Name="Planetary_Nomenclature">
+        <efeatyp Sync="TRUE">Simple</efeatyp>
+        <efeageom Sync="TRUE">Point</efeageom>
+        <esritopo Sync="TRUE">FALSE</esritopo>
+        <efeacnt Sync="TRUE">1690</efeacnt>
+        <spindex Sync="TRUE">FALSE</spindex>
+        <linrefer Sync="TRUE">FALSE</linrefer>
+      </esriterm>
+      <sdtsterm Name="Planetary_Nomenclature">
+        <sdtstype>Point</sdtstype>
+        <ptvctcnt Sync="TRUE">1690</ptvctcnt>
+      </sdtsterm>
+    </ptvctinf>
+  </spdoinfo>
+  <spref>
+    <horizsys>
+      <geograph>
+        <latres Sync="TRUE">0.000000</latres>
+        <longres Sync="TRUE">0.000000</longres>
+        <geogunit Sync="TRUE">Decimal degrees</geogunit>
+      </geograph>
+      <geodetic>
+        <horizdn Sync="TRUE">Please see projection file (*.prj)</horizdn>
+        <ellips Sync="TRUE">Please see projection file (*.prj)</ellips>
+        <semiaxis Sync="TRUE">Please see projection file</semiaxis>
+        <denflat Sync="TRUE">Please see projection file</denflat>
+      </geodetic>
+      <cordsysn>
+        <geogcsn>Please see projection file (*.prj)</geogcsn>
+      </cordsysn>
+    </horizsys>
+  </spref>
+  <eainfo>
+    <detailed Name="Planetary_Nomenclature">
+      <enttyp>
+        <enttypl>Planetary Nomenclature</enttypl>
+        <enttypt Sync="TRUE">Feature Class</enttypt>
+        <enttypc Sync="TRUE">1690</enttypc>
+        <enttypds>
+          <onlink>http://planetarynames.wr.usgs.gov/site/Page/Categories</onlink>
+        </enttypds>
+      </enttyp>
+      <attr>
+        <attrlabl>FID</attrlabl>
+        <attrdef>Internal feature number.</attrdef>
+        <attrdefs>ESRI</attrdefs>
+        <attrdomv>
+          <udom>Sequential unique whole numbers that are automatically generated.</udom>
+        </attrdomv>
+        <attalias Sync="TRUE">FID</attalias>
+        <attrtype Sync="TRUE">OID</attrtype>
+        <attwidth Sync="TRUE">4</attwidth>
+        <atprecis Sync="TRUE">0</atprecis>
+        <attscale Sync="TRUE">0</attscale>
+      </attr>
+      <attr>
+        <attrlabl>Shape</attrlabl>
+        <attrdef>Feature geometry.</attrdef>
+        <attrdefs>ESRI</attrdefs>
+        <attrdomv>
+          <udom>Coordinates defining the features.</udom>
+        </attrdomv>
+        <attalias Sync="TRUE">Shape</attalias>
+        <attrtype Sync="TRUE">Geometry</attrtype>
+        <attwidth Sync="TRUE">0</attwidth>
+        <atprecis Sync="TRUE">0</atprecis>
+        <attscale Sync="TRUE">0</attscale>
+      </attr>
+      <attr>
+        <attrlabl Sync="TRUE">FEATURE</attrlabl>
+        <attalias Sync="TRUE">FEATURE</attalias>
+        <attrtype Sync="TRUE">String</attrtype>
+        <attwidth Sync="TRUE">255</attwidth>
+        <attrdef>As spelled by honoree or by reference shown in Sources of Planetary Names; brackets indicate that the name has been dropped or was never officially approved. This field shows the names with the diacritical marks. </attrdef>
+        <attrdefs>International Astronomical Union (IAU) Working Group for Planetary System Nomenclature (WGPSN)</attrdefs>
+        <attrdomv>
+          <edom>
+            <edomvds>
+              <onlink>http://planetarynames.wr.usgs.gov/site/References</onlink>
+            </edomvds>
+          </edom>
+        </attrdomv>
+      </attr>
+      <attr>
+        <attrlabl Sync="TRUE">CLEAN_FEAT</attrlabl>
+        <attalias Sync="TRUE">CLEAN_FEAT</attalias>
+        <attrtype Sync="TRUE">String</attrtype>
+        <attwidth Sync="TRUE">255</attwidth>
+        <attrdef>This field shows the feature name without the diacritical marks which can cause display issues in some programs. The correct spelling of a feature name includes diacritical marks not shown in this field. </attrdef>
+        <attrdefs>International Astronomical Union (IAU) Working Group for Planetary System Nomenclature (WGPSN) </attrdefs>
+        <attrdomv>
+          <edom>
+            <edomvds>
+              <onlink>http://planetarynames.wr.usgs.gov/site/References</onlink>
+            </edomvds>
+          </edom>
+        </attrdomv>
+      </attr>
+      <attr>
+        <attrlabl Sync="TRUE">APPROVALDT</attrlabl>
+        <attalias Sync="TRUE">APPROVALDT</attalias>
+        <attrtype Sync="TRUE">String</attrtype>
+        <attwidth Sync="TRUE">19</attwidth>
+        <attrdef>Date when name was adopted. Starting in mid-September 2006, complete dates are recorded (YYYY-MM-DD). Before mid-September 2006, only the approval year was recorded. </attrdef>
+        <attrdefs>International Astronomical Union (IAU) Working Group for Planetary System Nomenclature (WGPSN)</attrdefs>
+      </attr>
+      <attr>
+        <attrlabl Sync="TRUE">ORIGIN</attrlabl>
+        <attalias Sync="TRUE">ORIGIN</attalias>
+        <attrtype Sync="TRUE">String</attrtype>
+        <attwidth Sync="TRUE">255</attwidth>
+        <attrdefs>International Astronomical Union (IAU) Working Group for Planetary System Nomenclature (WGPSN)</attrdefs>
+        <attrdef>Short explanation of name. </attrdef>
+      </attr>
+      <attr>
+        <attrlabl Sync="TRUE">DIAMETER</attrlabl>
+        <attalias Sync="TRUE">DIAMETER</attalias>
+        <attrtype Sync="TRUE">Number</attrtype>
+        <attwidth Sync="TRUE">32</attwidth>
+        <attrdefs>International Astronomical Union (IAU) Working Group for Planetary System Nomenclature (WGPSN)</attrdefs>
+        <attrdef>Approximate diameter or longest dimension of feature in kilometers. </attrdef>
+        <atnumdec Sync="TRUE">10</atnumdec>
+      </attr>
+      <attr>
+        <attrlabl Sync="TRUE">CENTER_LON</attrlabl>
+        <attalias Sync="TRUE">CENTER_LON</attalias>
+        <attrtype Sync="TRUE">Number</attrtype>
+        <attwidth Sync="TRUE">32</attwidth>
+        <attrdefs>International Astronomical Union (IAU) Working Group for Planetary System Nomenclature (WGPSN)</attrdefs>
+        <attrdef>Longitude of center of feature. Degrees 0 to 360 in an east or west system. On the Moon, positive longitude values indicate east longitudes, and negative values indicate west longitudes. </attrdef>
+        <atnumdec Sync="TRUE">10</atnumdec>
+      </attr>
+      <attr>
+        <attrlabl Sync="TRUE">CENTER_LAT</attrlabl>
+        <attalias Sync="TRUE">CENTER_LAT</attalias>
+        <attrtype Sync="TRUE">Number</attrtype>
+        <attwidth Sync="TRUE">32</attwidth>
+        <attrdefs>International Astronomical Union (IAU) Working Group for Planetary System Nomenclature (WGPSN)</attrdefs>
+        <attrdef>Latitude of center of feature. Positive numbers indicate that the feature is located in the northern hemisphere, and negative numbers indicate that the feature is located in the southern hemisphere. </attrdef>
+        <atnumdec Sync="TRUE">10</atnumdec>
+      </attr>
+      <attr>
+        <attrlabl Sync="TRUE">TYPE</attrlabl>
+        <attalias Sync="TRUE">TYPE</attalias>
+        <attrtype Sync="TRUE">String</attrtype>
+        <attwidth Sync="TRUE">255</attwidth>
+        <attrdefs>International Astronomical Union (IAU) Working Group for Planetary System Nomenclature (WGPSN)</attrdefs>
+        <attrdef>Latin or Greek descriptor term</attrdef>
+        <attrdomv>
+          <edom>
+            <edomv>Albedo Feature (AL)</edomv>
+            <edomvd>Geographic area distinguished by amount of reflected light</edomvd>
+          </edom>
+          <edom>
+            <edomv>Arcus, arcus (AR)</edomv>
+            <edomvd>Arc-shaped feature</edomvd>
+          </edom>
+          <edom>
+            <edomv>Catena, catenae (CA)</edomv>
+            <edomvd>Chain of craters</edomvd>
+          </edom>
+          <edom>
+            <edomv>Cavus, cavi (CB)</edomv>
+            <edomvd>Hollows, irregular steep-sided depressions usually in arrays or clusters</edomvd>
+          </edom>
+          <edom>
+            <edomv>Chaos, chaoses (CH)</edomv>
+            <edomvd>Distinctive area of broken terrain</edomvd>
+          </edom>
+          <edom>
+            <edomv>Chasma, chasmata (CM)</edomv>
+            <edomvd>A deep, elongated, steep-sided depression</edomvd>
+          </edom>
+          <edom>
+            <edomv>Collis, colles (CO)</edomv>
+            <edomvd>Small hills or knobs</edomvd>
+          </edom>
+          <edom>
+            <edomv>Corona, coronae (CR)</edomv>
+            <edomvd>Ovoid-shaped feature</edomvd>
+          </edom>
+          <edom>
+            <edomv>Crater, craters (AA)</edomv>
+            <edomvd>A circular depression</edomvd>
+          </edom>
+          <edom>
+            <edomv>Dorsum, dorsa (DO)</edomv>
+            <edomvd>Ridge</edomvd>
+          </edom>
+          <edom>
+            <edomv>Eruptive center (ER)</edomv>
+            <edomvd>Active volcanic centers on Io</edomvd>
+          </edom>
+          <edom>
+            <edomv>Facula, faculae (FA)</edomv>
+            <edomvd>Bright spot</edomvd>
+          </edom>
+          <edom>
+            <edomv>Farrum, farra (FR)</edomv>
+            <edomvd>Pancake-like structure, or a row of such structures</edomvd>
+          </edom>
+          <edom>
+            <edomv>Flexus, flexus (FE)</edomv>
+            <edomvd>A very low curvilinear ridge with a scalloped pattern</edomvd>
+          </edom>
+          <edom>
+            <edomv>Fluctus, fluctus (FL)</edomv>
+            <edomvd>Flow terrain</edomvd>
+          </edom>
+          <edom>
+            <edomv>Flumen, flumina (FM)</edomv>
+            <edomvd>Channel on Titan that might carry liquid</edomvd>
+          </edom>
+          <edom>
+            <edomv>Fossa, fossae (FO)</edomv>
+            <edomvd>Long, narrow depression</edomvd>
+          </edom>
+          <edom>
+            <edomv>Insula, insulae (IN)</edomv>
+            <edomvd>Island (islands), an isolated land area (or group of such areas) surrounded by, or nearly surrounded by, a liquid area (sea or lake).</edomvd>
+          </edom>
+          <edom>
+            <edomv>Labes, labes (LA)</edomv>
+            <edomvd>Landslide</edomvd>
+          </edom>
+          <edom>
+            <edomv>Labyrinthus, labyrinthi (LB)</edomv>
+            <edomvd>Complex of intersecting valleys or ridges.</edomvd>
+          </edom>
+          <edom>
+            <edomv>Lacus, lacus (LC)</edomv>
+            <edomvd>"Lake" or small plain; on Titan, a "lake" or small, dark plain with discrete, sharp boundaries</edomvd>
+          </edom>
+          <edom>
+            <edomv>Landing site name (LF)</edomv>
+            <edomvd>Lunar features at or near Apollo landing sites</edomvd>
+          </edom>
+          <edom>
+            <edomv>Large ringed feature (LG)</edomv>
+            <edomvd>Cryptic ringed features</edomvd>
+          </edom>
+          <edom>
+            <edomv>Linea, lineae (LI)</edomv>
+            <edomvd>A dark or bright elongate marking, may be curved or straight</edomvd>
+          </edom>
+          <edom>
+            <edomv>Lingula, lingulae (LN)</edomv>
+            <edomvd>Extension of plateau having rounded lobate or tongue-like boundaries</edomvd>
+          </edom>
+          <edom>
+            <edomv>Macula, maculae (MA)</edomv>
+            <edomvd>Dark spot, may be irregular</edomvd>
+          </edom>
+          <edom>
+            <edomv>Mare, maria (ME)</edomv>
+            <edomvd>"Sea"; large circular plain; on Titan, large expanses of dark materials thought to be liquid hydrocarbons</edomvd>
+          </edom>
+          <edom>
+            <edomv>Mensa, mensae (MN)</edomv>
+            <edomvd>A flat-topped prominence with cliff-like edges</edomvd>
+          </edom>
+          <edom>
+            <edomv>Mons, montes (MO)</edomv>
+            <edomvd>Mountain</edomvd>
+          </edom>
+          <edom>
+            <edomv>Oceanus, oceani (OC)</edomv>
+            <edomvd>A very large dark area on the moon</edomvd>
+          </edom>
+          <edom>
+            <edomv>Palus, paludes (PA)</edomv>
+            <edomvd>"Swamp"; small plain</edomvd>
+          </edom>
+          <edom>
+            <edomv>Patera, paterae (PE)</edomv>
+            <edomvd>An irregular crater, or a complex one with scalloped edges</edomvd>
+          </edom>
+          <edom>
+            <edomv>Planitia, planitiae (PL)</edomv>
+            <edomvd>Low plain</edomvd>
+          </edom>
+          <edom>
+            <edomv>Planum, plana (PM)</edomv>
+            <edomvd>Plateau or high plain</edomvd>
+          </edom>
+          <edom>
+            <edomv>Plume, plumes (PU)</edomv>
+            <edomvd>Cryo-volcanic features on Triton</edomvd>
+          </edom>
+          <edom>
+            <edomv>Promontorium, promontoria (PR)</edomv>
+            <edomvd>"Cape"; headland promontoria</edomvd>
+          </edom>
+          <edom>
+            <edomv>Regio, regiones (RE)</edomv>
+            <edomvd>A large area marked by reflectivity or color distinctions from adjacent areas, or a broad geographic region</edomvd>
+          </edom>
+          <edom>
+            <edomv>Rima, rimae (RI)</edomv>
+            <edomvd>Fissure</edomvd>
+          </edom>
+          <edom>
+            <edomv>Rupes, rupes (RU)</edomv>
+            <edomvd>Scarp</edomvd>
+          </edom>
+          <edom>
+            <edomv>Satellite Feature (SF)</edomv>
+            <edomvd>A feature that shares the name of an associated feature. For example, on the Moon the craters referred to as "Lettered Craters" are classified in the gazetteer as "Satellite Features."</edomvd>
+          </edom>
+          <edom>
+            <edomv>Scopulus, scopuli (SC)</edomv>
+            <edomvd>Lobate or irregular scarp</edomvd>
+          </edom>
+          <edom>
+            <edomv>Serpens, serpentes (SE)</edomv>
+            <edomvd>Sinuous feature with segments of positive and negative relief along its length</edomvd>
+          </edom>
+          <edom>
+            <edomv>Sinus, sinus (SI)</edomv>
+            <edomvd>"Bay"; small plain</edomvd>
+          </edom>
+          <edom>
+            <edomv>Sulcus, sulci (SU)</edomv>
+            <edomvd>Subparallel furrows and ridges</edomvd>
+          </edom>
+          <edom>
+            <edomv>Terra, terrae (TA)</edomv>
+            <edomvd>Extensive land mass</edomvd>
+          </edom>
+          <edom>
+            <edomv>Tessera, tesserae (TE)</edomv>
+            <edomvd>Tile-like, polygonal terrain</edomvd>
+          </edom>
+          <edom>
+            <edomv>Tholus, tholi (TH)</edomv>
+            <edomvd>Small domical mountain or hill</edomvd>
+          </edom>
+          <edom>
+            <edomv>Unda, undae (UN)</edomv>
+            <edomvd>Dunes</edomvd>
+          </edom>
+          <edom>
+            <edomv>Vallis, valles (VA)</edomv>
+            <edomvd>Valley</edomvd>
+          </edom>
+          <edom>
+            <edomv>Vastitas, vastitates (VS)</edomv>
+            <edomvd>Extensive plain</edomvd>
+          </edom>
+          <edom>
+            <edomv>Virga, virgae (VI)</edomv>
+            <edomvd>A streak or stripe of color</edomvd>
+          </edom>
+        </attrdomv>
+      </attr>
+      <attr>
+        <attrlabl Sync="TRUE">CODE</attrlabl>
+        <attalias Sync="TRUE">CODE</attalias>
+        <attrtype Sync="TRUE">String</attrtype>
+        <attwidth Sync="TRUE">255</attwidth>
+        <attrdefs>International Astronomical Union (IAU) Working Group for Planetary System Nomenclature (WGPSN)</attrdefs>
+        <attrdef>Country or ethnic group that is origin of name </attrdef>
+        <attrdomv>
+          <edom>
+            <edomvds>
+              <onlink>http://planetarynames.wr.usgs.gov/site/Abbreviations</onlink>
+            </edomvds>
+          </edom>
+        </attrdomv>
+      </attr>
+      <attr>
+        <attrlabl Sync="TRUE">APPROVAL</attrlabl>
+        <attalias Sync="TRUE">APPROVAL</attalias>
+        <attrtype Sync="TRUE">String</attrtype>
+        <attwidth Sync="TRUE">255</attwidth>
+        <attrdefs>International Astronomical Union (IAU) Working Group for Planetary System Nomenclature (WGPSN)</attrdefs>
+        <attrdef>Number indicates IAU level of approval</attrdef>
+        <attrdomv>
+          <edom>
+            <edomv>1</edomv>
+            <edomvd>Proposed (not currently used) </edomvd>
+            <edomvds>Number indicates IAU level of approval</edomvds>
+          </edom>
+          <edom>
+            <edomv>2</edomv>
+            <edomvd>Task Group approval (not currently used) </edomvd>
+          </edom>
+          <edom>
+            <edomv>3</edomv>
+            <edomvd>WGPSN approval (not currently used)</edomvd>
+          </edom>
+          <edom>
+            <edomv>4</edomv>
+            <edomvd>Executive Committee approval (not currently used)</edomvd>
+          </edom>
+          <edom>
+            <edomv>5</edomv>
+            <edomvd>Adopted by IAU</edomvd>
+          </edom>
+          <edom>
+            <edomv>6</edomv>
+            <edomvd>Dropped, no longer in use </edomvd>
+          </edom>
+          <edom>
+            <edomv>7</edomv>
+            <edomvd>Never approved by the IAU </edomvd>
+          </edom>
+        </attrdomv>
+      </attr>
+      <attr>
+        <attrlabl Sync="TRUE">WEST_LON</attrlabl>
+        <attalias Sync="TRUE">WEST_LON</attalias>
+        <attrtype Sync="TRUE">Number</attrtype>
+        <attwidth Sync="TRUE">32</attwidth>
+        <attrdefs>International Astronomical Union (IAU) Working Group for Planetary System Nomenclature (WGPSN)</attrdefs>
+        <attrdef>Approximate westernmost longitude extent. Using a positive East longitude system.</attrdef>
+        <atnumdec Sync="TRUE">10</atnumdec>
+      </attr>
+      <attr>
+        <attrlabl Sync="TRUE">EAST_LON</attrlabl>
+        <attalias Sync="TRUE">EAST_LON</attalias>
+        <attrtype Sync="TRUE">Number</attrtype>
+        <attwidth Sync="TRUE">32</attwidth>
+        <attrdefs>International Astronomical Union (IAU) Working Group for Planetary System Nomenclature (WGPSN)</attrdefs>
+        <attrdef>Approximate easternmost longtiude extent. Using a positive East longitude system. </attrdef>
+        <atnumdec Sync="TRUE">10</atnumdec>
+      </attr>
+      <attr>
+        <attrlabl Sync="TRUE">SOUTH_LAT</attrlabl>
+        <attalias Sync="TRUE">SOUTH_LAT</attalias>
+        <attrtype Sync="TRUE">Number</attrtype>
+        <attwidth Sync="TRUE">32</attwidth>
+        <attrdefs>International Astronomical Union (IAU) Working Group for Planetary System Nomenclature (WGPSN)</attrdefs>
+        <attrdef>Approximate southernmost planetocentric latitude extent</attrdef>
+        <atnumdec Sync="TRUE">10</atnumdec>
+      </attr>
+      <attr>
+        <attrlabl Sync="TRUE">NORTH_LAT</attrlabl>
+        <attalias Sync="TRUE">NORTH_LAT</attalias>
+        <attrtype Sync="TRUE">Number</attrtype>
+        <attwidth Sync="TRUE">32</attwidth>
+        <attrdefs>International Astronomical Union (IAU) Working Group for Planetary System Nomenclature (WGPSN)</attrdefs>
+        <attrdef>Approximate northernmost planetocentric latitude extent</attrdef>
+        <atnumdec Sync="TRUE">10</atnumdec>
+      </attr>
+      <attr>
+        <attrlabl Sync="TRUE">ETHNICITY</attrlabl>
+        <attalias Sync="TRUE">ETHNICITY</attalias>
+        <attrtype Sync="TRUE">String</attrtype>
+        <attwidth Sync="TRUE">255</attwidth>
+        <attrdefs>International Astronomical Union (IAU) Working Group for Planetary System Nomenclature (WGPSN)</attrdefs>
+        <attrdef>Country or ethnic group that is origin of name </attrdef>
+        <attrdomv>
+          <edom>
+            <edomvds>
+              <onlink>http://planetarynames.wr.usgs.gov/site/Abbreviations</onlink>
+            </edomvds>
+          </edom>
+        </attrdomv>
+      </attr>
+      <attr>
+        <attrlabl Sync="TRUE">CONTINENT</attrlabl>
+        <attalias Sync="TRUE">CONTINENT</attalias>
+        <attrtype Sync="TRUE">String</attrtype>
+        <attwidth Sync="TRUE">255</attwidth>
+        <attrdefs>International Astronomical Union (IAU) Working Group for Planetary System Nomenclature (WGPSN)</attrdefs>
+        <attrdef>Continent or large geographic division that is origin of name </attrdef>
+      </attr>
+      <attr>
+        <attrlabl Sync="TRUE">QUAD_NAME</attrlabl>
+        <attalias Sync="TRUE">QUAD_NAME</attalias>
+        <attrtype Sync="TRUE">String</attrtype>
+        <attwidth Sync="TRUE">255</attwidth>
+        <attrdefs>International Astronomical Union (IAU) Working Group for Planetary System Nomenclature (WGPSN)</attrdefs>
+        <attrdef>The name of planetary quadrant that the features center point lies within</attrdef>
+      </attr>
+      <attr>
+        <attrlabl Sync="TRUE">QUAD_CODE</attrlabl>
+        <attalias Sync="TRUE">QUAD_CODE</attalias>
+        <attrtype Sync="TRUE">String</attrtype>
+        <attwidth Sync="TRUE">20</attwidth>
+        <attrdefs>International Astronomical Union (IAU) Working Group for Planetary System Nomenclature (WGPSN)</attrdefs>
+        <attrdef>The specific planetary quadrant that the features center point lies within</attrdef>
+      </attr>
+      <attr>
+        <attrlabl Sync="TRUE">LINK</attrlabl>
+        <attalias Sync="TRUE">LINK</attalias>
+        <attrtype Sync="TRUE">String</attrtype>
+        <attwidth Sync="TRUE">47</attwidth>
+        <attrdefs>International Astronomical Union (IAU) Working Group for Planetary System Nomenclature (WGPSN)</attrdefs>
+        <attrdef>URL directly to feature on the planetary nomenclature website</attrdef>
+      </attr>
+    </detailed>
+    <overview>
+      <eadetcit>
+        <onlink>http://planetarynames.wr.usgs.gov/site/Page/Categories</onlink>
+      </eadetcit>
+    </overview>
+  </eainfo>
+  <distinfo>
+    <distrib>
+      <cntinfo>
+        <cntorgp>
+          <cntorg>United States Geological Survey (USGS)</cntorg>
+          <cntper>Jennifer Blue</cntper>
+        </cntorgp>
+        <cntpos>Geographer</cntpos>
+        <cntaddr>
+          <addrtype>mailing</addrtype>
+          <address>2255 North Gemini Drive</address>
+          <city>Flagstaff</city>
+          <state>AZ</state>
+          <postal>86001</postal>
+          <country>USA</country>
+        </cntaddr>
+        <cntvoice>928 556 7126</cntvoice>
+        <cntfax>(703) 648-5548</cntfax>
+        <cntemail>jblue@usgs.gov</cntemail>
+        <hours>8:00 AM to 4:30 PM Pacific Time</hours>
+      </cntinfo>
+    </distrib>
+    <resdesc>Downloadable Data</resdesc>
+    <distliab>none</distliab>
+    <stdorder>
+      <fees>To be determined at time of order</fees>
+      <digform>
+        <digtinfo>
+          <transize Sync="TRUE">0.045</transize>
+          <dssize Sync="TRUE">0.045</dssize>
+        </digtinfo>
+      </digform>
+    </stdorder>
+  </distinfo>
+  <metainfo>
+    <metd Sync="TRUE">20121002</metd>
+    <metc>
+      <cntinfo>
+        <cntorgp>
+          <cntorg>United States Geological Survey (USGS)</cntorg>
+          <cntper>Jennifer Blue</cntper>
+        </cntorgp>
+        <cntpos>Geographer</cntpos>
+        <cntaddr>
+          <addrtype>mailing</addrtype>
+          <address>2255 North Gemini Drive</address>
+          <city>Flagstaff</city>
+          <state>AZ</state>
+          <postal>86001</postal>
+          <country>USA</country>
+        </cntaddr>
+        <cntvoice>928 556 7126</cntvoice>
+        <cntfax>928 556 7014</cntfax>
+        <cntemail>jblue@usgs.gov</cntemail>
+        <cntemail>thare@usgs.gov</cntemail>
+        <hours>8:00 AM to 4:30 PM Pacific Time</hours>
+      </cntinfo>
+    </metc>
+    <metstdn Sync="TRUE">FGDC Content Standards for Digital Geospatial Metadata</metstdn>
+    <metstdv Sync="TRUE">FGDC-STD-001-1998</metstdv>
+    <mettc Sync="TRUE">local time</mettc>
+    <metextns>
+      <onlink>http://www.esri.com/metadata/esriprof80.html</onlink>
+      <metprof>ESRI Metadata Profile</metprof>
+    </metextns>
+    <langmeta Sync="TRUE">en</langmeta>
+    <metextns>
+      <onlink Sync="TRUE">http://www.esri.com/metadata/esriprof80.html</onlink>
+      <metprof Sync="TRUE">ESRI Metadata Profile</metprof>
+    </metextns>
+  </metainfo>
+  <Esri>
+    <MetaID>{2723B7BB-C51A-4C68-95E5-D23863811506}</MetaID>
+    <CreaDate>20100504</CreaDate>
+    <CreaTime>15271600</CreaTime>
+    <SyncOnce>FALSE</SyncOnce>
+    <SyncDate>20100505</SyncDate>
+    <SyncTime>10251800</SyncTime>
+    <ModDate>20100505</ModDate>
+    <ModTime>10251800</ModTime>
+  </Esri>
+  <dataIdInfo>
+    <envirDesc Sync="TRUE">Microsoft Windows XP Version 5.1 (Build 2600) Service Pack 3; ESRI ArcCatalog 9.3.1.3500</envirDesc>
+    <dataLang>
+      <languageCode Sync="TRUE" value="en"></languageCode>
+    </dataLang>
+    <idCitation>
+      <resTitle Sync="TRUE">Planetary_Nomenclature</resTitle>
+      <presForm>
+        <PresFormCd Sync="TRUE" value="005"></PresFormCd>
+      </presForm>
+    </idCitation>
+    <spatRpType>
+      <SpatRepTypCd Sync="TRUE" value="001"></SpatRepTypCd>
+    </spatRpType>
+    <dataExt>
+      <geoEle>
+        <GeoBndBox esriExtentType="native">
+          <westBL Sync="TRUE">0</westBL>
+          <eastBL Sync="TRUE">360</eastBL>
+          <northBL Sync="TRUE">88.178636</northBL>
+          <southBL Sync="TRUE">-86.954318</southBL>
+          <exTypeCode Sync="TRUE">1</exTypeCode>
+        </GeoBndBox>
+      </geoEle>
+    </dataExt>
+    <geoBox esriExtentType="decdegrees">
+      <westBL Sync="TRUE">0</westBL>
+      <eastBL Sync="TRUE">360</eastBL>
+      <northBL Sync="TRUE">88.178636</northBL>
+      <southBL Sync="TRUE">-86.954318</southBL>
+      <exTypeCode Sync="TRUE">1</exTypeCode>
+    </geoBox>
+  </dataIdInfo>
+  <mdLang>
+    <languageCode Sync="TRUE" value="en"></languageCode>
+  </mdLang>
+  <mdStanName Sync="TRUE">ISO 19115 Geographic Information - Metadata</mdStanName>
+  <mdStanVer Sync="TRUE">DIS_ESRI1.0</mdStanVer>
+  <mdChar>
+    <CharSetCd Sync="TRUE" value="004"></CharSetCd>
+  </mdChar>
+  <mdHrLv>
+    <ScopeCd Sync="TRUE" value="005"></ScopeCd>
+  </mdHrLv>
+  <mdHrLvName Sync="TRUE">dataset</mdHrLvName>
+  <distInfo>
+    <distributor>
+      <distorTran>
+        <onLineSrc>
+          <orDesc Sync="TRUE">002</orDesc>
+          <linkage Sync="TRUE">Planetary_Nomenclature.shp</linkage>
+          <protocol Sync="TRUE">Local Area Network</protocol>
+        </onLineSrc>
+        <transSize Sync="TRUE">0.045</transSize>
+      </distorTran>
+      <distorFormat>
+        <formatName Sync="TRUE">Shapefile</formatName>
+      </distorFormat>
+    </distributor>
+  </distInfo>
+  <refSysInfo>
+    <RefSystem>
+      <refSysID>
+        <identCode Sync="TRUE">Please see projection file (*.prj)</identCode>
+      </refSysID>
+    </RefSystem>
+  </refSysInfo>
+  <spatRepInfo>
+    <VectSpatRep>
+      <topLvl>
+        <TopoLevCd Sync="TRUE" value="001"></TopoLevCd>
+      </topLvl>
+      <geometObjs Name="Planetary_Nomenclature">
+        <geoObjTyp>
+          <GeoObjTypCd Sync="TRUE" value="004"></GeoObjTypCd>
+        </geoObjTyp>
+        <geoObjCnt Sync="TRUE">1690</geoObjCnt>
+      </geometObjs>
+    </VectSpatRep>
+  </spatRepInfo>
+  <mdDateSt Sync="TRUE">20100505</mdDateSt>
+</metadata>

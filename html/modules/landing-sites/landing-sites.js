@@ -35,8 +35,7 @@ $(document).ready(function() {
 
 
 // When click on viewLandingSites button, it will display the place markers
-$("#viewLandingSites").click(function(e) {
-    console.log(landingSitesArray);
+$("#viewLandingSites").click(function(e) {    
     if (isShow === false) {
         isShow = true;
         $(this).text('Hide Landing Sites');
@@ -61,7 +60,7 @@ function addLandingSites() {
     for (var i = 0; i < landingSitesArray.length; i++) {
         var obj = landingSitesArray[i];
 
-        var placemark = new WorldWind.Placemark(new WorldWind.Position(obj.latitude, obj.longitude, 90000), true, null);
+        var placemark = new WorldWind.Placemark(new WorldWind.Position(obj.latitude, obj.longitude, 1e2), true, null);
         placemark.label = "Name: " + obj.name + "\n"
                         + "Date: " + obj.date + "\n"
                         + "Lat: " + obj.latitude + "\n"
@@ -69,17 +68,18 @@ function addLandingSites() {
 
         var placemarkAttributes = new WorldWind.PlacemarkAttributes();
         placemarkAttributes.imageScale = 4;
+        placemarkAttributes.altitudeMode = WorldWind.RELATIVE_TO_GROUND;
         placemarkAttributes.labelAttributes.color = WorldWind.Color.YELLOW;
         placemarkAttributes.labelAttributes.scale = 2;
         placemarkAttributes.labelAttributes.depthTest = false;
         placemarkAttributes.leaderLineAttributes.outlineColor = WorldWind.Color.RED;
 
         if (obj.type === "1") {
-            placemarkAttributes.imageSource = endPoint + "html/images/icons/landing-sites-1.png";
+            placemarkAttributes.imageSource = endPoint + "/html/images/icons/landing-sites-1.png";
         } else if (obj.type === "2") {
-            placemarkAttributes.imageSource = endPoint + "html/images/icons/landing-sites-2.png";
+            placemarkAttributes.imageSource = endPoint + "/html/images/icons/landing-sites-2.png";
         } else {
-            placemarkAttributes.imageSource = endPoint + "html/images/icons/landing-sites-3.png";
+            placemarkAttributes.imageSource = endPoint + "/html/images/icons/landing-sites-3.png";
         }
 
         placemark.attributes = placemarkAttributes;
