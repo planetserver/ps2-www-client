@@ -66,11 +66,11 @@ function addLandingSites() {
                         + "Lat: " + obj.latitude + "\n"
                         + "Lon: " + obj.longitude;
 
-        var placemarkAttributes = new WorldWind.PlacemarkAttributes();
-        placemarkAttributes.imageScale = 4;
+        var placemarkAttributes = new WorldWind.PlacemarkAttributes();                
+        placemark.eyeDistanceScalingLabelThreshold = 1.312e7;
+        placemark.eyeDistanceScalingThreshold = 1.312e7;
         placemarkAttributes.altitudeMode = WorldWind.RELATIVE_TO_GROUND;
-        placemarkAttributes.labelAttributes.color = WorldWind.Color.YELLOW;
-        placemarkAttributes.labelAttributes.scale = 2;
+        placemarkAttributes.labelAttributes.color = WorldWind.Color.YELLOW;        
         placemarkAttributes.labelAttributes.depthTest = false;
         placemarkAttributes.leaderLineAttributes.outlineColor = WorldWind.Color.RED;
 

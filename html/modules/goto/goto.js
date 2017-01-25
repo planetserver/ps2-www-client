@@ -1,25 +1,28 @@
 $(document).ready(function() {
 
     // All regions are possible
-    var availableRegionsJSON = [];
+    var availableRegionsCSV = [];
     var availableRegions = [];
     var selectedValue = "region";
 
     var availableCoverageIDs = [];
 
+    var dataFile = null;
+
+    // change to ps2EndPoint later
+    var localEndPoint = "http://localhost:8080/";
+
+    if (clientName == MARS_CLIENT) {
+        dataFile = localEndPoint + "html/data/shapefiles/mars/MARS_nomenclature.csv";
+    } else {
+        dataFile = localEndPoint + "html/data/shapefiles/moon/MOON_nomenclature.csv";
+    }
+
     $.ajax({
         type: "GET",
-        url: ps2EndPoint + "html/data/region-goto.json",
-        data: "{dataset: 'CRISM'}", // it will query later on database with dataset
-        cache: false,
-        async: false,
+        url: dataFile,                       
         success: function(data) {
-            availableRegionsJSON = data;
-            for (var i = 0; i < availableRegionsJSON.length; i++) {
-                availableRegions.push(availableRegionsJSON[i].name);
-            }
-
-            console.log(availableRegions);
+            availableRegionsCSV = parseCsvToArray(data);
         }
     });
 
@@ -133,16 +136,16 @@ $(document).ready(function() {
         var region = $("#txtGoto").val();
         // User want to go to region
         if (region !== "") {
-            for (var i = 0; i < availableRegionsJSON.length; i++) {
-                if (availableRegionsJSON[i].name == region) {
+            for (var i = 0; i < availableRegionsCSV.length; i++) {
+                if (availableRegionsCSV[i].name == region) {
                     // Move to region
-                    moveToFootPrint(availableRegionsJSON[i].latitude, availableRegionsJSON[i].longitude);
-                    makeLinkGoTo("", availableRegionsJSON[i].latitude, availableRegionsJSON[i].longitude);
+                    moveToFootPrint(availableRegionsCSV[i].center_lat, availableRegionsCSV[i].center_lon, availableRegionsCSV[i]);
+                    makeLinkGoTo("", availableRegionsCSV[i].center_lat, availableRegionsCSV[i].center_lon);
                     return true;
                 }
             }
         }
-        alert("You need to choose existing region on globe.");
+        alert("You need to choose an existing region on globe.");
         return false;
     }
 
@@ -239,7 +242,8 @@ $(document).ready(function() {
     }
 
     // Move to latitude, longitude coordinate
-    function moveToFootPrint(latitude, longitude) {
+    function moveToFootPrint(latitude, longitude, regionObj) {
+        
         // Keep the user current zoom
         //wwd.navigator.range = 2e6;
         wwd.goTo(new WorldWind.Location(latitude, longitude));
@@ -249,15 +253,34 @@ $(document).ready(function() {
             wwd.removeLayer(placemarkLayer);
         }
 
-        var placemark = new WorldWind.Placemark(new WorldWind.Position(latitude, longitude, 1e2), true, null);
-        var placemarkAttributes = new WorldWind.PlacemarkAttributes(placemarkAttributes);
+        wwd.navigator.range = 100;
+
+        var placemark = new WorldWind.Placemark(new WorldWind.Position(latitude, longitude, 10), true, null);
+        placemark.altitudeMode = WorldWind.RELATIVE_TO_GROUND;        
+        placemark.eyeDistanceScalingLabelThreshold = 1.312e7;
+        placemark.eyeDistanceScalingThreshold = 1.312e7;
+
+        var placemarkAttributes = new WorldWind.PlacemarkAttributes();          
+        placemarkAttributes.labelAttributes.color = new WorldWind.Color(0.43, 0.93, 0.97, 1);
+        placemarkAttributes.labelAttributes.depthTest = false;
+        placemarkAttributes.labelAttributes.scale = 1.2;
         placemarkAttributes.imageSource = "html/images/close.png";
+
+        // move to a region then load the lat, lon, diameter of this point on map
+        if (typeof regionObj !== "undefined")  {
+            placemark.label = "Name: " + regionObj.name + "\n"
+                            + "Diameter: " + regionObj.diameter + "\n"    
+                            + "Lat: " + regionObj.center_lat + "\n"
+                            + "Lon: " + regionObj.center_lon;            
+        }
+
         placemark.attributes = placemarkAttributes;
 
         placemarkLayer = new WorldWind.RenderableLayer("Placemarks");
         placemarkLayer.addRenderable(placemark);
 
-        wwd.insertLayer(4, placemarkLayer);
+               
+        wwd.insertLayer(4, placemarkLayer);        
     }
 
 
@@ -283,5 +306,33 @@ $(document).ready(function() {
         // Set the new range to link
         $("#linkGoTo").text(tmp);
         $("#linkGoTo").attr("href", tmp);
+    }
+
+
+    //var csv is the CSV file with headers
+    function parseCsvToArray(csv) {
+
+        var lines=csv.split("\n");
+
+        var result = [];
+
+        var headers=lines[0].split(",");
+
+        for (var i=1;i<lines.length;i++) {
+            var obj = {};
+            var currentline=lines[i].split(",");
+
+            for(var j=0;j<headers.length;j++) {
+                obj[headers[j]] = currentline[j];
+            }
+
+            result.push(obj);
+
+            // just need the text for auto complete
+            availableRegions.push(obj.name);
+        }
+
+        //return result; //JavaScript object
+        return result; //JSON
     }
 });

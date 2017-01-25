@@ -30,7 +30,9 @@ $("#viewGazetteer").click(function(e) {
 
 // for each shape record, read the shape record attributes to get necessary fields
 function setAttributes(shapeFileAttributes, shapeFileRecord) {        
-    var name = shapeFileAttributes.values.name + "\n Lat: " + shapeFileAttributes.values.center_lat + "\n Lon: " + shapeFileAttributes.values.center_lon;
+    var name = shapeFileAttributes.values.name;
+    // + "\n Lat: " + shapeFileAttributes.values.center_lat + "\n Lon: " + shapeFileAttributes.values.center_lon;
+    
     placemarkAttributes = new WorldWind.PlacemarkAttributes(null);
     placemarkAttributes.depthTest = false;
     placemarkAttributes.imageSource = ps2EndPoint + "/html/images/icons/main-chart/5.png";        
