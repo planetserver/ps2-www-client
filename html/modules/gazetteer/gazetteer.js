@@ -5,7 +5,7 @@ var isShow = false;
 var gazetteerLayer = null;
 
 // change to ps2EndPoint later
-var endPoint = "http://localhost:8080";
+var localEndPoint = "http://localhost:8080";
 
 // object
 var shapeFile = null;
@@ -48,9 +48,9 @@ function setAttributes(shapeFileAttributes, shapeFileRecord) {
 function addShapeRecords() {
     if (shapeFile == null) {
         if (clientName === MARS_CLIENT) {        
-            shapeFile = new WorldWind.Shapefile(endPoint + "/html/data/shapefiles/mars/MARS_nomenclature.shp");
+            shapeFile = new WorldWind.Shapefile(localEndPoint + "/html/data/shapefiles/mars/MARS_nomenclature.shp");
         } else if (clientName === MOON_CLIENT) {
-            shapeFile = new WorldWind.Shapefile(endPoint + "/html/data/shapefiles/mars/MARS_nomenclature.shp");
+            shapeFile = new WorldWind.Shapefile(localEndPoint + "/html/data/shapefiles/mars/MARS_nomenclature.shp");
         }
     }    
 
