@@ -5,7 +5,8 @@ var isShow = false;
 var gazetteerLayer = null;
 
 // change to ps2EndPoint later
-var localEndPoint = "http://localhost:8080";
+//var localEndPoint = "http://localhost:8080";
+var localEndPoint = ps2EndPoint;
 
 // object
 var shapeFile = null;

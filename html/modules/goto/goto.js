@@ -10,7 +10,8 @@ $(document).ready(function() {
     var dataFile = null;
 
     // change to ps2EndPoint later
-    var localEndPoint = "http://localhost:8080/";
+    //var localEndPoint = "http://localhost:8080/";
+    var localEndPoint = ps2EndPoint;
 
     if (clientName == MARS_CLIENT) {
         dataFile = localEndPoint + "html/data/shapefiles/mars/MARS_nomenclature.csv";
