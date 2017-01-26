@@ -53,7 +53,7 @@ function addShapeRecords() {
         if (clientName === MARS_CLIENT) {
             shapeFile = new WorldWind.Shapefile(localEndPoint + "/html/data/shapefiles/mars/MARS_nomenclature.shp");
         } else if (clientName === MOON_CLIENT) {
-            shapeFile = new WorldWind.Shapefile(localEndPoint + "/html/data/shapefiles/mars/MOON_nomenclature.shp");
+            shapeFile = new WorldWind.Shapefile(localEndPoint + "/html/data/shapefiles/moon/MOON_nomenclature.shp");
         }
     }
 
