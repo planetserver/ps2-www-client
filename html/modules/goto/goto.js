@@ -1,31 +1,10 @@
 $(document).ready(function() {
 
-    // All regions are possible
-    var availableRegionsCSV = [];
-    var availableRegions = [];
     var selectedValue = "region";
 
     var availableCoverageIDs = [];
 
     var dataFile = null;
-
-    // change to ps2EndPoint later
-    //var localEndPoint = "http://localhost:8080/";
-    var localEndPoint = ps2EndPoint;
-
-    if (clientName == MARS_CLIENT) {
-        dataFile = localEndPoint + "html/data/shapefiles/mars/MARS_nomenclature.csv";
-    } else {
-        dataFile = localEndPoint + "html/data/shapefiles/moon/MOON_nomenclature.csv";
-    }
-
-    $.ajax({
-        type: "GET",
-        url: dataFile,                       
-        success: function(data) {
-            availableRegionsCSV = parseCsvToArray(data);
-        }
-    });
 
     // default load auto suggestion for region
     $(function() {
@@ -130,6 +109,15 @@ $(document).ready(function() {
             gotoLatLon();
         }
     });
+
+    // press enter triggers the click goto
+    $('#txtGoto').keypress(function (e) {
+        var key = e.which;
+        if(key == 13) {
+            $("#btnGoto").click();
+            return false;  
+        }
+    }); 
 
 
     // goto region to allow goto coverageID or (Latitude and Longitude)
@@ -307,33 +295,5 @@ $(document).ready(function() {
         // Set the new range to link
         $("#linkGoTo").text(tmp);
         $("#linkGoTo").attr("href", tmp);
-    }
-
-
-    //var csv is the CSV file with headers
-    function parseCsvToArray(csv) {
-
-        var lines=csv.split("\n");
-
-        var result = [];
-
-        var headers=lines[0].split(",");
-
-        for (var i=1;i<lines.length;i++) {
-            var obj = {};
-            var currentline=lines[i].split(",");
-
-            for(var j=0;j<headers.length;j++) {
-                obj[headers[j]] = currentline[j];
-            }
-
-            result.push(obj);
-
-            // just need the text for auto complete
-            availableRegions.push(obj.name);
-        }
-
-        //return result; //JavaScript object
-        return result; //JSON
-    }
+    } 
 });

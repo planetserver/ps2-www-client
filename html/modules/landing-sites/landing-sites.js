@@ -2,10 +2,10 @@
 var landingSitesArray = null;
 
 // check if landing sites are shown
-var isShow = false;
+var isShowLandingSites = false;
 
 // map layer
-var landingSitesLayer = null;
+landingSitesLayer = null;
 
 // change to ps2EndPoint later
 var endPoint = "http://access.planetserver.eu/";
@@ -34,59 +34,73 @@ $(document).ready(function() {
 });
 
 
-// When click on viewLandingSites button, it will display the place markers
-$("#viewLandingSites").click(function(e) {    
-    if (isShow === false) {
-        isShow = true;
-        $(this).text('Hide Landing Sites');
-
-        // create list place markers
-        addLandingSites();
-
+$('#radioLandingSitesShow').click(function() {
+    if (isShowLandingSites === false) {
+        isShowLandingSites = true;           
+        // load the records from shapefile
+        addPlaceMarks();
     } else {
-        isShow = false;
-        $(this).text('Show Landing Sites');
-        // remove layer
-        wwd.removeLayer(landingSitesLayer);
+        alert("Please chose hide this layer.");
+    }        
+});
+
+$('#radioLandingSitesHide').click(function() {
+    if (isShowLandingSites === true) {
+        isShowLandingSites = false;           
+        // hide the layer
+        addPlaceMarks();
+    } else {
+        alert("Please chose show this layer.");
     }
 });
 
 
 // Load all the landing sites as place markers
-function addLandingSites() {
-    // create a new layer
-    landingSitesLayer = new WorldWind.RenderableLayer("landingSitesLayer");
+function addPlaceMarks() {
+    if (landingSitesLayer == null) {
+        // create a new layer
+        landingSitesLayer = new WorldWind.RenderableLayer("landingSitesLayer");
 
-    for (var i = 0; i < landingSitesArray.length; i++) {
-        var obj = landingSitesArray[i];
+        for (var i = 0; i < landingSitesArray.length; i++) {
+            var obj = landingSitesArray[i];
 
-        var placemark = new WorldWind.Placemark(new WorldWind.Position(obj.latitude, obj.longitude, 1e2), true, null);
-        placemark.label = "Name: " + obj.name + "\n"
-                        + "Date: " + obj.date + "\n"
-                        + "Lat: " + obj.latitude + "\n"
-                        + "Lon: " + obj.longitude;
+            var placemark = new WorldWind.Placemark(new WorldWind.Position(obj.latitude, obj.longitude, 1e2), true, null);
+            placemark.label = "Name: " + obj.name + "\n"
+                            + "Date: " + obj.date + "\n"
+                            + "Lat: " + obj.latitude + "\n"
+                            + "Lon: " + obj.longitude;
 
-        var placemarkAttributes = new WorldWind.PlacemarkAttributes();                
-        placemark.eyeDistanceScalingLabelThreshold = 1.312e7;
-        placemark.eyeDistanceScalingThreshold = 1.312e7;
-        placemarkAttributes.altitudeMode = WorldWind.RELATIVE_TO_GROUND;
-        placemarkAttributes.labelAttributes.color = WorldWind.Color.YELLOW;        
-        placemarkAttributes.labelAttributes.depthTest = false;
-        placemarkAttributes.leaderLineAttributes.outlineColor = WorldWind.Color.RED;
+            var placemarkAttributes = new WorldWind.PlacemarkAttributes();   
+            placemark.alwaysOnTop = true;             
+            placemark.eyeDistanceScalingLabelThreshold = 1.312e7;
+            placemark.eyeDistanceScalingThreshold = 1.312e7;
+            placemarkAttributes.altitudeMode = WorldWind.RELATIVE_TO_GROUND;
+            placemarkAttributes.labelAttributes.color = WorldWind.Color.YELLOW;        
+            placemarkAttributes.labelAttributes.depthTest = false;
+            placemarkAttributes.leaderLineAttributes.outlineColor = WorldWind.Color.RED;
 
-        if (obj.type === "1") {
-            placemarkAttributes.imageSource = endPoint + "/html/images/icons/landing-sites-1.png";
-        } else if (obj.type === "2") {
-            placemarkAttributes.imageSource = endPoint + "/html/images/icons/landing-sites-2.png";
-        } else {
-            placemarkAttributes.imageSource = endPoint + "/html/images/icons/landing-sites-3.png";
+            if (obj.type === "1") {
+                placemarkAttributes.imageSource = endPoint + "/html/images/icons/landing-sites-1.png";
+            } else if (obj.type === "2") {
+                placemarkAttributes.imageSource = endPoint + "/html/images/icons/landing-sites-2.png";
+            } else {
+                placemarkAttributes.imageSource = endPoint + "/html/images/icons/landing-sites-3.png";
+            }
+
+            placemark.attributes = placemarkAttributes;
+
+            landingSitesLayer.addRenderable(placemark);
         }
 
-        placemark.attributes = placemarkAttributes;
-
-        landingSitesLayer.addRenderable(placemark);
+        // Marker layer
+        wwd.insertLayer(11, landingSitesLayer);    
+    } else {
+        if (isShowLandingSites === false) {
+                landingSitesLayer.enabled = false;           
+            } else {
+                landingSitesLayer.enabled = true;                
+        }
     }
 
-    // Marker layer
-    wwd.insertLayer(10, landingSitesLayer);
+    
 }
