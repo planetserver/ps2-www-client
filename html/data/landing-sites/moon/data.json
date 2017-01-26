@@ -1,24 +1,141 @@
 [
     {
-        "name": "location 1",
-        "date": "xx/yy/zz",
-        "description": "landing site 1",
-        "latitude": "12",
-        "longitude": "23",
+        "name": "Luna 2",
+        "date": "13 Sep 1959",
+        "latitude": "29.10",
+        "longitude": "0.00",
         "type": "1"
     }, {
-        "name": "location 2",
-        "date": "xx/yy/zz",
-        "description": "landing site 2",
-        "latitude": "13",
-        "longitude": "24",
-        "type": "2"
+        "name": "Luna 9",
+        "date": "03 Feb 1966",
+        "latitude": "7.08",
+        "longitude": "-64.37",
+        "type": "1"
     }, {
-        "name": "location 3",
-        "date": "xx/yy/zz",
-        "description": "landing site 3",
-        "latitude": "14",
-        "longitude": "25",
-        "type": "2"
+        "name": "Luna 13",
+        "date": "24 Dec 1966",
+        "latitude": "18.87",
+        "longitude": "-62.05",
+        "type": "1"
+    }, {
+        "name": "Luna 16",
+        "date": "20 Sep 1970",
+        "latitude": "-0.68",
+        "longitude": "56.30",
+        "type": "1"
+    }, {
+        "name": "Luna 17",
+        "date": "17 Nov 1970",
+        "latitude": "38.28",
+        "longitude": "-35.00",
+        "type": "1"
+    }, {
+        "name": "Luna 20",
+        "date": "21 Feb 1972",
+        "latitude": "3.57",
+        "longitude": "56.05",
+        "type": "1"
+    }, {
+        "name": "Luna 21",
+        "date": "15 Jan 1973",
+        "latitude": "25.51",
+        "longitude": "30.38",
+        "type": "1"
+    }, {
+        "name": "Luna 24",
+        "date": "18 Aug 1976",
+        "latitude": "12.25",
+        "longitude": "62.20",
+        "type": "1"
+    }, {
+        "name": "Ranger 7",
+        "date": "31 July 1964",
+        "latitude": "-10.35",
+        "longitude": "20.58",
+        "type": "1"
+    }, {
+        "name": "Ranger 8",
+        "date": "20 February 1965",
+        "latitude": "2.67",
+        "longitude": "24.65",
+        "type": "1"
+    }, {
+        "name": "Ranger 9",
+        "date": "24 March 1965",
+        "latitude": "-12.83",
+        "longitude": "-2.37",
+        "type": "1"
+    }, {
+        "name": "Surveyor 1",
+        "date": "02 June 1966",
+        "latitude": "-2.45",
+        "longitude": "-43.21",
+        "type": "1"
+    }, {
+        "name": "Surveyor 3",
+        "date": "20 April 1967",
+        "latitude": "-2.94",
+        "longitude": "-23.34",
+        "type": "1"
+    }, {
+        "name": "Surveyor 5",
+        "date": "11 September 1967",
+        "latitude": "1.41",
+        "longitude": "23.18",
+        "type": "1"
+    }, {
+        "name": "Surveyor 6",
+        "date": "10 November 1967",
+        "latitude": "0.46",
+        "longitude": "1.37",
+        "type": "1"
+    }, {
+        "name": "Surveyor 7",
+        "date": "10 January 1968",
+        "latitude": "-41.01",
+        "longitude": "-11.41",
+        "type": "1"
+    }, {
+        "name": "Apollo 11",
+        "date": "20 July 1969",
+        "latitude": "0.67",
+        "longitude": "23.49",
+        "type": "1"
+    }, {
+        "name": "Apollo 12",
+        "date": "19 November 1969",
+        "latitude": "-2.94",
+        "longitude": "-23.45",
+        "type": "1"
+    }, {
+        "name": "Apollo 14",
+        "date": "05 February 1971",
+        "latitude": "-3.67",
+        "longitude": "-17.46",
+        "type": "1"
+    }, {
+        "name": "Apollo 15",
+        "date": "30 July 1971",
+        "latitude": "26.11",
+        "longitude": "3.66",
+        "type": "1"
+    }, {
+        "name": "Apollo 16",
+        "date": "20 April 1972",
+        "latitude": "-8.60",
+        "longitude": "15.31",
+        "type": "1"
+    }, {
+        "name": "Apollo 17",
+        "date": "11 December 1972",
+        "latitude": "20.17",
+        "longitude": "30.80",
+        "type": "1"
+    }, {
+        "name": "Chang'e 3",
+        "date": "14 December 2013",
+        "latitude": "44.12",
+        "longitude": "-19.51",
+        "type": "1"
     }
 ]
