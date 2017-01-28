@@ -15,6 +15,12 @@ availableRegions = [];
 //var localEndPoint = "http://localhost:8080/";
 var localEndPoint = ps2EndPoint;
 
+var MIN_DIAMETER = 0;
+var MAX_DIAMTER = 2500;
+
+// no load diameter lesser
+var MIN_DEFAULT_LOAD = 100;
+
 // layer
 gazetteerLayer = null;
 
@@ -56,11 +62,64 @@ $(document).ready(function() {
     });
 
 
+
+    // when range diamater is changed, then need to reload the gazetteer layer
+    function reloadDimaterRange() {
+        var diameterRange = $("#txtGazetteerDiameter").val();
+        var tmp = diameterRange.split("-");
+        var min = parseFloat(tmp[0]);
+        var max = parseFloat(tmp[1]);        
+
+        if (min < MIN_DIAMETER) {
+            alert("Min diameter must be greater than 0!");
+            return false;
+        } else if (max > MAX_DIAMTER) {
+            alert("Max diameter must be lesser than " + MAX_DIAMTER);
+            return false;
+        } else if (min > max) {
+            alert("Min: " + min + " cannot greater than max: " + max + " diameter!");
+            return false;
+        }                
+
+        // filter the place markers by the diameter range
+        var placeMarkArray = gazetteerLayer.renderables;
+        for (var i = 0; i < placeMarkArray.length; i++) {
+            var diameter = parseFloat(placeMarkArray[i].userProperties.diameter);
+            if (diameter >= min && diameter <= max) {
+                placeMarkArray[i].enabled = true;
+            } else {
+                placeMarkArray[i].enabled = false;
+            }
+        }
+
+        gazetteerLayer.enabled = true;
+
+        return true;
+    }
+
+
+    // press enter triggers the display gazetteer based on diameter
+    $('#txtGazetteerDiameter').keypress(function (e) {
+        var key = e.which;
+        if(key == 13) {            
+            if (isShowGazetteer === false) {
+                alert("You need to click on show layer first!");
+                return false;
+            }    
+
+            // reload the gazetteer layer
+            reloadDimaterRange();           
+
+            return false;  
+        }
+    }); 
+
+
     // make array of place markers and add it on Gazetteer layer
     function addPlaceMarks() {
         // first init layer
         if (gazetteerLayer == null) {
-            gazetteerLayer = new WorldWind.RenderableLayer("GazetteerLayer");
+            gazetteerLayer = new WorldWind.RenderableLayer("GazetteerLayer");           
 
             for (var i = 0; i < availableRegionsCSV.length; i++) {            
                 // create a marker for each point
@@ -69,7 +128,8 @@ $(document).ready(function() {
                 var longitude = availableRegionsCSV[i].center_lon;         
                 var diameter = parseFloat(availableRegionsCSV[i].diameter);
 
-                var labelAltitudeThreshold = 0;
+                var labelAltitudeThreshold = 0;                
+
                 if (diameter >= 0 && diameter < 10) { 
                     labelAltitudeThreshold = 1.1e3;
                 } else if (diameter > 10 && diameter < 20) {
@@ -99,7 +159,6 @@ $(document).ready(function() {
                 }
 
 
-
                 var placemark = new WorldWind.Placemark(new WorldWind.Position(latitude, longitude, 10), true, null);
                 placemark.label = name;
                 placemark.altitudeMode = WorldWind.RELATIVE_TO_GROUND;   
@@ -117,9 +176,18 @@ $(document).ready(function() {
                 placemark.attributes = placemarkAttributes;
 
 
+                // as they are small and slow
+                if (diameter < MIN_DEFAULT_LOAD) {
+                    placemark.enabled = false;
+                }
+
+                var obj = {"diameter": diameter};
+                placemark.userProperties = obj;
+
+
                 // add place mark to layer
                 gazetteerLayer.addRenderable(placemark);          
-            }
+            }            
 
             // Marker layer
             wwd.insertLayer(10, gazetteerLayer);
@@ -127,8 +195,13 @@ $(document).ready(function() {
         } else {
             if (isShowGazetteer === false) {
                 gazetteerLayer.enabled = false;           
-            } else {
-                gazetteerLayer.enabled = true;                
+            } else {                
+
+                // trigger the reload from range diameter
+                // reload the gazetteer layer
+                if (reloadDimaterRange()) {
+                    gazetteerLayer.enabled = true; 
+                }
             }
         }                
     }
