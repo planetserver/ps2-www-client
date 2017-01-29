@@ -98,6 +98,7 @@ MOON_CLIENT = "moon";
 
 clientName = MARS_CLIENT;
 
+
 $(function() {
     var url = window.location.href;
     if (url.indexOf(MOON_CLIENT) > -1) {
@@ -130,6 +131,38 @@ var qsParam = {
 // default it only allow 7 seconds to load libraries, it will wait until all libaries load with out set seconds
 requirejs.config({
     waitSeconds: 0
+});
+
+// no loading image when it was done
+var ajaxLoad = 0;
+
+$(document).ajaxStop(function() {  
+  if (ajaxLoad >= 0) {
+    ajaxLoad++;
+  }  
+  if (ajaxLoad > 1) {
+    $("#loading").hide();    
+    ajaxLoad = -1;
+
+    // show dialoag about tour if user did not choose never
+    if ($.cookie('dialog_tour_never') !== "true") {
+        $('#dialogTour').modal('show');
+    }
+  }  
+});
+
+$(document).ready(function() {        
+    // goto tour ok
+    $("#btnDialogTourOk").click(function() {
+        // call the function in "html/template/service.js"
+        startTour();
+    });
+
+    // goto tour never, store it on cookie
+    $("#btnDialogTourNever").click(function() {
+        $.cookie('dialog_tour_never', true);
+        alert("You will never see the tour dialog again!");
+    });    
 });
 
 // Load dependent libraries
@@ -172,6 +205,9 @@ requirejs(['../../config/config',
 
         WorldWind.Logger.setLoggingLevel(WorldWind.Logger.LEVEL_WARNING);
         wwd = new WorldWind.WorldWindow("canvasOne");
+
+        // show the loading image
+        $("#loading").show();
 
         var layers = null;
 
@@ -460,6 +496,7 @@ requirejs(['../../config/config',
                 });
             }
         };
+
 
         /* This function is called from landing.js after all checked footprints are updated to checkedFootPrintsArray
         and it loads the image accordingly to checked footprints

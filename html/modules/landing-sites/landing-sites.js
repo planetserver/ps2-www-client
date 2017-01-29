@@ -34,7 +34,7 @@ $(document).ready(function() {
 });
 
 
-$('#radioLandingSitesShow').click(function() {
+$('#radioLandingSitesShow').click(function() {    
     if (isShowLandingSites === false) {
         isShowLandingSites = true;           
         // load the records from shapefile
