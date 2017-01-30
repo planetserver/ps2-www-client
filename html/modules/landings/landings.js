@@ -133,6 +133,8 @@ requirejs.config({
     waitSeconds: 0
 });
 
+$("#loading").delay(5000).fadeOut();
+
 // no loading image when it was done
 var ajaxLoad = 0;
 
@@ -205,9 +207,6 @@ requirejs(['../../config/config',
 
         WorldWind.Logger.setLoggingLevel(WorldWind.Logger.LEVEL_WARNING);
         wwd = new WorldWind.WorldWindow("canvasOne");
-
-        // show the loading image
-        $("#loading").show();
 
         var layers = null;
 
