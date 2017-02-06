@@ -252,7 +252,7 @@ function loadWCPSQueriesJSON() {
 
     $.ajax({
         type: "GET",
-        url: "http://access.planetserver.eu/html/data/wcps_queries.json",
+        url: ps2EndPoint + "/html/data/wcps_queries.json",
         data: "{dataset: 'CRISM'}", // it will query later on database with dataset
         cache: false,
         async: false,

@@ -27,9 +27,9 @@ gazetteerLayer = null;
 $(document).ready(function() {
 
     if (clientName == MARS_CLIENT) {
-        dataFile = localEndPoint + "html/data/shapefiles/mars/MARS_nomenclature.csv";
+        dataFile = localEndPoint + "/html/data/shapefiles/mars/MARS_nomenclature.csv";
     } else {
-        dataFile = localEndPoint + "html/data/shapefiles/moon/MOON_nomenclature.csv";
+        dataFile = localEndPoint + "/html/data/shapefiles/moon/MOON_nomenclature.csv";
     }
 
     $.ajax({

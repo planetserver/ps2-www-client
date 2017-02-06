@@ -29,7 +29,7 @@ define([
             ElevationModel.call(this,
                 Sector.FULL_SPHERE, new Location(45, 45), 12, "image/bil", "tiles_test", 256, 256);
 
-                if (url.indexOf("moon") > -1){
+                if (url.indexOf("moon") > -1) {
                   this.displayName = "Moon Elevation Model";
                   this.minElevation = -9115; // Depth of Marianas Trench, in meters
                   this.maxElevation = 10786; // Height of Mt. Everest
@@ -37,13 +37,13 @@ define([
 
                   /*this.urlBuilder = new WmsUrlBuilder("http://worldwind26.arc.nasa.gov/elev1",
                                       "GEBCO,aster_v2,USGS-NED", "", "1.3.0");*/
-                  //var testEndPoint = "http://access.planetserver.eu:8083/geoserver/WWW_DEM_10km_1file/wms";
+                  //var testEndPoint = "http://moon.planetserver.eu:8083/geoserver/WWW_DEM_10km_1file/wms";
                   //var layer = "WWW_DEM_10km_1file:tiles_test";
-                  var testEndPoint = "http://access.planetserver.eu:8083/geoserver/lunar_global/wms";
+                  var testEndPoint = "http://moon.planetserver.eu:8083/geoserver/lunar_global/wms";
                   var layer = "lunar_global:tiles_cut";
                   this.urlBuilder = new WmsUrlBuilder(testEndPoint, layer, "", "1.1.0");
 
-                } else{
+                } else {
                   this.displayName = "Mars Elevation Model";
                   this.minElevation = -8201; // Depth of Marianas Trench, in meters
                   this.maxElevation = 21241; // Height of Mt. Everest
@@ -51,9 +51,9 @@ define([
 
                   /*this.urlBuilder = new WmsUrlBuilder("http://worldwind26.arc.nasa.gov/elev1",
                                       "GEBCO,aster_v2,USGS-NED", "", "1.3.0");*/
-                  //var testEndPoint = "http://access.planetserver.eu:8083/geoserver/WWW_DEM_10km_1file/wms";
+                  //var testEndPoint = "http://mars.planetserver.eu:8083/geoserver/WWW_DEM_10km_1file/wms";
                   //var layer = "WWW_DEM_10km_1file:tiles_test";
-                  var testEndPoint = "http://access.planetserver.eu:8083/geoserver/global_dem/wms";
+                  var testEndPoint = "http://mars.planetserver.eu:8083/geoserver/global_dem/wms";
                   var layer = "global_dem:tiles_cut";
                   this.urlBuilder = new WmsUrlBuilder(testEndPoint, layer, "", "1.1.0");
                 }

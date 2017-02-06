@@ -49,7 +49,7 @@ function CheckedDataSetConstructor(coverageID, Easternmost_longitude, Maximum_la
 var getAllCoverageData = "request=getAllCoverages&type=" + clientName;
 $.ajax({
     type: "get",
-    url: "http://access.planetserver.eu:8080/ps2/" + "dataset",
+    url: ps2EndPoint + ":8080/ps2/" + "dataset",
     data: getAllCoverageData,
     dataType: 'json',
     cache: false,
@@ -83,7 +83,7 @@ function getFootPrintsContainingPointLeftClick(shapesArray, attributesObj, check
     var getCoveragesContainingPointData = "request=getCoveragesContainingPoint&type=" + clientName + "&latPoint=" + latitude + "&longPoint=" + longitude;
     $.ajax({
         type: "get",
-        url: "http://access.planetserver.eu:8080/ps2/" + "dataset",
+        url: ps2EndPoint + ":8080/ps2/" + "dataset",
         data: getCoveragesContainingPointData,
         dataType: 'json',
         cache: false,
@@ -193,7 +193,7 @@ function getFootPrintsContainingPointRightClick(shapesArray, attributesObj, chec
     var getCoveragesContainingPointData = "request=getCoveragesContainingPoint&type=" + clientName + "&latPoint=" + latitude + "&longPoint=" + longitude
     $.ajax({
         type: "get",
-        url: "http://access.planetserver.eu:8080/ps2/" + "dataset",
+        url: ps2EndPoint + ":8080/ps2/" + "dataset",
         data: getCoveragesContainingPointData,
         dataType: 'json',
         cache: false,

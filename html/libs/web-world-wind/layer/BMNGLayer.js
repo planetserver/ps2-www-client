@@ -35,22 +35,22 @@
 
              this.displayName = "Moon WMS service";
              this.pickEnabled = false;
-	     console.log(layerName);
+	           console.log(layerName);
              if(layerName === "mars_MOLA_color"){
-		 // strip mars_
-		 layerName = layerName.replace("mars_", "");
+		            // strip mars_
+		            layerName = layerName.replace("mars_", "");
                  this.urlBuilder = new WmsUrlBuilder("http://planetarymaps.usgs.gov/cgi-bin/mapserv?map=/maps/mars/mars_simp_cyl.map",
                  layerName || "mars_wgs84", "", "1.3.0");
              } else if(layerName === "mars_wgs84"){
-                 this.urlBuilder = new WmsUrlBuilder("http://access.planetserver.eu:8082/rasdaman/ows",
+                 this.urlBuilder = new WmsUrlBuilder("http://mars.planetserver.eu:8082/rasdaman/ows",
                  layerName || "mars_wgs84", "", "1.3.0");
              } else if(layerName === "moon_LOLA_color"){
                 // strip moon_
-		layerName = layerName.replace("moon_", "");
+		            layerName = layerName.replace("moon_", "");
                 this.urlBuilder = new WmsUrlBuilder("http://planetarymaps.usgs.gov/cgi-bin/mapserv?map=/maps/earth/moon_simp_cyl.map",
                 layerName || "moon_wgs84", "", "1.3.0");
              } else if(layerName === "moon_wgs84"){
-                this.urlBuilder = new WmsUrlBuilder("http://access.planetserver.eu:8082/rasdaman/ows",
+                this.urlBuilder = new WmsUrlBuilder("http://moon.planetserver.eu:8082/rasdaman/ows",
                 layerName || "moon_wgs84", "", "1.3.0");
              }
 

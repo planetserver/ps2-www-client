@@ -6,13 +6,9 @@
  * @version $Id: BasicExample.js 3320 2015-07-15 20:53:05Z dcollins $
  */
 /* Global variables */
-ps2EndPoint = "http://access.planetserver.eu/";
-ps2GetCoverage = "http://access.planetserver.eu:8080/rasdaman/ows?service=WCS&version=2.0.1&request=GetCoverage&format=image/tiff&coverageId=";
-ps2WCPSEndPoint = "http://access.planetserver.eu:8080/rasdaman/ows?service=WCS&version=2.0.1&request=ProcessCoverages&query=";
-ps2StretchWCPSEndPoint = "http://access.planetserver.eu:8090/python?wcpsQuery=";
 
-
-wcpsQueriesJsonURL = "http://access.planetserver.eu/html/data/wcps_queries.json"
+MARS_END_POINT = "http://mars.planetserver.eu";
+MOON_END_POINT = "http://moon.planetserver.eu";
 
 checkedFootPrintsArray = []; // array of footprints that user choosed
 
@@ -99,13 +95,27 @@ MOON_CLIENT = "moon";
 clientName = MARS_CLIENT;
 
 
+ps2EndPoint = null;
+ps2GetCoverage = null;
+ps2WCPSEndPoint = null;
+ps2StretchWCPSEndPoint = null;
+wcpsQueriesJsonURL = null;
+
 $(function() {
     var url = window.location.href;
     if (url.indexOf(MOON_CLIENT) > -1) {
         clientName = MOON_CLIENT;
-    } else {
+        ps2EndPoint = MOON_END_POINT;
+    } else {        
         clientName = MARS_CLIENT;
+        ps2EndPoint = MARS_END_POINT;
     }
+    
+    ps2GetCoverage = ps2EndPoint + ":8080/rasdaman/ows?service=WCS&version=2.0.1&request=GetCoverage&format=image/tiff&coverageId=";
+    ps2WCPSEndPoint = ps2EndPoint + ":8080/rasdaman/ows?service=WCS&version=2.0.1&request=ProcessCoverages&query=";
+    ps2StretchWCPSEndPoint = ps2EndPoint + ":8090/python?wcpsQuery=";
+    wcpsQueriesJsonURL = ps2EndPoint + "/html/data/wcps_queries.json"
+
 });
 
 
@@ -168,8 +178,7 @@ $(document).ready(function() {
 });
 
 // Load dependent libraries
-requirejs(['../../config/config',
-        '../../libs/web-world-wind/WorldWind',
+requirejs(['../../libs/web-world-wind/WorldWind',
         '../coordinate-controller/CoordinateController',
         '../../libs/web-world-wind/navigate/Navigator',
         '../layer-manager/LayerManager',
@@ -186,8 +195,7 @@ requirejs(['../../config/config',
         '../charts/chart',
         '../spectral-library/spectral-library'
     ],
-    function(config,
-        ww,
+    function(ww,
         CoordinateController,
         Navigator,
         LayerManager,
@@ -212,7 +220,7 @@ requirejs(['../../config/config',
 
         var baseMapName = "";
 
-        if (clientName === "mars") {
+        if (clientName === MARS_CLIENT) {
             // Mars
             layers = [{
                 // this is colorful base map
@@ -253,7 +261,7 @@ requirejs(['../../config/config',
             var selectedBaseMapName = $(this).children().html();
             var isLoadedBaseMap = true;
 
-            if (clientName === "mars") {
+            if (clientName === MARS_CLIENT) {
                 // colorful base map
                 if (selectedBaseMapName === "MOLA Colored") {
                     if (baseMapName !== selectedBaseMapName) {
@@ -269,7 +277,7 @@ requirejs(['../../config/config',
                     }
 
                 }
-            } else if (clientName === "moon") {
+            } else if (clientName === MOON_CLIENT) {
                 if (selectedBaseMapName === "LOLA color") {
                     if (baseMapName !== selectedBaseMapName) {
                         index = 0;
@@ -554,9 +562,8 @@ requirejs(['../../config/config',
                 }
 
                 checkedFootPrintsArray[i].isLoadedImage = true;
-                // If just use http://access.planetserver.eu:8080/rasdaman/ows?query it will have error NULL
                 // Load default bands for all footprints
-                if (clientName === "mars") {
+                if (clientName === MARS_CLIENT) {
                     var WCPSLoadImage = ps2WCPSEndPoint + 'for data in (' + coverageID + ') return encode( { red: ' + redBandDefault + '; green: ' + greenBandDefault + '; blue: ' + blueBandDefault + ' ; alpha: ' + alphaBandDefault + '}, "png", "nodata=65535")';
                     var surfaceImage = new WorldWind.SurfaceImage(new WorldWind.Sector(checkedFootPrintsArray[i].Minimum_latitude, checkedFootPrintsArray[i].Maximum_latitude, minlong, maxlong), WCPSLoadImage);
 
@@ -571,13 +578,13 @@ requirejs(['../../config/config',
 
                     // Add footprint and query to download option in menu context
                     updateDownloadWCPSQuery(coverageID, WCPSLoadImage);
-                } else if (clientName === "moon") {
+                } else if (clientName === MOON_CLIENT) {
                     // create WCPS queries by subsettings then load in another footprints
-                    var WCPSLoadImageTemplate = 'http://access.planetserver.eu:8080/rasdaman/ows?service=WCS&version=2.0.1&request=ProcessCoverages&query=for data in ( $coverageID ) return encode( { red: (float)(((int)(255 / (max((data).band_10) - min((data).band_10))) * ((data).band_10 - min((data).band_10))))[N( $minN$newN )]; green: (float)(((int)(255 / (max((data).band_13) - min((data).band_13))) * ((data).band_13 - min((data).band_13))))[N( $minN$newN )]; blue: (float)(((int)(255 / (max((data).band_78) - min((data).band_78))) * ((data).band_78 - min((data).band_78))))[N( $minN$newN )] ; alpha: (float)((((data).band_85 > 0) * 255))[N( $minN$newN )]}, "png", "nodata=65535")';
+                    var WCPSLoadImageTemplate = ps2WCPSEndPoint + 'for data in ( $coverageID ) return encode( { red: (float)(((int)(255 / (max((data).band_10) - min((data).band_10))) * ((data).band_10 - min((data).band_10))))[N( $minN$newN )]; green: (float)(((int)(255 / (max((data).band_13) - min((data).band_13))) * ((data).band_13 - min((data).band_13))))[N( $minN$newN )]; blue: (float)(((int)(255 / (max((data).band_78) - min((data).band_78))) * ((data).band_78 - min((data).band_78))))[N( $minN$newN )] ; alpha: (float)((((data).band_85 > 0) * 255))[N( $minN$newN )]}, "png", "nodata=65535")';
                     loadSubsettingsWCPSQuery(WCPSLoadImageTemplate, i);
 
                     // Add footprint and query to download option in menu context
-                    var WCPSLoadImage = 'http://access.planetserver.eu:8080/rasdaman/ows?service=WCS&version=2.0.1&request=ProcessCoverages&query=for data in ( $coverageID ) return encode( { red: (float)(((int)(255 / (max((data).band_10) - min((data).band_10))) * ((data).band_10 - min((data).band_10)))); green: (float)(((int)(255 / (max((data).band_13) - min((data).band_13))) * ((data).band_13 - min((data).band_13)))); blue: (float)(((int)(255 / (max((data).band_78) - min((data).band_78))) * ((data).band_78 - min((data).band_78)))) ; alpha: (float)((((data).band_85 > 0) * 255))}, "png", "nodata=65535")';
+                    var WCPSLoadImage = ps2WCPSEndPoint + 'for data in ( $coverageID ) return encode( { red: (float)(((int)(255 / (max((data).band_10) - min((data).band_10))) * ((data).band_10 - min((data).band_10)))); green: (float)(((int)(255 / (max((data).band_13) - min((data).band_13))) * ((data).band_13 - min((data).band_13)))); blue: (float)(((int)(255 / (max((data).band_78) - min((data).band_78))) * ((data).band_78 - min((data).band_78)))) ; alpha: (float)((((data).band_85 > 0) * 255))}, "png", "nodata=65535")';
                     WCPSLoadImage = WCPSLoadImage.replace("$coverageID", coverageID.toUpperCase());
                     updateDownloadWCPSQuery(coverageID, WCPSLoadImage);
                 }
@@ -711,7 +718,7 @@ requirejs(['../../config/config',
             var upperCorner = "";
 
             $.ajax({
-                url: 'http://access.planetserver.eu:8080/rasdaman/ows?service=WCS&version=2.0.1&request=DescribeCoverage&coverageID=' + coverageID,
+                url: ps2EndPoint + ':8080/rasdaman/ows?service=WCS&version=2.0.1&request=DescribeCoverage&coverageID=' + coverageID,
                 async: false,
                 dataType: "xml",
                 success: function(xml) {
@@ -785,7 +792,7 @@ requirejs(['../../config/config',
             drawLon = longitude;
 
             var r = null;
-            if (clientName === "mars") {
+            if (clientName === MARS_CLIENT) {
                 r = 3396190;
             } else {
                 r = 1737400;
@@ -902,11 +909,11 @@ requirejs(['../../config/config',
 
             // Mars use the lower case footprint, Moon is the upper case
             var query = "";
-            if (clientName === "mars") {
-                query = "http://access.planetserver.eu:8080/rasdaman/ows?query=for%20c%20in%20(" + covID.toLowerCase() + ")%20return%20encode(c[%20N(" +
+            if (clientName === MARS_CLIENT) {
+                query = ps2WCPSEndPoint + "for%20c%20in%20(" + covID.toLowerCase() + ")%20return%20encode(c[%20N(" +
                 N + ":" + N + "),%20E(" + E + ":" + E + ")%20],%20%22csv%22)";
             } else {
-                query = "http://access.planetserver.eu:8080/rasdaman/ows?query=for%20c%20in%20(" + covID + ")%20return%20encode(c[%20N(" +
+                query = ps2WCPSEndPoint + "for%20c%20in%20(" + covID + ")%20return%20encode(c[%20N(" +
                 N + ":" + N + "),%20E(" + E + ":" + E + ")%20],%20%22csv%22)";
             }
 

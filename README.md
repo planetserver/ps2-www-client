@@ -36,7 +36,9 @@ The main point of contact is Dr. Angelo Pio Rossi, Service Lead and EarhtServer 
 
 Lead developer: Ramiro Marco Figuera.
 
-Developer: Bang Pham Huu, Tsvetan Rankov.
+Solution Developer: Bang Pham Huu.
+
+Junior Developer: Tsvetan Rankov.
 
 PlanetServer alumni, friends and past collaborators: Jelmer Oosthoek, Federico Cantini, Dominik Kundel, Valentine Chiwome, Software Engineering Italia.
 

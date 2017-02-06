@@ -8,7 +8,7 @@ var isShowLandingSites = false;
 landingSitesLayer = null;
 
 // change to ps2EndPoint later
-var endPoint = "http://access.planetserver.eu/";
+var endPoint = ps2EndPoint;
 
 $(document).ready(function() {
     var jsonFile = "";

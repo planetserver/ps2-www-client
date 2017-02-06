@@ -16,7 +16,7 @@ $(document).ready(function() {
 
     // list of spectral files in html/data/spectral-chart
     var availableSpectralArray = ["carbonate", "inosil", "meteor", "moon", "nesosil", "nitrates", "oxide", "phosphate", "phylosil", "rocks", "RT_resamp", "sorosil", "sulfate", "synth", "tectosil", "unconsolidated"];
-    var JSON_FILE_TEMPLATE = ps2EndPoint + "html/data/spectral-library/$FILENAME.json";
+    var JSON_FILE_TEMPLATE = ps2EndPoint + "/html/data/spectral-library/$FILENAME.json";
 
     // store the JSON data for each file json
     var spectralLibraryArray = [];

@@ -1,7 +1,7 @@
 $(function () {
     var url = window.location.href;
-    var moonClientURL = "http://access.planetserver.eu/moon/";
-    var marClientURL = "http://access.planetserver.eu/";
+    var moonClientURL = "http://moon.planetserver.eu";
+    var marClientURL = "http://mars.planetserver.eu";
     var moonClient = "#";
     var marClient = "#";
     if (url.indexOf("moon") > -1) {
