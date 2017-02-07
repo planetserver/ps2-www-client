@@ -106,11 +106,11 @@ $(function() {
     if (url.indexOf(MOON_CLIENT) > -1) {
         clientName = MOON_CLIENT;
         ps2EndPoint = MOON_END_POINT;
-    } else {        
+    } else {
         clientName = MARS_CLIENT;
         ps2EndPoint = MARS_END_POINT;
     }
-    
+
     ps2GetCoverage = ps2EndPoint + ":8080/rasdaman/ows?service=WCS&version=2.0.1&request=GetCoverage&format=image/tiff&coverageId=";
     ps2WCPSEndPoint = ps2EndPoint + ":8080/rasdaman/ows?service=WCS&version=2.0.1&request=ProcessCoverages&query=";
     ps2StretchWCPSEndPoint = ps2EndPoint + ":8090/python?wcpsQuery=";
@@ -148,22 +148,22 @@ $("#loading").delay(5000).fadeOut();
 // no loading image when it was done
 var ajaxLoad = 0;
 
-$(document).ajaxStop(function() {  
+$(document).ajaxStop(function() {
   if (ajaxLoad >= 0) {
     ajaxLoad++;
-  }  
+  }
   if (ajaxLoad > 1) {
-    $("#loading").hide();    
+    $("#loading").hide();
     ajaxLoad = -1;
 
     // show dialoag about tour if user did not choose never
     if ($.cookie('dialog_tour_never') !== "true") {
         $('#dialogTour').modal('show');
     }
-  }  
+  }
 });
 
-$(document).ready(function() {        
+$(document).ready(function() {
     // goto tour ok
     $("#btnDialogTourOk").click(function() {
         // call the function in "html/template/service.js"
@@ -174,7 +174,7 @@ $(document).ready(function() {
     $("#btnDialogTourNever").click(function() {
         $.cookie('dialog_tour_never', true);
         alert("You will never see the tour dialog again!");
-    });    
+    });
 });
 
 // Load dependent libraries
@@ -649,7 +649,7 @@ requirejs(['../../libs/web-world-wind/WorldWind',
                                 '{'
                                 // insert bands here
                                 + "$RGB_BANDS"
-                                + '  alpha: ((data.band_85 > 0) * 255)[N( $minN$newN )] }, "png", "nodata=65535")';
+                                + '  alpha: (float)((data.band_85 > 0) * 255)[N( $minN$newN )] }, "png", "nodata=65535")';
             var redBand = selectedFootPrintObj.redBand;
             var greenBand = selectedFootPrintObj.greenBand;
             var blueBand = selectedFootPrintObj.blueBand;
