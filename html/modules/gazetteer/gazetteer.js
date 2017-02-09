@@ -24,6 +24,10 @@ var MIN_DEFAULT_LOAD = 100;
 // layer
 gazetteerLayer = null;
 
+
+var minSlider = 0;
+var maxSlider = 0;
+
 $(document).ready(function() {
 
     if (clientName == MARS_CLIENT) {
@@ -40,9 +44,33 @@ $(document).ready(function() {
         }
     });
 
+    // slider for diameter view
+    $( "#sliderDiameter" ).slider({
+        range: true,
+        min: 0,
+        max: 2500,
+        values: [ 500, 2500 ],
+        slide: function( event, ui ) {
+            if (isShowGazetteer === false) {                
+                return false;
+            } else {
+                $( "#sizeDiameter" ).html(ui.values[ 0 ] + " km - " + ui.values[ 1 ] + " km"); 
+                minSlider = ui.values[ 0 ];
+                maxSlider = ui.values[ 1 ];
+
+                // reload the gazeteer layer by the size range
+                reloadDimaterRange();
+            }            
+        }       
+    });
+
+    // set the startsize range
+    $( "#sizeDiameter" ).html($("#sliderDiameter").slider("values", 0) + " km - " + $("#sliderDiameter").slider("values", 1) + " km");
+
 
     $('#radioGazetteerShow').click(function() {
         if (isShowGazetteer === false) {
+            $( "#sliderDiameter" ).show();
             isShowGazetteer = true;           
             // load the records from shapefile
             addPlaceMarks();
@@ -56,6 +84,8 @@ $(document).ready(function() {
             isShowGazetteer = false;           
             // hide the layer
             addPlaceMarks();
+
+            $( "#sliderDiameter" ).hide();
         } else {
             alert("Please chose show this layer.");
         }
@@ -65,10 +95,8 @@ $(document).ready(function() {
 
     // when range diamater is changed, then need to reload the gazetteer layer
     function reloadDimaterRange() {
-        var diameterRange = $("#txtGazetteerDiameter").val();
-        var tmp = diameterRange.split("-");
-        var min = parseFloat(tmp[0]);
-        var max = parseFloat(tmp[1]);        
+        var min = parseFloat(minSlider);
+        var max = parseFloat(maxSlider);        
 
         if (min < MIN_DIAMETER) {
             alert("Min diameter must be greater than 0!");
@@ -96,24 +124,6 @@ $(document).ready(function() {
 
         return true;
     }
-
-
-    // press enter triggers the display gazetteer based on diameter
-    $('#txtGazetteerDiameter').keypress(function (e) {
-        var key = e.which;
-        if(key == 13) {            
-            if (isShowGazetteer === false) {
-                alert("You need to click on show layer first!");
-                return false;
-            }    
-
-            // reload the gazetteer layer
-            reloadDimaterRange();           
-
-            return false;  
-        }
-    }); 
-
 
     // make array of place markers and add it on Gazetteer layer
     function addPlaceMarks() {
