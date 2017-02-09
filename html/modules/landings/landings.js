@@ -104,9 +104,11 @@ wcpsQueriesJsonURL = null;
 $(function() {
     var url = window.location.href;
     if (url.indexOf(MOON_CLIENT) > -1) {
+        document.title = "Moon - Planetsever 2";
         clientName = MOON_CLIENT;
         ps2EndPoint = MOON_END_POINT;
     } else {
+        document.title = "Mars - Planetsever 2";
         clientName = MARS_CLIENT;
         ps2EndPoint = MARS_END_POINT;
     }
