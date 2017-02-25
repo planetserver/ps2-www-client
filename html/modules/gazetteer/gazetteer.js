@@ -25,8 +25,8 @@ var MIN_DEFAULT_LOAD = 100;
 gazetteerLayer = null;
 
 
-var minSlider = 0;
-var maxSlider = 0;
+var minSlider = 500;
+var maxSlider = 2500;
 
 $(document).ready(function() {
 
@@ -34,7 +34,7 @@ $(document).ready(function() {
         dataFile = localEndPoint + "/html/data/shapefiles/mars/MARS_nomenclature.csv";
     } else {
         dataFile = localEndPoint + "/html/data/shapefiles/moon/MOON_nomenclature.csv";
-    }
+    }   
 
     $.ajax({
         type: "GET",
@@ -68,29 +68,22 @@ $(document).ready(function() {
     $( "#sizeDiameter" ).html($("#sliderDiameter").slider("values", 0) + " km - " + $("#sliderDiameter").slider("values", 1) + " km");
 
 
-    $('#radioGazetteerShow').click(function() {
-        if (isShowGazetteer === false) {
+    $('#checkboxGazetteer').on('switchChange.bootstrapSwitch', function(event, state) {        
+        console.log(state); // true | false
+        // show
+        if (state === true) {            
             $( "#sliderDiameter" ).show();
             isShowGazetteer = true;           
             // load the records from shapefile
-            addPlaceMarks();
+            addPlaceMarks();            
         } else {
-            alert("Please chose hide this layer.");
-        }        
-    });
-
-    $('#radioGazetteerHide').click(function() {
-        if (isShowGazetteer === true) {
+            // hide            
             isShowGazetteer = false;           
-            // hide the layer
-            addPlaceMarks();
-
             $( "#sliderDiameter" ).hide();
-        } else {
-            alert("Please chose show this layer.");
+            // hide the layer
+            addPlaceMarks();            
         }
     });
-
 
 
     // when range diamater is changed, then need to reload the gazetteer layer
@@ -202,16 +195,11 @@ $(document).ready(function() {
             // Marker layer
             wwd.insertLayer(10, gazetteerLayer);
 
-        } else {
+        } else {            
             if (isShowGazetteer === false) {
                 gazetteerLayer.enabled = false;           
-            } else {                
-
-                // trigger the reload from range diameter
-                // reload the gazetteer layer
-                if (reloadDimaterRange()) {
-                    gazetteerLayer.enabled = true; 
-                }
+            } else {                                
+                gazetteerLayer.enabled = true;
             }
         }                
     }

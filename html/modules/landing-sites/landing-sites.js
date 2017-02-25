@@ -34,26 +34,20 @@ $(document).ready(function() {
 });
 
 
-$('#radioLandingSitesShow').click(function() {    
-    if (isShowLandingSites === false) {
-        isShowLandingSites = true;           
+ $('#checkboxLandingSites').on('switchChange.bootstrapSwitch', function(event, state) {        
+    console.log(state); // true | false
+    // show
+    if (state === true) {            
+        isShowLandingSites = true;         
         // load the records from shapefile
-        addPlaceMarks();
+        addPlaceMarks();            
     } else {
-        alert("Please chose hide this layer.");
-    }        
-});
-
-$('#radioLandingSitesHide').click(function() {
-    if (isShowLandingSites === true) {
-        isShowLandingSites = false;           
+        // hide            
+        isShowLandingSites = false;  
         // hide the layer
-        addPlaceMarks();
-    } else {
-        alert("Please chose show this layer.");
+        addPlaceMarks();            
     }
 });
-
 
 // Load all the landing sites as place markers
 function addPlaceMarks() {

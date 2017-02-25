@@ -8,9 +8,10 @@ $(function () {
             this.panelBody
                 .append(
                     $("<div id='gotoPanel' style='float: background-color: rgba(47, 85, 151, .2); '>"+
-                      "Landing Sites: &nbsp; <label class='radio-inline'> <input type='radio' id='radioLandingSitesShow' name='landingSitesOp'>Show </label> <label class='radio-inline'> <input type='radio' id='radioLandingSitesHide' name='landingSitesOp'>Hide </label> <hr/>" +
 
-                      "Gazetteer: &nbsp; &nbsp; &nbsp; &nbsp; <label class='radio-inline'> <input type='radio' id='radioGazetteerShow' name='gazetteerOp'>Show </label> <label class='radio-inline'> <input type='radio' id='radioGazetteerHide' name='gazetteerOp'>Hide </label> <br/>" + 
+                      "<div class='form-group form-inline' style='height: 30px;'> <label for='checkboxLandingSites' style='font-weight: lighter; margin-right: 35px;'>Landing sites: </label> <input type='checkbox' data-size='normal' data-on-text='Show' data-off-text='Hide' id='checkboxLandingSites'> </div>" + 
+
+                      "<div class='form-group form-inline' style='height: 30px;'> <label for='checkboxGazetteer' style='font-weight: lighter; margin-right: 56px;'>Gazetteer: </label> <input type='checkbox' data-size='normal' data-on-text='Show' data-off-text='Hide' id='checkboxGazetteer'> </div>" + 
 
                       "<div style='margin-top: 10px;'> Size range: <p id='sizeDiameter' style='font-weight:bold; margin-left: 25px; display:inline;'> </p> </div> <br/>" + 
 

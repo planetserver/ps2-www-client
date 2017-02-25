@@ -177,6 +177,8 @@ $(document).ready(function() {
         $.cookie('dialog_tour_never', true);
         alert("You will never see the tour dialog again!");
     });
+
+    $("[type='checkbox']").bootstrapSwitch();    
 });
 
 // Load dependent libraries
