@@ -98,8 +98,10 @@ clientName = MARS_CLIENT;
 ps2EndPoint = null;
 ps2GetCoverage = null;
 ps2WCPSEndPoint = null;
-ps2StretchWCPSEndPoint = null;
 wcpsQueriesJsonURL = null;
+
+// Cache the result in PNG and redirect to Petascope and Python Stretching service based on the encoding format (png / tiff)
+PS2_MEMCACHED_URL = "http://localhost/php/cache.php?server=$server&wcps_query=";
 
 $(function() {
     var url = window.location.href;
@@ -107,15 +109,17 @@ $(function() {
         document.title = "Moon - Planetsever 2";
         clientName = MOON_CLIENT;
         ps2EndPoint = MOON_END_POINT;
+        PS2_MEMCACHED_URL = PS2_MEMCACHED_URL.replace("$server", MOON_CLIENT);
     } else {
         document.title = "Mars - Planetsever 2";
         clientName = MARS_CLIENT;
         ps2EndPoint = MARS_END_POINT;
+        PS2_MEMCACHED_URL = PS2_MEMCACHED_URL.replace("$server", MARS_CLIENT);
     }
 
+    // Used only to get value at point on the footprint, load image from PHP Memcached
     ps2GetCoverage = ps2EndPoint + ":8080/rasdaman/ows?service=WCS&version=2.0.1&request=GetCoverage&format=image/tiff&coverageId=";
-    ps2WCPSEndPoint = ps2EndPoint + ":8080/rasdaman/ows?service=WCS&version=2.0.1&request=ProcessCoverages&query=";
-    ps2StretchWCPSEndPoint = ps2EndPoint + ":8090/python?wcpsQuery=";
+    ps2WCPSEndPoint = ps2EndPoint + ":8080/rasdaman/ows?service=WCS&version=2.0.1&request=ProcessCoverages&query=";    
     wcpsQueriesJsonURL = ps2EndPoint + "/html/data/wcps_queries.json"
 
 });
@@ -567,8 +571,9 @@ requirejs(['../../libs/web-world-wind/WorldWind',
 
                 checkedFootPrintsArray[i].isLoadedImage = true;
                 // Load default bands for all footprints
-                if (clientName === MARS_CLIENT) {
-                    var WCPSLoadImage = ps2WCPSEndPoint + 'for data in (' + coverageID + ') return encode( { red: ' + redBandDefault + '; green: ' + greenBandDefault + '; blue: ' + blueBandDefault + ' ; alpha: ' + alphaBandDefault + '}, "png", "nodata=65535")';
+                if (clientName === MARS_CLIENT) {                    
+                    var WCPSLoadImage = PS2_MEMCACHED_URL + 'for data in (' + coverageID + ') return encode( { red: ' + redBandDefault + '; green: ' + greenBandDefault + '; blue: ' + blueBandDefault + ' ; alpha: ' + alphaBandDefault + '}, "png", "nodata=65535")';
+
                     var surfaceImage = new WorldWind.SurfaceImage(new WorldWind.Sector(checkedFootPrintsArray[i].Minimum_latitude, checkedFootPrintsArray[i].Maximum_latitude, minlong, maxlong), WCPSLoadImage);
 
 
@@ -584,11 +589,11 @@ requirejs(['../../libs/web-world-wind/WorldWind',
                     updateDownloadWCPSQuery(coverageID, WCPSLoadImage);
                 } else if (clientName === MOON_CLIENT) {
                     // create WCPS queries by subsettings then load in another footprints
-                    var WCPSLoadImageTemplate = ps2WCPSEndPoint + 'for data in ( $coverageID ) return encode( { red: (float)(((int)(255 / (max((data).band_10) - min((data).band_10))) * ((data).band_10 - min((data).band_10))))[N( $minN$newN )]; green: (float)(((int)(255 / (max((data).band_13) - min((data).band_13))) * ((data).band_13 - min((data).band_13))))[N( $minN$newN )]; blue: (float)(((int)(255 / (max((data).band_78) - min((data).band_78))) * ((data).band_78 - min((data).band_78))))[N( $minN$newN )] ; alpha: (float)((((data).band_85 > 0) * 255))[N( $minN$newN )]}, "png", "nodata=65535")';
+                    var WCPSLoadImageTemplate = PS2_MEMCACHED_URL + 'for data in ( $coverageID ) return encode( { red: (float)(((int)(255 / (max((data).band_10) - min((data).band_10))) * ((data).band_10 - min((data).band_10))))[N( $minN$newN )]; green: (float)(((int)(255 / (max((data).band_13) - min((data).band_13))) * ((data).band_13 - min((data).band_13))))[N( $minN$newN )]; blue: (float)(((int)(255 / (max((data).band_78) - min((data).band_78))) * ((data).band_78 - min((data).band_78))))[N( $minN$newN )] ; alpha: (float)((((data).band_85 > 0) * 255))[N( $minN$newN )]}, "png", "nodata=65535")';
                     loadSubsettingsWCPSQuery(WCPSLoadImageTemplate, i);
 
                     // Add footprint and query to download option in menu context
-                    var WCPSLoadImage = ps2WCPSEndPoint + 'for data in ( $coverageID ) return encode( { red: (float)(((int)(255 / (max((data).band_10) - min((data).band_10))) * ((data).band_10 - min((data).band_10)))); green: (float)(((int)(255 / (max((data).band_13) - min((data).band_13))) * ((data).band_13 - min((data).band_13)))); blue: (float)(((int)(255 / (max((data).band_78) - min((data).band_78))) * ((data).band_78 - min((data).band_78)))) ; alpha: (float)((((data).band_85 > 0) * 255))}, "png", "nodata=65535")';
+                    var WCPSLoadImage = PS2_MEMCACHED_URL + 'for data in ( $coverageID ) return encode( { red: (float)(((int)(255 / (max((data).band_10) - min((data).band_10))) * ((data).band_10 - min((data).band_10)))); green: (float)(((int)(255 / (max((data).band_13) - min((data).band_13))) * ((data).band_13 - min((data).band_13)))); blue: (float)(((int)(255 / (max((data).band_78) - min((data).band_78))) * ((data).band_78 - min((data).band_78)))) ; alpha: (float)((((data).band_85 > 0) * 255))}, "png", "nodata=65535")';
                     WCPSLoadImage = WCPSLoadImage.replace("$coverageID", coverageID.toUpperCase());
                     updateDownloadWCPSQuery(coverageID, WCPSLoadImage);
                 }
@@ -600,11 +605,16 @@ requirejs(['../../libs/web-world-wind/WorldWind',
         window.loadRGBCombinationsMars = function(WCPSLoadImage, coverageID, stretch) {
             // If stretch is true then need to use Python stretch.py to stretch
             //alert(WCPSLoadImage);
-            WCPSLoadImage = ps2WCPSEndPoint + WCPSLoadImage;
+            // PHP memcached must need + is encoded or it will replace with empty string
+            WCPSLoadImage = replaceAll(WCPSLoadImage, "+", "%2B");            
 
             if (stretch) {
+                // 3 bands are customized WCPS queries
                 // Use Python web service to stretch WCPS queries
-                WCPSLoadImage = ps2StretchWCPSEndPoint + WCPSLoadImage;
+                WCPSLoadImage = PS2_MEMCACHED_URL + WCPSLoadImage;
+            } else {
+                // 3 bands are default bands
+                WCPSLoadImage = PS2_MEMCACHED_URL + WCPSLoadImage;
             }
 
             for (var i = 0; i < checkedFootPrintsArray.length; i++) {
@@ -687,11 +697,14 @@ requirejs(['../../libs/web-world-wind/WorldWind',
             var RGB_BANDS = redBand + " " + greenBand + " " + blueBand;
             WCPSLoadImageTemplate = WCPSLoadImageTemplate.replace("$RGB_BANDS", RGB_BANDS);
 
+            // PHP memcached must need + is encoded or it will replace with empty string
+            WCPSLoadImageTemplate = replaceAll(WCPSLoadImageTemplate, "+", "%2B");
+
             if (stretch) {
                 // use Python web service to stretch WCPS queries
-                WCPSLoadImageTemplate = ps2StretchWCPSEndPoint + WCPSLoadImageTemplate;
+                WCPSLoadImageTemplate = PS2_MEMCACHED_URL + WCPSLoadImageTemplate;
             } else {
-                WCPSLoadImageTemplate = ps2WCPSEndPoint + WCPSLoadImageTemplate;
+                WCPSLoadImageTemplate = PS2_MEMCACHED_URL + WCPSLoadImageTemplate;
             }
 
             // clear the title footprints temporary of the coverageID
