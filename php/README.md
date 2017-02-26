@@ -9,7 +9,7 @@ Restart services: sudo systemctl restart memcached
               sudo systemctl restart httpd
 Verify memcache is working: php -m | grep memcache
 
-Create log file: sudo touch cached.log in /var/www/html
+Create log file: sudo touch cached.log in /var/www/html/php
 Change permission to 777: sudo chmod 777 /var/www/html/php/cached.log
 
 Increase memcache file size to 10 MB

@@ -4,12 +4,12 @@
     Author: Bang Pham Huu - mailto: b.phamhuu@jacobs-university.de
     Disable selinux to redirect to other IP address if not localhost.   
     
-    Dependency on Centos: sudo yum install php-pecl-memcache  
+    Dependency on Centos: sudo yum install php-pecl-memcache memcached  
     Restart services: sudo systemctl restart memcached
                       sudo systemctl restart httpd
     Verify memcache is working: php -m | grep memcache
     
-    Create log file: sudo touch cached.log in /var/www/html
+    Create log file: sudo touch cached.log in /var/www/html/php
     Change permission to 777: sudo chmod 777 /var/www/html/cached.log
     
     Increase memcache file size to 10 MB
