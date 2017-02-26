@@ -101,7 +101,7 @@ ps2WCPSEndPoint = null;
 wcpsQueriesJsonURL = null;
 
 // Cache the result in PNG and redirect to Petascope and Python Stretching service based on the encoding format (png / tiff)
-PS2_MEMCACHED_URL = "http://localhost/php/cache.php?server=$server&wcps_query=";
+PS2_MEMCACHED_URL = "$domain/php/cache.php?server=$server&wcps_query=";
 
 $(function() {
     var url = window.location.href;
@@ -110,11 +110,13 @@ $(function() {
         clientName = MOON_CLIENT;
         ps2EndPoint = MOON_END_POINT;
         PS2_MEMCACHED_URL = PS2_MEMCACHED_URL.replace("$server", MOON_CLIENT);
+        PS2_MEMCACHED_URL = PS2_MEMCACHED_URL.replace("$domain", MOON_END_POINT);
     } else {
         document.title = "Mars - Planetsever 2";
         clientName = MARS_CLIENT;
         ps2EndPoint = MARS_END_POINT;
         PS2_MEMCACHED_URL = PS2_MEMCACHED_URL.replace("$server", MARS_CLIENT);
+        PS2_MEMCACHED_URL = PS2_MEMCACHED_URL.replace("$domain", MARS_END_POINT);
     }
 
     // Used only to get value at point on the footprint, load image from PHP Memcached
