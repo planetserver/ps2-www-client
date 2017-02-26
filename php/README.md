@@ -1,8 +1,10 @@
 PHP redirect to Petascope service and cache the result only in PNG
 Author: Bang Pham Huu - mailto: b.phamhuu@jacobs-university.de
+
 Disable selinux to redirect to other IP address if not localhost.
 
 Dependency on Centos: sudo yum install php-pecl-memcache memcached
+
 Restart services: sudo systemctl restart memcached
               sudo systemctl restart httpd
 Verify memcache is working: php -m | grep memcache
