@@ -95,6 +95,13 @@ MOON_CLIENT = "moon";
 clientName = MARS_CLIENT;
 
 
+MOON_SUB_TYPE = MOON_CLIENT;
+// default load footprints from type='mars_trdr'
+MARS_SUB_TYPE_TRDR = MARS_CLIENT + "_trdr";
+MARS_SUB_TYPE_MRDR = MARS_CLIENT + "_mrdr";
+
+data_type = MARS_SUB_TYPE_TRDR;
+
 ps2EndPoint = null;
 ps2GetCoverage = null;
 ps2WCPSEndPoint = null;
@@ -107,12 +114,16 @@ $(function() {
     if (url.indexOf(MOON_CLIENT) > -1) {
         document.title = "Moon - Planetsever 2";
         clientName = MOON_CLIENT;
+        // to load footprints by sub tyle
+        data_type = MOON_SUB_TYPE;
         ps2EndPoint = MOON_END_POINT;
         PS2_MEMCACHED_URL = PS2_MEMCACHED_URL.replace("$server", MOON_CLIENT);
         PS2_MEMCACHED_URL = PS2_MEMCACHED_URL.replace("$domain", MOON_END_POINT);
     } else {
         document.title = "Mars - Planetsever 2";
         clientName = MARS_CLIENT;
+        // to load footprints by sub tyle (by default: mars_trdr)
+        data_type = MARS_SUB_TYPE_TRDR;
         ps2EndPoint = MARS_END_POINT;
         PS2_MEMCACHED_URL = PS2_MEMCACHED_URL.replace("$server", MARS_CLIENT);
         PS2_MEMCACHED_URL = PS2_MEMCACHED_URL.replace("$domain", MARS_END_POINT);

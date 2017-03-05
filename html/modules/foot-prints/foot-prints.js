@@ -5,7 +5,6 @@ var lastCovID;
 var shapes = []; // footprints shape
 var attributes = ""; // attirbutes for footprints shape
 
-
 // Create constructor for dataset object
 function DataSetConstructor(coverageID, Easternmost_longitude, Maximum_latitude, Minimum_latitude, Westernmost_longitude, latList, longList, isLoadedImage, centroid_longitude) {
     this.coverageID = coverageID;
@@ -46,7 +45,7 @@ function CheckedDataSetConstructor(coverageID, Easternmost_longitude, Maximum_la
 }
 
 // when page loads then load all footprints
-var getAllCoverageData = "request=getAllCoverages&type=" + clientName;
+var getAllCoverageData = "request=getAllCoverages&type=" + data_type;
 $.ajax({
     type: "get",
     url: ps2EndPoint + ":8080/ps2/" + "dataset",
@@ -80,7 +79,7 @@ function getFootPrintsContainingPointLeftClick(shapesArray, attributesObj, check
     //alert(shapes.length);
     // only load images when click on footprints (and when click to select new footprints)
     var isUpdateCheckedFootPrintsArray = false;
-    var getCoveragesContainingPointData = "request=getCoveragesContainingPoint&type=" + clientName + "&latPoint=" + latitude + "&longPoint=" + longitude;
+    var getCoveragesContainingPointData = "request=getCoveragesContainingPoint&type=" + data_type + "&latPoint=" + latitude + "&longPoint=" + longitude;
     $.ajax({
         type: "get",
         url: ps2EndPoint + ":8080/ps2/" + "dataset",
@@ -190,7 +189,7 @@ function getFootPrintsContainingPointRightClick(shapesArray, attributesObj, chec
     // clear the containedFootPrintsArray and get the news one from footprint.js
     containedFootPrintsArray = [];
 
-    var getCoveragesContainingPointData = "request=getCoveragesContainingPoint&type=" + clientName + "&latPoint=" + latitude + "&longPoint=" + longitude
+    var getCoveragesContainingPointData = "request=getCoveragesContainingPoint&type=" + data_type + "&latPoint=" + latitude + "&longPoint=" + longitude
     $.ajax({
         type: "get",
         url: ps2EndPoint + ":8080/ps2/" + "dataset",
