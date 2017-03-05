@@ -98,7 +98,6 @@ clientName = MARS_CLIENT;
 ps2EndPoint = null;
 ps2GetCoverage = null;
 ps2WCPSEndPoint = null;
-wcpsQueriesJsonURL = null;
 
 // Cache the result in PNG and redirect to Petascope and Python Stretching service based on the encoding format (png / tiff)
 PS2_MEMCACHED_URL = "$domain/php/cache.php?server=$server&wcps_query=";
@@ -121,8 +120,7 @@ $(function() {
 
     // Used only to get value at point on the footprint, load image from PHP Memcached
     ps2GetCoverage = ps2EndPoint + ":8080/rasdaman/ows?service=WCS&version=2.0.1&request=GetCoverage&format=image/tiff&coverageId=";
-    ps2WCPSEndPoint = ps2EndPoint + ":8080/rasdaman/ows?service=WCS&version=2.0.1&request=ProcessCoverages&query=";    
-    wcpsQueriesJsonURL = ps2EndPoint + "/html/data/wcps_queries.json"
+    ps2WCPSEndPoint = ps2EndPoint + ":8080/rasdaman/ows?service=WCS&version=2.0.1&request=ProcessCoverages&query=";       
 
 });
 
