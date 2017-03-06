@@ -10,6 +10,10 @@ projectionNames = [
     "South Gnomonic"
 ];
 
+layerNames = [
+    "CRISM TRDR",
+    "CRISM MRDR"
+];
 
 // check if URL contains "moon"
 var url = window.location.href;

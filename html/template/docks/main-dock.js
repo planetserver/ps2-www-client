@@ -32,6 +32,9 @@ $(function() {
             if (this.options.baseMaps) {
                 this.addAvailableBaseMapsPanel();
             }
+            if (this.options.avalLayers) {
+                this.addAvailableLayersPanel();
+            }
             if (this.options.queryTerminal) {
                 this.addQueryTerminalPanel();
             }
@@ -80,6 +83,27 @@ $(function() {
                     self.baseMapsSelectPanel.setButtonContent(basemap);
                 }
                 self.baseMapsSelectPanel.addSelectOption(basemap.replace(/ /g, '').toLowerCase(), basemap);
+            });
+            return this;
+        },
+        // available layers Panel
+  // selectPanel is select-panel.js
+        addAvailableLayersPanel: function() {
+            this.LayersSelectPanel = $("<div>").selectPanel({
+                dock: this.dock,
+                panelId: "layers-selector",
+                panelTitle: "available Layers",
+                dropdownId: "availableLayersDropdown"
+            }).selectPanel("instance");
+
+            var self = this;
+
+            // Layers from selection-panel.js
+            $.each(layerNames, function(index, layer) {
+                if (index == 0) {
+                    self.LayersSelectPanel.setButtonContent(layer);
+                }
+                self.LayersSelectPanel.addSelectOption(layer.replace(/ /g, '').toLowerCase(), layer);
             });
             return this;
         },
