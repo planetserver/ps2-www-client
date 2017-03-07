@@ -2,6 +2,10 @@
 import os
 import subprocess
 import re
+import json
+import cgi
+import urllib
+
 from stretch import *
 from BaseHTTPServer import BaseHTTPRequestHandler,HTTPServer
 
@@ -21,30 +25,52 @@ print "Start simpleHTTPServer for stretching WCPS query. Use Ctrl + C to stop se
 #the browser
 class PythonWebHandler(BaseHTTPRequestHandler):
 
-	#Handler for the GET requests
-	def do_GET(self):
-		self.send_response(200)
-		self.send_header('Content-type','image/png')
-		self.send_header("Access-Control-Allow-Origin", "*")
-		self.end_headers()
-		# Get the result from WCPS query and return the stretched image to web
-		stretchHandler = StretchHandler(None, "");
-		try:
-			uri = stretchHandler.parseURI(self.path);
-			self.wfile.write(uri);
-		except:
-			print ""
-		return
+    #Handler for the GET requests
+    def do_GET(self):
+        self.send_response(200)
+        self.send_header('Content-type','image/png')
+        self.send_header("Access-Control-Allow-Origin", "*")
+        self.end_headers()
+        # Get the result from WCPS query and return the stretched image to web
+        stretchHandler = StretchHandler(None, "");
+        try:
+            URI = urllib.unquote(self.path.partition("wcpsQuery=")[2]);             
+            image = stretchHandler.parseURI(URI);
+            self.wfile.write(image);
+        except Exception as e:
+            print str(e)
+        return
+
+    def do_POST(self):
+        self.send_response(200)
+        self.send_header('Content-type','image/png')
+        self.send_header("Access-Control-Allow-Origin", "*")
+        self.end_headers()
+        # Get the result from WCPS query and return the stretched image to web
+        stretchHandler = StretchHandler(None, "");
+
+        varLen = int(self.headers['Content-Length'])
+        postVars = self.rfile.read(varLen)
+
+        try:            
+            tmp = postVars.split("wcpsQuery=")
+            # get the URI wcpsQuery=petascopeEndPoint?query=
+            URI = urllib.unquote(tmp[1])
+            image = stretchHandler.parseURI(URI);
+            self.wfile.write(image);
+        except Exception as e:
+            print str(e)
+        return 
 
 try:
-	#Create a web server and define the handler to manage the
-	#incoming request
-	server = HTTPServer(('', PORT_NUMBER), PythonWebHandler)
-	print 'Started httpserver on port', PORT_NUMBER
+    #Create a web server and define the handler to manage the
+    #incoming request
+    server = HTTPServer(('', PORT_NUMBER), PythonWebHandler)
+    print 'Started httpserver on port', PORT_NUMBER
 
-	#Wait forever for incoming htto requests
-	server.serve_forever()
+    #Wait forever for incoming htto requests
+    server.serve_forever()
 
 except KeyboardInterrupt:
-	print '^C received, shutting down the web server'
-	server.socket.close()
+    print '^C received, shutting down the web server'
+    server.socket.close()

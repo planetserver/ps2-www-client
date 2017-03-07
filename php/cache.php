@@ -32,7 +32,7 @@
     define("DOMAIN_MARS", "http://mars.planetserver.eu");
     define("PETASCOPE_PORT", "8080");
     define("PYTHON_STRETCHING_PORT", "8090");        
-    define("PETASCOPE_URL", "DOMAIN" . ":" . PETASCOPE_PORT . "/rasdaman/ows?service=WCS&version=2.0.1&request=ProcessCoverages&query=");
+    define("PETASCOPE_URL", "DOMAIN" . ":" . PETASCOPE_PORT . "/rasdaman/ows?query=");
     define("PYTHON_STRETCHING_URL", "DOMAIN" . ":" . PYTHON_STRETCHING_PORT . "/python?wcpsQuery=");
     
     $mem = new Memcache();
