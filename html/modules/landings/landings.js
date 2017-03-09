@@ -349,6 +349,9 @@ requirejs(['../../libs/web-world-wind/WorldWind',
             getAllFootprintsFromDatabase()
             // Add the new footprints on the surface
             addAllFootprintsOnSurface();
+
+            // remove all selected footprints in dropdown box
+            removeAllSelectedFootPrints();
         });
 
 
@@ -626,7 +629,7 @@ requirejs(['../../libs/web-world-wind/WorldWind',
                         WCPSLoadImage = PS2_MEMCACHED_URL + 'for data in (' + coverageID + ') return encode( { red: ' + redBandDefault + '; green: ' + greenBandDefault + '; blue: ' + blueBandDefault + ' ; alpha: ' + alphaBandDefault + '}, "png", "nodata=65535")';
                     } else {
                         // mars_mrdr (need using streching service in python by default)
-                        WCPSLoadImage = PS2_MEMCACHED_URL + 'for data in ( gdal_prep_5 ) return encode( { red: (float)((int)(255 / (max( data.OLINDEX) - min(data.OLINDEX))) * (data.OLINDEX - min(data.OLINDEX))); green: (float)((int)(255 / (max( data.LCPINDEX) - min(data.LCPINDEX))) * (data.LCPINDEX - min(data.LCPINDEX))); blue: (float)((int)(255 / (max( data.HCPXINDEX) - min(data.HCPXINDEX))) * (data.HCPXINDEX - min(data.HCPXINDEX))); alpha: (float)((data.RBR > 0) * 255) }, "tiff", "nodata=65535")';
+                        WCPSLoadImage = PS2_MEMCACHED_URL + 'for data in ( ' + coverageID + ' ) return encode( { red: (float)((int)(255 / (max( data.OLINDEX) - min(data.OLINDEX))) * (data.OLINDEX - min(data.OLINDEX))); green: (float)((int)(255 / (max( data.LCPINDEX) - min(data.LCPINDEX))) * (data.LCPINDEX - min(data.LCPINDEX))); blue: (float)((int)(255 / (max( data.HCPXINDEX) - min(data.HCPXINDEX))) * (data.HCPXINDEX - min(data.HCPXINDEX))); alpha: (float)((data.RBR > 0) * 255) }, "tiff", "nodata=65535")';
                     }
 
 
