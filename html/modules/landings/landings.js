@@ -121,6 +121,9 @@ $(function() {
         ps2EndPoint = MOON_END_POINT;
         PS2_MEMCACHED_URL = PS2_MEMCACHED_URL.replace("$server", MOON_CLIENT);
         PS2_MEMCACHED_URL = PS2_MEMCACHED_URL.replace("$domain", MOON_END_POINT);
+
+        // use moon's rgb bands default
+        updateDefaultRGBBands();
     } else {
         document.title = "Mars - Planetsever 2";
         clientName = MARS_CLIENT;
@@ -197,6 +200,14 @@ $(document).ready(function() {
 
     $("[type='checkbox']").bootstrapSwitch();    
 });
+
+
+// RGB Bands default for all footprints from WCPS Query (mars_trdr)
+redBandDefault = "(float)((int)(255 / (max( data.band_233) - min(data.band_233))) * (data.band_233 - min(data.band_233)))";
+blueBandDefault = "(float)((int)(255 / (max( data.band_78) - min(data.band_78))) * (data.band_78 - min(data.band_78)))";
+greenBandDefault = "(float)((int)(255 / (max( data.band_13) - min(data.band_13))) * (data.band_13 - min(data.band_13)))";
+alphaBandDefault = "(float)((data.band_100 > 0) * 255)";
+
 
 // Load dependent libraries
 requirejs(['../../libs/web-world-wind/WorldWind',
@@ -329,7 +340,7 @@ requirejs(['../../libs/web-world-wind/WorldWind',
         });        
 
 
-        // Availabe layers (mars trdr, mars mrdr)
+        // Availabe layers (mars trdr, mars mrdr) dropdown changes
         $("#availableLayersDropdown").find(" li").on("click", function(e) {
             var index = -1;
             var selectedLayerName = $(this).children().html();
@@ -337,12 +348,14 @@ requirejs(['../../libs/web-world-wind/WorldWind',
             // remove current footprint layers
             wwd.removeLayer(shapesLayer);        
             wwd.removeLayer(imagesLayer);
+            imagesLayer = null;
+
 
             // mars_tr
             if (selectedLayerName == "CRISM TRDR") {
-                dataType = "mars_trdr";
+                dataType = MARS_SUB_TYPE_TRDR;
             } else {
-                dataType = "mars_mrdr";            
+                dataType = MARS_SUB_TYPE_MRDR;            
             }        
 
             // Get all new footprints by data type
@@ -352,6 +365,15 @@ requirejs(['../../libs/web-world-wind/WorldWind',
 
             // remove all selected footprints in dropdown box
             removeAllSelectedFootPrints();
+
+            // load rgb bands to rgbDropDown from rgb_combination.js (mars_trdr: 1 - 438, mars_mrdr: from csv)
+            loadDropDownRGBBands();
+
+            // load WCPS custom query to wcpsDropDown from rgb_combinations.js (mars_trdr: wcps custom queries, mars_mrdr: null)
+            loadDropDownWCPSBands();
+
+            // update the default bands for mars_mrdr, mars_trdr
+            updateDefaultRGBBands();
         });
 
 
@@ -578,6 +600,32 @@ requirejs(['../../libs/web-world-wind/WorldWind',
             }
         }
 
+        // based on clien (mars_trdr, mars_mrdr), moon to set default rgb bands
+        function updateDefaultRGBBands() { 
+            if (clientName === MARS_CLIENT) {
+                if (dataType === MARS_SUB_TYPE_TRDR) {
+
+                    redBandDefault = "(float)((int)(255 / (max( data.band_233) - min(data.band_233))) * (data.band_233 - min(data.band_233)))";
+                    blueBandDefault = "(float)((int)(255 / (max( data.band_78) - min(data.band_78))) * (data.band_78 - min(data.band_78)))";
+                    greenBandDefault = "(float)((int)(255 / (max( data.band_13) - min(data.band_13))) * (data.band_13 - min(data.band_13)))";
+                    alphaBandDefault = "(float)((data.band_100 > 0) * 255)";
+                } else if (dataType === MARS_SUB_TYPE_MRDR) {
+
+                    redBandDefault = "(float)((int)(255 / (max( data.OLINDEX) - min(data.OLINDEX))) * (data.OLINDEX - min(data.OLINDEX)))";
+                    greenBandDefault =  "(float)((int)(255 / (max( data.LCPINDEX) - min(data.LCPINDEX))) * (data.LCPINDEX - min(data.LCPINDEX)))";
+                    blueBandDefault = "(float)((int)(255 / (max( data.HCPXINDEX) - min(data.HCPXINDEX))) * (data.HCPXINDEX - min(data.HCPXINDEX)))";
+                    alphaBandDefault = "(float)((data.RBR > 0) * 255)";   
+
+                } 
+            } else if (clientName === MOON_CLIENT) {
+
+                redBandDefault = "(float)((int)(255 / (max( data.band_10) - min(data.band_10))) * (data.band_10 - min(data.band_10)))";
+                blueBandDefault = "(float)((int)(255 / (max(data.band_78) - min(data.band_78))) * (data.band_78 - min(data.band_78)))";
+                greenBandDefault = "(float)((int)(255 / (max(data.band_13) - min(data.band_13))) * (data.band_13 - min(data.band_13)))";
+                alphaBandDefault = "(float)((data.band_85 > 0) * 255)";
+            }
+        }
+
         window.accessCheckedFootPrintsArray = function(newClickedFootPrintsArray) {
 
             // Remove the old layers first
@@ -629,7 +677,7 @@ requirejs(['../../libs/web-world-wind/WorldWind',
                         WCPSLoadImage = PS2_MEMCACHED_URL + 'for data in (' + coverageID + ') return encode( { red: ' + redBandDefault + '; green: ' + greenBandDefault + '; blue: ' + blueBandDefault + ' ; alpha: ' + alphaBandDefault + '}, "png", "nodata=65535")';
                     } else {
                         // mars_mrdr (need using streching service in python by default)
-                        WCPSLoadImage = PS2_MEMCACHED_URL + 'for data in ( ' + coverageID + ' ) return encode( { red: (float)((int)(255 / (max( data.OLINDEX) - min(data.OLINDEX))) * (data.OLINDEX - min(data.OLINDEX))); green: (float)((int)(255 / (max( data.LCPINDEX) - min(data.LCPINDEX))) * (data.LCPINDEX - min(data.LCPINDEX))); blue: (float)((int)(255 / (max( data.HCPXINDEX) - min(data.HCPXINDEX))) * (data.HCPXINDEX - min(data.HCPXINDEX))); alpha: (float)((data.RBR > 0) * 255) }, "tiff", "nodata=65535")';
+                        WCPSLoadImage = PS2_MEMCACHED_URL + 'for data in (' + coverageID + ') return encode( { red: ' + redBandDefault + '; green: ' + greenBandDefault + '; blue: ' + blueBandDefault + ' ; alpha: ' + alphaBandDefault + '}, "tiff", "nodata=65535")';
                     }
 
 
@@ -637,6 +685,7 @@ requirejs(['../../libs/web-world-wind/WorldWind',
 
 
                     console.log("Load default image on footprint: " + coverageID);
+                    console.log(WCPSLoadImage);
 
                     renderLayer[i] = new WorldWind.RenderableLayer("");
                     renderLayer[i].addRenderable(surfaceImage);
@@ -675,6 +724,8 @@ requirejs(['../../libs/web-world-wind/WorldWind',
                 // 3 bands are default bands
                 WCPSLoadImage = PS2_MEMCACHED_URL + WCPSLoadImage;
             }
+
+            console.log(WCPSLoadImage);
 
             for (var i = 0; i < checkedFootPrintsArray.length; i++) {
                 var maxlong;
