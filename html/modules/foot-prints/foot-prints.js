@@ -5,6 +5,9 @@ var lastCovID;
 var shapes = []; // footprints shape
 var attributes = ""; // attirbutes for footprints shape
 
+// cache all the footprints by data_type
+var cachedArray = [];
+
 // Create constructor for dataset object
 function DataSetConstructor(coverageID, Easternmost_longitude, Maximum_latitude, Minimum_latitude, Westernmost_longitude, latList, longList, isLoadedImage, centroid_longitude) {
     this.coverageID = coverageID;
@@ -44,24 +47,42 @@ function CheckedDataSetConstructor(coverageID, Easternmost_longitude, Maximum_la
     this.centroid_longitude = centroid_longitude;
 }
 
-// when page loads then load all footprints
-var getAllCoverageData = "request=getAllCoverages&type=" + data_type;
-$.ajax({
-    type: "get",
-    url: ps2EndPoint + ":8080/ps2/" + "dataset",
-    data: getAllCoverageData,
-    dataType: 'json',
-    cache: false,
-    async: false, // this needs time to query all footprints from database and load to WWW then the problem with cache is done.
-    success: function(data) {
-        $.each(data, function(key, val) {
-            var dataSetFootPrint = new DataSetConstructor(val.coverageID, val.Easternmost_longitude, val.Maximum_latitude, val.Minimum_latitude, val.Westernmost_longitude, val.latList, val.longList, false, val.centroid_longitude);
 
-            // push this dataSet to array for displaying later
-            allFootPrintsArray.push(dataSetFootPrint);
+// load all footprints data to an array
+function getAllFootprintsFromDatabase() {
+
+    allFootPrintsArray = [];
+
+    // check if data_type alread cached then no need to load from database
+    if (cachedArray[dataType] != null) {
+        allFootPrintsArray = cachedArray[dataType];        
+    } else {
+        // when page loads then load all footprints (mars: mars_trdr)
+        var getAllCoverageDataByType = "request=getAllCoverages&type=" + dataType;
+
+
+        $.ajax({
+            type: "get",
+            url: ps2EndPoint + ":8080/ps2/" + "dataset",
+            data: getAllCoverageDataByType,
+            dataType: 'json',
+            cache: false,
+            async: false, // this needs time to query all footprints from database and load to WWW then the problem with cache is done.
+            success: function(data) {
+                $.each(data, function(key, val) {
+                    var dataSetFootPrint = new DataSetConstructor(val.coverageID, val.Easternmost_longitude, val.Maximum_latitude, val.Minimum_latitude, val.Westernmost_longitude, val.latList, val.longList, false, val.centroid_longitude);
+
+                    // push this dataSet to array for displaying later
+                    allFootPrintsArray.push(dataSetFootPrint);
+
+                    // store all the footprints arrat to cache
+                    cachedArray[dataType] = allFootPrintsArray;
+                });
+            }
         });
     }
-});
+}
+
 
 // get footprints containing clicked point for left click
 function getFootPrintsContainingPointLeftClick(shapesArray, attributesObj, checkedAttributes, latitude, longitude) {
@@ -79,7 +100,7 @@ function getFootPrintsContainingPointLeftClick(shapesArray, attributesObj, check
     //alert(shapes.length);
     // only load images when click on footprints (and when click to select new footprints)
     var isUpdateCheckedFootPrintsArray = false;
-    var getCoveragesContainingPointData = "request=getCoveragesContainingPoint&type=" + data_type + "&latPoint=" + latitude + "&longPoint=" + longitude;
+    var getCoveragesContainingPointData = "request=getCoveragesContainingPoint&type=" + dataType + "&latPoint=" + latitude + "&longPoint=" + longitude;
     $.ajax({
         type: "get",
         url: ps2EndPoint + ":8080/ps2/" + "dataset",
@@ -189,7 +210,7 @@ function getFootPrintsContainingPointRightClick(shapesArray, attributesObj, chec
     // clear the containedFootPrintsArray and get the news one from footprint.js
     containedFootPrintsArray = [];
 
-    var getCoveragesContainingPointData = "request=getCoveragesContainingPoint&type=" + data_type + "&latPoint=" + latitude + "&longPoint=" + longitude
+    var getCoveragesContainingPointData = "request=getCoveragesContainingPoint&type=" + dataType + "&latPoint=" + latitude + "&longPoint=" + longitude
     $.ajax({
         type: "get",
         url: ps2EndPoint + ":8080/ps2/" + "dataset",

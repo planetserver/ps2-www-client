@@ -12,7 +12,7 @@ projectionNames = [
 
 layerNames = [
     "CRISM TRDR",
-    "CRISM MRDR"
+    "CRISM MRDR (Alpha Version)"
 ];
 
 // check if URL contains "moon"

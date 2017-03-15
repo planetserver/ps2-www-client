@@ -24,6 +24,8 @@ leftClickFootPrintsArray = []; // store all the footprints when left click (each
 
 shapesLayer = ""; // layer contains all footprints shapes
 
+imagesLayer = null; // layer contains all the surface image on footprints
+
 renderLayer = [];
 
 // add the tile footprints in moon client when load multi temporary footprints
@@ -100,7 +102,7 @@ MOON_SUB_TYPE = MOON_CLIENT;
 MARS_SUB_TYPE_TRDR = MARS_CLIENT + "_trdr";
 MARS_SUB_TYPE_MRDR = MARS_CLIENT + "_mrdr";
 
-data_type = MARS_SUB_TYPE_TRDR;
+dataType = MARS_SUB_TYPE_TRDR;
 
 ps2EndPoint = null;
 ps2GetCoverage = null;
@@ -115,15 +117,18 @@ $(function() {
         document.title = "Moon - Planetsever 2";
         clientName = MOON_CLIENT;
         // to load footprints by sub tyle
-        data_type = MOON_SUB_TYPE;
+        dataType = MOON_SUB_TYPE;
         ps2EndPoint = MOON_END_POINT;
         PS2_MEMCACHED_URL = PS2_MEMCACHED_URL.replace("$server", MOON_CLIENT);
         PS2_MEMCACHED_URL = PS2_MEMCACHED_URL.replace("$domain", MOON_END_POINT);
+
+        // use moon's rgb bands default
+        updateDefaultRGBBands();
     } else {
         document.title = "Mars - Planetsever 2";
         clientName = MARS_CLIENT;
         // to load footprints by sub tyle (by default: mars_trdr)
-        data_type = MARS_SUB_TYPE_TRDR;
+        dataType = MARS_SUB_TYPE_TRDR;
         ps2EndPoint = MARS_END_POINT;
         PS2_MEMCACHED_URL = PS2_MEMCACHED_URL.replace("$server", MARS_CLIENT);
         PS2_MEMCACHED_URL = PS2_MEMCACHED_URL.replace("$domain", MARS_END_POINT);
@@ -195,6 +200,14 @@ $(document).ready(function() {
 
     $("[type='checkbox']").bootstrapSwitch();    
 });
+
+
+// RGB Bands default for all footprints from WCPS Query (mars_trdr)
+redBandDefault = "(float)((int)(255 / (max( data.band_233) - min(data.band_233))) * (data.band_233 - min(data.band_233)))";
+blueBandDefault = "(float)((int)(255 / (max( data.band_78) - min(data.band_78))) * (data.band_78 - min(data.band_78)))";
+greenBandDefault = "(float)((int)(255 / (max( data.band_13) - min(data.band_13))) * (data.band_13 - min(data.band_13)))";
+alphaBandDefault = "(float)((data.band_100 > 0) * 255)";
+
 
 // Load dependent libraries
 requirejs(['../../libs/web-world-wind/WorldWind',
@@ -314,7 +327,6 @@ requirejs(['../../libs/web-world-wind/WorldWind',
             }
 
 
-
             // no load the same base map again
             if (!isLoadedBaseMap) {
 
@@ -325,54 +337,52 @@ requirejs(['../../libs/web-world-wind/WorldWind',
                 baseMapLayer = layers[index].layer;
                 wwd.insertLayer(--baseMapIndex, baseMapLayer);
             }
+        });        
+
+
+        // Availabe layers (mars trdr, mars mrdr) dropdown changes
+        $("#availableLayersDropdown").find(" li").on("click", function(e) {
+            var index = -1;
+            var selectedLayerName = $(this).children().html();
+            
+            // remove current footprint layers
+            wwd.removeLayer(shapesLayer);        
+            wwd.removeLayer(imagesLayer);
+            imagesLayer = null;
+
+
+            // mars_tr
+            if (selectedLayerName == "CRISM TRDR") {
+                dataType = MARS_SUB_TYPE_TRDR;
+            } else {
+                dataType = MARS_SUB_TYPE_MRDR;            
+            }        
+
+            // Get all new footprints by data type
+            getAllFootprintsFromDatabase()
+            // Add the new footprints on the surface
+            addAllFootprintsOnSurface();
+
+            // remove all selected footprints in dropdown box
+            removeAllSelectedFootPrints();
+
+            // load rgb bands to rgbDropDown from rgb_combination.js (mars_trdr: 1 - 438, mars_mrdr: from csv)
+            loadDropDownRGBBands();
+
+            // load WCPS custom query to wcpsDropDown from rgb_combinations.js (mars_trdr: wcps custom queries, mars_mrdr: null)
+            loadDropDownWCPSBands();
+
+            // update the default bands for mars_mrdr, mars_trdr
+            updateDefaultRGBBands();
         });
 
-        // Create a layer to hold the surface shapes.
-        shapesLayer = new WorldWind.RenderableLayer("");
 
-        // Create and set attributes for it. The shapes below except the surface polyline use this same attributes
-        // object. Real apps typically create new attributes objects for each shape unless they know the attributes
-        // can be shared among shapes.
-        defaultAttributes = new WorldWind.ShapeAttributes(null);
-        defaultAttributes.outlineColor = WorldWind.Color.RED;
-        defaultAttributes.drawInterior = false;
-
-        checkedAttributes = new WorldWind.ShapeAttributes(null);
-        checkedAttributes.outlineColor = WorldWind.Color.BLUE;
-        checkedAttributes.interiorColor = new WorldWind.Color(0, 1, 1, 0.5);
-        checkedAttributes.drawInterior = false;
+        // load all footprints from footprint.js
+        getAllFootprintsFromDatabase();
 
 
-        selectedAttributes = new WorldWind.ShapeAttributes(null);
-        selectedAttributes.outlineColor = WorldWind.Color.YELLOW;
-        selectedAttributes.interiorColor = new WorldWind.Color(0, 1, 1, 0.5);
-        selectedAttributes.drawInterior = false;
-
-
-        hightlightedAttributes = new WorldWind.ShapeAttributes(null);
-        hightlightedAttributes.outlineColor = WorldWind.Color.GREEN;
-        hightlightedAttributes.outlineWidth = 1.5;
-        hightlightedAttributes.interiorColor = new WorldWind.Color(0, 1, 1, 0.5);
-        hightlightedAttributes.drawInterior = false;
-
-
-        //Adding allFootPrintsArray
-        var boundaries = []; // array for boundary locations of the footprints
-        for (var i = 0; i < allFootPrintsArray.length; i++) {
-            boundaries.push([]); // new array for the boundaries of a single footprint
-            for (var j = 0; j < allFootPrintsArray[i].latList.length; j++) {
-                // adding all the boundaries of a single polygon into boundaries[i]
-                boundaries[i].push(new WorldWind.Location(allFootPrintsArray[i].latList[j], allFootPrintsArray[i].longList[j]));
-            }
-
-            shapes[i] = new WorldWind.SurfacePolygon(boundaries[i], defaultAttributes);
-            shapes[i]._displayName = allFootPrintsArray[i].coverageID; // setting the exact name of the polygon into _displayName
-
-            shapesLayer.addRenderable(shapes[i]);
-        }
-
-        // this is all footprints
-        wwd.insertLayer(2, shapesLayer);
+        // add all footprints shape on the surface
+        addAllFootprintsOnSurface();
 
 
         /* This function will check if user click on globe or click on loaded image for footprint:
@@ -524,10 +534,61 @@ requirejs(['../../libs/web-world-wind/WorldWind',
         };
 
 
+        // after get all footprints from p2 database, load all the shape files to the map
+        function addAllFootprintsOnSurface() {
+            // Create a layer to hold the surface shapes.
+            shapesLayer = new WorldWind.RenderableLayer("");
+
+            // Create and set attributes for it. The shapes below except the surface polyline use this same attributes
+            // object. Real apps typically create new attributes objects for each shape unless they know the attributes
+            // can be shared among shapes.
+            defaultAttributes = new WorldWind.ShapeAttributes(null);
+            defaultAttributes.outlineColor = WorldWind.Color.RED;
+            defaultAttributes.drawInterior = false;
+
+            checkedAttributes = new WorldWind.ShapeAttributes(null);
+            checkedAttributes.outlineColor = WorldWind.Color.BLUE;
+            checkedAttributes.interiorColor = new WorldWind.Color(0, 1, 1, 0.5);
+            checkedAttributes.drawInterior = false;
+
+
+            selectedAttributes = new WorldWind.ShapeAttributes(null);
+            selectedAttributes.outlineColor = WorldWind.Color.YELLOW;
+            selectedAttributes.interiorColor = new WorldWind.Color(0, 1, 1, 0.5);
+            selectedAttributes.drawInterior = false;
+
+
+            hightlightedAttributes = new WorldWind.ShapeAttributes(null);
+            hightlightedAttributes.outlineColor = WorldWind.Color.GREEN;
+            hightlightedAttributes.outlineWidth = 1.5;
+            hightlightedAttributes.interiorColor = new WorldWind.Color(0, 1, 1, 0.5);
+            hightlightedAttributes.drawInterior = false;
+
+
+            //Adding allFootPrintsArray
+            var boundaries = []; // array for boundary locations of the footprints
+            for (var i = 0; i < allFootPrintsArray.length; i++) {
+                boundaries.push([]); // new array for the boundaries of a single footprint
+                for (var j = 0; j < allFootPrintsArray[i].latList.length; j++) {
+                    // adding all the boundaries of a single polygon into boundaries[i]
+                    boundaries[i].push(new WorldWind.Location(allFootPrintsArray[i].latList[j], allFootPrintsArray[i].longList[j]));
+                }
+
+                shapes[i] = new WorldWind.SurfacePolygon(boundaries[i], defaultAttributes);
+                shapes[i]._displayName = allFootPrintsArray[i].coverageID; // setting the exact name of the polygon into _displayName
+
+                shapesLayer.addRenderable(shapes[i]);
+            }
+
+            // this is all footprints
+            wwd.insertLayer(2, shapesLayer);
+
+        }
+
+
         /* This function is called from landing.js after all checked footprints are updated to checkedFootPrintsArray
         and it loads the image accordingly to checked footprints
         */
-        var imagesLayer = null;
 
         // Check to update WCPS query when load RGB combinations
         function updateDownloadWCPSQuery(coverageID, wcpsQueryLink) {
@@ -536,6 +597,32 @@ requirejs(['../../libs/web-world-wind/WorldWind',
                     checkedFootPrintsArray[j].wcpsQuery = wcpsQueryLink;
                     return;
                 }
+            }
+        }
+
+        // based on clien (mars_trdr, mars_mrdr), moon to set default rgb bands
+        function updateDefaultRGBBands() { 
+            if (clientName === MARS_CLIENT) {
+                if (dataType === MARS_SUB_TYPE_TRDR) {
+
+                    redBandDefault = "(float)((int)(255 / (max( data.band_233) - min(data.band_233))) * (data.band_233 - min(data.band_233)))";
+                    blueBandDefault = "(float)((int)(255 / (max( data.band_78) - min(data.band_78))) * (data.band_78 - min(data.band_78)))";
+                    greenBandDefault = "(float)((int)(255 / (max( data.band_13) - min(data.band_13))) * (data.band_13 - min(data.band_13)))";
+                    alphaBandDefault = "(float)((data.band_100 > 0) * 255)";
+                } else if (dataType === MARS_SUB_TYPE_MRDR) {
+
+                    redBandDefault = "(float)((int)(255 / (max( data.OLINDEX) - min(data.OLINDEX))) * (data.OLINDEX - min(data.OLINDEX)))";
+                    greenBandDefault =  "(float)((int)(255 / (max( data.LCPINDEX) - min(data.LCPINDEX))) * (data.LCPINDEX - min(data.LCPINDEX)))";
+                    blueBandDefault = "(float)((int)(255 / (max( data.HCPXINDEX) - min(data.HCPXINDEX))) * (data.HCPXINDEX - min(data.HCPXINDEX)))";
+                    alphaBandDefault = "(float)((data.RBR > 0) * 255)";   
+
+                } 
+            } else if (clientName === MOON_CLIENT) {
+
+                redBandDefault = "(float)((int)(255 / (max( data.band_10) - min(data.band_10))) * (data.band_10 - min(data.band_10)))";
+                blueBandDefault = "(float)((int)(255 / (max(data.band_78) - min(data.band_78))) * (data.band_78 - min(data.band_78)))";
+                greenBandDefault = "(float)((int)(255 / (max(data.band_13) - min(data.band_13))) * (data.band_13 - min(data.band_13)))";
+                alphaBandDefault = "(float)((data.band_85 > 0) * 255)";
             }
         }
 
@@ -583,12 +670,22 @@ requirejs(['../../libs/web-world-wind/WorldWind',
                 checkedFootPrintsArray[i].isLoadedImage = true;
                 // Load default bands for all footprints
                 if (clientName === MARS_CLIENT) {                    
-                    var WCPSLoadImage = PS2_MEMCACHED_URL + 'for data in (' + coverageID + ') return encode( { red: ' + redBandDefault + '; green: ' + greenBandDefault + '; blue: ' + blueBandDefault + ' ; alpha: ' + alphaBandDefault + '}, "png", "nodata=65535")';
+                    var WCPSLoadImage = "";
+
+                    // mars_trdr
+                    if (dataType == MARS_SUB_TYPE_TRDR) {
+                        WCPSLoadImage = PS2_MEMCACHED_URL + 'for data in (' + coverageID + ') return encode( { red: ' + redBandDefault + '; green: ' + greenBandDefault + '; blue: ' + blueBandDefault + ' ; alpha: ' + alphaBandDefault + '}, "png", "nodata=65535")';
+                    } else {
+                        // mars_mrdr (need using streching service in python by default)
+                        WCPSLoadImage = PS2_MEMCACHED_URL + 'for data in (' + coverageID + ') return encode( { red: ' + redBandDefault + '; green: ' + greenBandDefault + '; blue: ' + blueBandDefault + ' ; alpha: ' + alphaBandDefault + '}, "tiff", "nodata=65535")';
+                    }
+
 
                     var surfaceImage = new WorldWind.SurfaceImage(new WorldWind.Sector(checkedFootPrintsArray[i].Minimum_latitude, checkedFootPrintsArray[i].Maximum_latitude, minlong, maxlong), WCPSLoadImage);
 
 
                     console.log("Load default image on footprint: " + coverageID);
+                    console.log(WCPSLoadImage);
 
                     renderLayer[i] = new WorldWind.RenderableLayer("");
                     renderLayer[i].addRenderable(surfaceImage);
@@ -627,6 +724,8 @@ requirejs(['../../libs/web-world-wind/WorldWind',
                 // 3 bands are default bands
                 WCPSLoadImage = PS2_MEMCACHED_URL + WCPSLoadImage;
             }
+
+            console.log(WCPSLoadImage);
 
             for (var i = 0; i < checkedFootPrintsArray.length; i++) {
                 var maxlong;
