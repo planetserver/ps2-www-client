@@ -1,6 +1,16 @@
 PHP redirect to Petascope service and cache the result only in PNG
 Author: Bang Pham Huu - mailto: b.phamhuu@jacobs-university.de
 
+### To increase GET length request when WCPS query is too long > 8600 characters
+open /etc/httpd/conf/httpd.conf
+and add 
+
+# Increase GET request limit
+LimitRequestLine 100000
+
+then restart httpd service and check again
+
+### Install memcache 
 Disable selinux to redirect to other IP address if not localhost.
 
 Dependency on Centos: sudo yum install php-pecl-memcache memcached
