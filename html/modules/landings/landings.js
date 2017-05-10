@@ -111,6 +111,32 @@ ps2WCPSEndPoint = null;
 // Cache the result in PNG and redirect to Petascope and Python Stretching service based on the encoding format (png / tiff)
 PS2_MEMCACHED_URL = "$domain/php/cache.php?server=$server&wcps_query=";
 
+// based on clien (mars_trdr, mars_mrdr), moon to set default rgb bands
+function updateDefaultRGBBands() { 
+    if (clientName === MARS_CLIENT) {
+        if (dataType === MARS_SUB_TYPE_TRDR) {
+
+            redBandDefault = "(float)((int)(255 / (max( data.band_233) - min(data.band_233))) * (data.band_233 - min(data.band_233)))";
+            blueBandDefault = "(float)((int)(255 / (max( data.band_78) - min(data.band_78))) * (data.band_78 - min(data.band_78)))";
+            greenBandDefault = "(float)((int)(255 / (max( data.band_13) - min(data.band_13))) * (data.band_13 - min(data.band_13)))";
+            alphaBandDefault = "(float)((data.band_100 > 0) * 255)";
+        } else if (dataType === MARS_SUB_TYPE_MRDR) {
+
+            redBandDefault = "(float)((int)(255 / (max( data.OLINDEX) - min(data.OLINDEX))) * (data.OLINDEX - min(data.OLINDEX)))";
+            greenBandDefault =  "(float)((int)(255 / (max( data.LCPINDEX) - min(data.LCPINDEX))) * (data.LCPINDEX - min(data.LCPINDEX)))";
+            blueBandDefault = "(float)((int)(255 / (max( data.HCPXINDEX) - min(data.HCPXINDEX))) * (data.HCPXINDEX - min(data.HCPXINDEX)))";
+            alphaBandDefault = "(float)((data.RBR > 0) * 255)";   
+
+        } 
+    } else if (clientName === MOON_CLIENT) {
+
+        redBandDefault = "(float)((int)(255 / (max( data.band_10) - min(data.band_10))) * (data.band_10 - min(data.band_10)))";
+        blueBandDefault = "(float)((int)(255 / (max(data.band_78) - min(data.band_78))) * (data.band_78 - min(data.band_78)))";
+        greenBandDefault = "(float)((int)(255 / (max(data.band_13) - min(data.band_13))) * (data.band_13 - min(data.band_13)))";
+        alphaBandDefault = "(float)((data.band_85 > 0) * 255)";
+    }
+}
+
 $(function() {
     var url = window.location.href;
     if (url.indexOf(MOON_CLIENT) > -1) {
@@ -598,33 +624,7 @@ requirejs(['../../libs/web-world-wind/WorldWind',
                     return;
                 }
             }
-        }
-
-        // based on clien (mars_trdr, mars_mrdr), moon to set default rgb bands
-        function updateDefaultRGBBands() { 
-            if (clientName === MARS_CLIENT) {
-                if (dataType === MARS_SUB_TYPE_TRDR) {
-
-                    redBandDefault = "(float)((int)(255 / (max( data.band_233) - min(data.band_233))) * (data.band_233 - min(data.band_233)))";
-                    blueBandDefault = "(float)((int)(255 / (max( data.band_78) - min(data.band_78))) * (data.band_78 - min(data.band_78)))";
-                    greenBandDefault = "(float)((int)(255 / (max( data.band_13) - min(data.band_13))) * (data.band_13 - min(data.band_13)))";
-                    alphaBandDefault = "(float)((data.band_100 > 0) * 255)";
-                } else if (dataType === MARS_SUB_TYPE_MRDR) {
-
-                    redBandDefault = "(float)((int)(255 / (max( data.OLINDEX) - min(data.OLINDEX))) * (data.OLINDEX - min(data.OLINDEX)))";
-                    greenBandDefault =  "(float)((int)(255 / (max( data.LCPINDEX) - min(data.LCPINDEX))) * (data.LCPINDEX - min(data.LCPINDEX)))";
-                    blueBandDefault = "(float)((int)(255 / (max( data.HCPXINDEX) - min(data.HCPXINDEX))) * (data.HCPXINDEX - min(data.HCPXINDEX)))";
-                    alphaBandDefault = "(float)((data.RBR > 0) * 255)";   
-
-                } 
-            } else if (clientName === MOON_CLIENT) {
-
-                redBandDefault = "(float)((int)(255 / (max( data.band_10) - min(data.band_10))) * (data.band_10 - min(data.band_10)))";
-                blueBandDefault = "(float)((int)(255 / (max(data.band_78) - min(data.band_78))) * (data.band_78 - min(data.band_78)))";
-                greenBandDefault = "(float)((int)(255 / (max(data.band_13) - min(data.band_13))) * (data.band_13 - min(data.band_13)))";
-                alphaBandDefault = "(float)((data.band_85 > 0) * 255)";
-            }
-        }
+        }       
 
         window.accessCheckedFootPrintsArray = function(newClickedFootPrintsArray) {
 

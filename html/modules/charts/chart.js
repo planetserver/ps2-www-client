@@ -17,7 +17,13 @@ var chartColors = ["#7EF10A", "#9B59B6", "#5499C7", "#48C9B0", "#58D68D", "#F4D0
 
 $(document).ready(function() {
     // change here with "ps2EndPoint" later
-    var csvFile = ps2EndPoint + "/html/data/x_axis.csv"
+    var csvFile = "";
+    if (clientName === MARS_CLIENT) {
+        csvFile = ps2EndPoint + "/html/data/x_axis.csv";
+    } else {
+        csvFile = ps2EndPoint + "/html/data/m3_x_axis.csv";
+    }
+
     // load the x_axis for charts from file
     $.ajax({
             type: "GET",
