@@ -435,14 +435,21 @@ requirejs(['../../libs/web-world-wind/WorldWind',
                     //$("#txtLongitudeGoTo").val(clickedLongitude);
 
                     // Generate a link to access to coverageID and/or Latitude and Longitude
-                    var link = ps2EndPoint + "index.html?";
+                    var link = ps2EndPoint + "/index.html?";
 
+                    var hasCoverage = false;
                     if (leftClickFootPrintsArray.length !== 0) {
-                        link = link + "covName=" + leftClickFootPrintsArray[0].coverageID;
+                        hasCoverage = true;
+                        link = link + "covName=" + leftClickFootPrintsArray[0].coverageID;                        
                     }
 
                     if (clickedLatitude != "" && clickedLongitude != "") {
-                        link = link + "&lat=" + clickedLatitude;
+                        if (hasCoverage) {
+                            link = link + "&lat=" + clickedLatitude;
+                        } else {
+                            // Click outside of a footprint
+                            link = link + "lat=" + clickedLatitude;
+                        }
                         link = link + "&lon=" + clickedLongitude;
                     }
 
