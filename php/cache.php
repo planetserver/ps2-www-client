@@ -27,13 +27,15 @@
     memcached-tool 127.0.0.1:11211 stats    
 */      
     // Configuration
+    // Using POST to both Petascope and Python server
     define("LOG_FILE", "/var/www/html/cache.log");
-    define("DOMAIN_MOON", "http://moon.planetserver.eu");
-    define("DOMAIN_MARS", "http://mars.planetserver.eu");
+    // Deploy to server first
+    define("DOMAIN_MOON", "http://localhost");
+    define("DOMAIN_MARS", "http://localhost");
     define("PETASCOPE_PORT", "8080");
     define("PYTHON_STRETCHING_PORT", "8090");        
-    define("PETASCOPE_URL", "DOMAIN" . ":" . PETASCOPE_PORT . "/rasdaman/ows?query=");
-    define("PYTHON_STRETCHING_URL", "DOMAIN" . ":" . PYTHON_STRETCHING_PORT . "/python?wcpsQuery=");
+    define("PETASCOPE_URL", "DOMAIN" . ":" . PETASCOPE_PORT . "/rasdaman/ows");
+    define("PYTHON_STRETCHING_URL", "DOMAIN" . ":" . PYTHON_STRETCHING_PORT . "/python");
     
     $mem = new Memcache();
     // Memcache is localhost server
@@ -57,8 +59,8 @@
     }, $query);
     
     # encode query as curl cannot handle spaces in URL
-    $encode_query = str_replace (' ', '%20', $query); 
-      
+    $query = str_replace (' ', '%20', $query);       
+          
     # make query with url for Petascope from domain (mars/moon)
     $PETASCOPE_DOMAIN_URL = "";
     $PYTHON_STRETCHING_DOMAIN_URL = "";
@@ -70,23 +72,29 @@
         $PETASCOPE_DOMAIN_URL = str_replace("DOMAIN", DOMAIN_MOON, PETASCOPE_URL);
         $PYTHON_STRETCHING_DOMAIN_URL = str_replace("DOMAIN", DOMAIN_MOON, PYTHON_STRETCHING_URL); 
     }
-    $redirect_url =  $PETASCOPE_DOMAIN_URL . $encode_query;
-    
+    #$redirect_url =  $PETASCOPE_DOMAIN_URL . $encode_query;
+    $petascope_url = $PETASCOPE_DOMAIN_URL;
+    $redirect_url = $petascope_url;
+
+    $post = "query=" . $query;
+   
     if (strpos($query, "tiff") == true) {
         // tiff -> Pyton stretching service which get result from Petascope and process with Python,
         // then returns in PNG as normally
-        $redirect_url = $PYTHON_STRETCHING_DOMAIN_URL . $redirect_url;       
+        $redirect_url = $PYTHON_STRETCHING_DOMAIN_URL;
+        // post this wcpsQuery=http://....?query=... to Python server
+        $post = "wcpsQuery=" . $petascope_url . "?" . $post;               
     }
         
     // hash the key to unique value and store in memcache
-    $key = md5($encode_query);
+    $key = md5($post);
     $result = $mem->get($key);    
-    
+ 
      if ($result) {
         echo $result;
         write_to_log('Key: ' . $key . ' is retrieving data from memcached.');
     } else {
-        $response = get_web_page($redirect_url);
+        $response = post_web_page($redirect_url, $post);
         echo $response;
         write_to_log('Key: ' . $key . ' is storing data to memcached.');
         $mem->set($key, $response) or die("Couldn't save anything to memcached...");
@@ -99,7 +107,10 @@ function write_to_log($content) {
     file_put_contents(LOG_FILE, date("c") . " " . $content . "\r\n", FILE_APPEND);
 }
 
-function get_web_page($url) {
+function post_web_page($url, $post) { 
+  
+   $ch = curl_init($url);
+
     $options = array(
         CURLOPT_RETURNTRANSFER => true,   // return web page
         CURLOPT_HEADER         => false,  // don't return headers (use to get ERROR when set to true)
@@ -108,8 +119,46 @@ function get_web_page($url) {
         CURLOPT_ENCODING       => "",     // handle compressed
         CURLOPT_USERAGENT      => "test", // name of client
         CURLOPT_AUTOREFERER    => true,   // set referrer on redirect
-        CURLOPT_CONNECTTIMEOUT => 50,    // time-out on connect
-        CURLOPT_TIMEOUT        => 50,    // time-out on response
+        CURLOPT_CONNECTTIMEOUT => 20,    // time-out on connect
+        CURLOPT_TIMEOUT        => 20,    // time-out on response
+        CURLOPT_FAILONERROR    => true,  // returns error from curl
+    ); 
+
+   curl_setopt_array($ch, $options);
+
+   curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+   curl_setopt($ch, CURLOPT_POSTFIELDS, $post);
+
+   // execute!
+   $response = curl_exec($ch);
+
+    $http_status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    $curl_error = curl_error($ch);
+   // close the connection, release resources used
+   curl_close($ch); 
+    
+    if ($http_status == 200) {
+        return $response;
+    }    
+
+    # error in curl, don't do anything to return value to client
+    write_to_log("Error from server: " . $http_status . " " . $curl_error);
+    exit (1);
+}
+
+function get_web_page($url) {
+    //echo $url;
+    $url = 'http://moon.planetserver.eu:8080/rasdaman/ows?query=for%20data%20in%20(M3G20090117T011605)%20return%20encode({red:(float)(((int)(255/(max((data).band_10)%20-%20min((data).band_10)))%20*%20((data).band_10%20-%20min((data).band_10))));%20green:%20(float)(((int)(255/(max((data).band_13)%20-%20min((data).band_13)))%20*%20((data).band_13%20-%20min((data).band_13))));%20blue:%20(float)(((int)(255/(max((data).band_78)%20-%20min((data).band_78)))%20*%20((data).band_78%20-%20min((data).band_78))));%20alpha:%20(float)((((data).band_85%20>0)%20*%20255))},%20"png",%20"nodata=65535")';
+    $options = array(
+        CURLOPT_RETURNTRANSFER => true,   // return web page
+        CURLOPT_HEADER         => false,  // don't return headers (use to get ERROR when set to true)
+        CURLOPT_FOLLOWLOCATION => true,   // follow redirects
+        CURLOPT_MAXREDIRS      => 10,     // stop after 10 redirects
+        CURLOPT_ENCODING       => "",     // handle compressed
+        CURLOPT_USERAGENT      => "test", // name of client
+        CURLOPT_AUTOREFERER    => true,   // set referrer on redirect
+        CURLOPT_CONNECTTIMEOUT => 20,    // time-out on connect
+        CURLOPT_TIMEOUT        => 20,    // time-out on response
         CURLOPT_FAILONERROR    => true,  // returns error from curl
     ); 
 
@@ -118,9 +167,9 @@ function get_web_page($url) {
 
     $content  = curl_exec($ch);       
     // also get the error and response code
-    #$errors = curl_error($ch);
-    #var_dump($errors);    
-    #echo "content: ". $content;
+    $errors = curl_error($ch);
+    var_dump($errors);    
+    echo "content: ". $content;
     
     $http_status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
     $curl_error = curl_error($ch);
