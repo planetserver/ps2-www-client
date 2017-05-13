@@ -32,7 +32,7 @@ $(document).ready(function() {
             cache: false,
             async: true,
             success: function(data) {
-                xAxisArray = data.split(",");
+                xAxisArray = data.split(",").map(Number);
             }
     });
 });
@@ -62,7 +62,7 @@ function Chart_handleSpectralChartValues(spectralFloatsArray, selectedWaveLength
 
             // wavelength is selected wavelength from spectral library
             var wavelength = selectedWaveLengthSpectralLibraryArrayRef[i];
-            var spectralObj = new SpectralDataConstructorLine(parseFloat(wavelength).toFixed(3), relectance);
+            var spectralObj = new SpectralDataConstructorLine(parseFloat(wavelength).toFixed(5), relectance);
             spectralLibraryDataProviderChart.push(spectralObj);
         }
     }
@@ -80,7 +80,7 @@ function Chart_handleClickedChartValues(floatsArray) {
         // Only get points with valid value
         var relectance = floatsArray[i];
 
-        var spectralObj = new SpectralDataConstructorLine(xAxisArray[i], relectance);
+        var spectralObj = new SpectralDataConstructorLine(xAxisArray[i].toFixed(5), relectance);
         spectralDataProviderChart.push(spectralObj);
     }
 
@@ -99,6 +99,11 @@ function Chart_implementChart(isChangeSpectralLibrary, floatsArray, spectralFloa
 
     // get chart data values from clicked chart values (438 values)
     var spectralDataProviderChart = Chart_handleClickedChartValues(floatsArray);
+    var minWavelength = Math.min.apply(null, xAxisArray).toFixed(5);
+    var maxWavelength = Math.max.apply(null, xAxisArray).toFixed(5);
+
+    // Change the default of set range wavelength from min to max instead of (1-4)
+    $("#txtRangeCharts" + chartPostfix).val(minWavelength + "-" + maxWavelength);
 
     // Check if it is update current line chart or add new chart
     if ($("#radioBtnAddChart" + chartPostfix).is(':checked')) {
@@ -204,11 +209,11 @@ function Chart_implementChart(isChangeSpectralLibrary, floatsArray, spectralFloa
                 // combine multiple spectral library charts > 4 can have undefined array indexes
                 if (typeof slObjTmp != 'undefined') {
                     // Prepend values from spectral library
-                    if (wavelength < 1) {
+                    if (wavelength < minWavelength) {
                         var reflectanceIndex = "sl_reflectance" + j;
                         // get the reflectance of the current wavelength from all spectral libraries
                         obj[reflectanceIndex] = slObjTmp.reflectance;
-                    } else if (wavelength > 4) {
+                    } else if (wavelength > maxWavelength) {
                         var reflectanceIndex = "sl_reflectance" + j;
                         // get the reflectance of the current wavelength from all spectral libraries
                         obj[reflectanceIndex] = slObjTmp.reflectance;
@@ -217,16 +222,16 @@ function Chart_implementChart(isChangeSpectralLibrary, floatsArray, spectralFloa
 
                 // Iterate all the clicked value charts (outside of range then, value is null)
                 for (var k = 0; k < dataProviderChartsArrayRef.length; k++) {
-                    if (wavelength < 1 || wavelength > 4) {
+                    if (wavelength < minWavelength || wavelength > maxWavelength) {
                         var reflectanceIndex = "reflectance" + k;
                         obj[reflectanceIndex] = null;
                     }
                 }
             }
 
-            if (wavelength < 1) {
+            if (wavelength < minWavelength) {
                 prependArray.push(obj);
-            } else if(wavelength > 4) {
+            } else if(wavelength > maxWavelength) {
                 appendArray.push(obj);
             }
         }
