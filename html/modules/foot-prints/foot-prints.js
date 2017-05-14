@@ -8,13 +8,22 @@ var attributes = ""; // attirbutes for footprints shape
 // cache all the footprints by data_type
 var cachedArray = [];
 
+// the date stored in database is slightly different from the DescribeCoverage values for East, North
+var EPSILON = 0.00001;
+
 // Create constructor for dataset object
-function DataSetConstructor(coverageID, Easternmost_longitude, Maximum_latitude, Minimum_latitude, Westernmost_longitude, latList, longList, isLoadedImage, centroid_longitude) {
+function DataSetConstructor(coverageID, easternmost_longitude, maximum_latitude, minimum_latitude, westernmost_longitude, latList, longList, isLoadedImage, centroid_longitude, width, height, resolution, minimum_east, minimum_north, maximum_east, maximum_north) {
     this.coverageID = coverageID;
-    this.Easternmost_longitude = Easternmost_longitude;
-    this.Maximum_latitude = Maximum_latitude;
-    this.Minimum_latitude = Minimum_latitude;
-    this.Westernmost_longitude = Westernmost_longitude;
+    if (easternmost_longitude > 180) { //long in www spans from -180 to 180, if its bigger than 180 = -360
+        easternmost_longitude = easternmost_longitude - 360;        
+    }
+    if (westernmost_longitude > 180) {
+        westernmost_longitude = westernmost_longitude - 360;
+    }
+    this.easternmost_longitude = easternmost_longitude;
+    this.maximum_latitude = maximum_latitude;
+    this.minimum_latitude = minimum_latitude;
+    this.westernmost_longitude = westernmost_longitude;
     this.latList = latList;
     this.longList = longList;
 
@@ -22,14 +31,28 @@ function DataSetConstructor(coverageID, Easternmost_longitude, Maximum_latitude,
     this.isLoadedImage = isLoadedImage;
 
     this.centroid_longitude = centroid_longitude;
+
+    this.width = width;
+    this.height = height;
+    this.resolution = resolution;
+    this.minimum_east = minimum_east + EPSILON;
+    this.minimum_north = minimum_north + EPSILON;
+    this.maximum_east = maximum_east - EPSILON;
+    this.maximum_north = maximum_north - EPSILON;
 }
 
-function CheckedDataSetConstructor(coverageID, Easternmost_longitude, Maximum_latitude, Minimum_latitude, Westernmost_longitude, latList, longList, latClickedPoint, longClickedPoint, shapeObj, wcpsQuery, centroid_longitude) {
+function CheckedDataSetConstructor(coverageID, easternmost_longitude, maximum_latitude, minimum_latitude, westernmost_longitude, latList, longList, latClickedPoint, longClickedPoint, shapeObj, wcpsQuery, centroid_longitude, width, height, resolution, minimum_east, minimum_north, maximum_east, maximum_north) {
     this.coverageID = coverageID;
-    this.Easternmost_longitude = Easternmost_longitude;
-    this.Maximum_latitude = Maximum_latitude;
-    this.Minimum_latitude = Minimum_latitude;
-    this.Westernmost_longitude = Westernmost_longitude;
+    if (easternmost_longitude > 180) { //long in www spans from -180 to 180, if its bigger than 180 = -360
+        easternmost_longitude = easternmost_longitude - 360;        
+    }
+    if (westernmost_longitude > 180) {
+        westernmost_longitude = westernmost_longitude - 360;
+    }
+    this.easternmost_longitude = easternmost_longitude;
+    this.maximum_latitude = maximum_latitude;
+    this.minimum_latitude = minimum_latitude;
+    this.westernmost_longitude = westernmost_longitude;
     this.latList = latList;
     this.longList = longList;
 
@@ -45,7 +68,16 @@ function CheckedDataSetConstructor(coverageID, Easternmost_longitude, Maximum_la
     this.wcpsQuery = wcpsQuery;
 
     this.centroid_longitude = centroid_longitude;
+
+    this.width = width;
+    this.height = height;
+    this.resolution = resolution;
+    this.minimum_east = minimum_east;
+    this.minimum_north = minimum_north;
+    this.maximum_east = maximum_east;
+    this.maximum_north = maximum_north;
 }
+
 
 
 // load all footprints data to an array
@@ -70,7 +102,7 @@ function getAllFootprintsFromDatabase() {
             async: false, // this needs time to query all footprints from database and load to WWW then the problem with cache is done.
             success: function(data) {
                 $.each(data, function(key, val) {
-                    var dataSetFootPrint = new DataSetConstructor(val.coverageID, val.Easternmost_longitude, val.Maximum_latitude, val.Minimum_latitude, val.Westernmost_longitude, val.latList, val.longList, false, val.centroid_longitude);
+                    var dataSetFootPrint = new DataSetConstructor(val.coverageID, val.easternmost_longitude, val.maximum_latitude, val.minimum_latitude, val.westernmost_longitude, val.latList, val.longList, false, val.centroid_longitude, val.width, val.height, val.resolution, val.minimum_east, val.minimum_north, val.maximum_east, val.maximum_north);
 
                     // push this dataSet to array for displaying later
                     allFootPrintsArray.push(dataSetFootPrint);
@@ -116,7 +148,7 @@ function getFootPrintsContainingPointLeftClick(shapesArray, attributesObj, check
 	    }
 
             $.each(data, function(key, val) {
-                var dataSetFootPrint = new CheckedDataSetConstructor(val.coverageID, val.Easternmost_longitude, val.Maximum_latitude, val.Minimum_latitude, val.Westernmost_longitude, val.latList, val.longList, latitude, longitude, null, "", val.centroid_longitude);
+                var dataSetFootPrint = new CheckedDataSetConstructor(val.coverageID, val.easternmost_longitude, val.maximum_latitude, val.minimum_latitude, val.westernmost_longitude, val.latList, val.longList, latitude, longitude, null, "", val.centroid_longitude, val.width, val.height, val.resolution, val.minimum_east, val.minimum_north, val.maximum_east, val.maximum_north);
 
                 // Get the last clicked coverageID to draw the chart when clicking on loaded image
                 lastCovID = val.coverageID;
@@ -221,8 +253,8 @@ function getFootPrintsContainingPointRightClick(shapesArray, attributesObj, chec
         success: function(data) {
             console.log("Get footprints containing point for right click:" + getCoveragesContainingPointData);
             $.each(data, function(key, val) {
-                var dataSetFootPrint = new CheckedDataSetConstructor(val.coverageID, val.Easternmost_longitude, val.Maximum_latitude, val.Minimum_latitude, val.Westernmost_longitude, val.latList, val.longList, latitude, longitude, false, false, "",
-                    val.centroid_longitude);
+                var dataSetFootPrint = new CheckedDataSetConstructor(val.coverageID, val.easternmost_longitude, val.maximum_latitude, val.minimum_latitude, val.westernmost_longitude, val.latList, val.longList, latitude, longitude, false, false, "",
+                    val.centroid_longitude, val.width, val.height, val.resolution, val.minimum_east, val.minimum_north, val.maximum_east, val.maximum_north);
                 console.log("mememe: " + val.coverageID);
 
                 // Get the last clicked coverageID to draw the chart when clicking on loaded image

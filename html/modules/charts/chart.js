@@ -1,4 +1,3 @@
-
 // store the xAxis values from 1 - 4
 xAxisArray = [];
 
@@ -26,14 +25,14 @@ $(document).ready(function() {
 
     // load the x_axis for charts from file
     $.ajax({
-            type: "GET",
-            dataType: "text",
-            url: csvFile,
-            cache: false,
-            async: true,
-            success: function(data) {
-                xAxisArray = data.split(",").map(Number);
-            }
+        type: "GET",
+        dataType: "text",
+        url: csvFile,
+        cache: false,
+        async: true,
+        success: function(data) {
+            xAxisArray = data.split(",").map(Number);
+        }
     });
 });
 
@@ -115,7 +114,7 @@ function Chart_implementChart(isChangeSpectralLibrary, floatsArray, spectralFloa
                 return;
             }
             dataProviderChartsArrayRef.push(spectralDataProviderChart);
-            console.log("Add new clicked line chart, count line charts: " + ( lineChartsCountRef.count + 1 ) );
+            console.log("Add new clicked line chart, count line charts: " + (lineChartsCountRef.count + 1));
 
             if (chartPostfix === "MainChart") {
                 // add the clicked point to place markers array to draw a layer with all points
@@ -128,7 +127,7 @@ function Chart_implementChart(isChangeSpectralLibrary, floatsArray, spectralFloa
         } else {
             // Handle for add new spectral library
             spectralLibrarydataProviderChartsArrayRef.push(spectralLibraryDataProviderChart);
-            console.log("Add new spectral library line chart, count line charts: " + ( lineChartsCountRef.count + 1 ) );
+            console.log("Add new spectral library line chart, count line charts: " + (lineChartsCountRef.count + 1));
 
             // a line chart is added
             isAddedALineChartRef.isDrawn = true;
@@ -150,12 +149,12 @@ function Chart_implementChart(isChangeSpectralLibrary, floatsArray, spectralFloa
                 placeMarkersArray.push(obj);
             }
         } else if (spectralLibrarydataProviderChartsArrayRef.length === 0 && isChangeSpectralLibrary) {
-                // Handle for spectral library
-                spectralLibrarydataProviderChartsArrayRef.push(spectralLibraryDataProviderChart);
-                console.log("Add the first spectral library chart");
+            // Handle for spectral library
+            spectralLibrarydataProviderChartsArrayRef.push(spectralLibraryDataProviderChart);
+            console.log("Add the first spectral library chart");
 
-                // a line chart is added
-                isAddedALineChartRef.isDrawn = true;
+            // a line chart is added
+            isAddedALineChartRef.isDrawn = true;
         } else {
             // Update the latest clicked chart
             if (!isChangeSpectralLibrary) {
@@ -188,7 +187,7 @@ function Chart_implementChart(isChangeSpectralLibrary, floatsArray, spectralFloa
     // This is a combined values from point values and spectral values in range (1 - 4)
     // As spectral library has more values from 0 - 1 and 4 - 5 then it need to prepend and append these values to spectralDataProviderChartMatched
     // Use the wavelength from spectral library to concatinate
-    if ( spectralLibrarydataProviderChartsArrayRef.length > 0) {
+    if (spectralLibrarydataProviderChartsArrayRef.length > 0) {
         var prependArray = [];
         var appendArray = [];
 
@@ -231,7 +230,7 @@ function Chart_implementChart(isChangeSpectralLibrary, floatsArray, spectralFloa
 
             if (wavelength < minWavelength) {
                 prependArray.push(obj);
-            } else if(wavelength > maxWavelength) {
+            } else if (wavelength > maxWavelength) {
                 appendArray.push(obj);
             }
         }
@@ -284,7 +283,7 @@ function Chart_getIdenticalValue(wavelength, spectralObjArray) {
 
 // it needs to match the wavelength from spectra library charts and 1 clicked value chart (i.e: they don't have same wavelength points and cannot draw charts if they are not matched)
 function Chart_approximateSpectralValues(spectralDataProviderChart, spectralLibrarydataProviderChartsArrayRef) {
-     // store the array for matching spectral library charts and 1 clciked value chart
+    // store the array for matching spectral library charts and 1 clciked value chart
     var spectralDataProviderChartMatched = [];
 
     try {
@@ -308,7 +307,7 @@ function Chart_approximateSpectralValues(spectralDataProviderChart, spectralLibr
 
             spectralDataProviderChartMatched.push(obj);
         }
-    } catch(err) {
+    } catch (err) {
         console.log("Error: " + err);
         console.log(spectralLibrarydataProviderChartsArrayRef);
         console.log(spectralDataProviderChart);
@@ -351,7 +350,7 @@ function Chart_CombineDataProviders(spectralDataProviderChartMatched, dataProvid
                 // reflectance from clicked value can be null
                 obj[reflectanceIndex] = dataProviderChartsArrayRef[j][i].reflectance;
             }
-        } catch(err) {
+        } catch (err) {
             console.log("wavelengh index: " + i);
             return;
         }
@@ -447,61 +446,61 @@ function Chart_drawChart(combinedArray, chartDivID, dataProviderChartsArrayRef, 
     console.log(chartsArray);
 
     var chart = AmCharts.makeChart("#" + chartDivID, {
-            "type": "serial",
-            "theme": "light",
-            "marginRight": 10,
-            "marginLeft": 10,
-            "backgroundColor": "#2F5597",
-            "backgroundAlpha": 1,
-            "autoMarginOffset": 20,
-            "mouseWheelZoomEnabled": true,
-            "dataProvider": combinedArray,
-            "fontSize": 14,
-            "color": "#ffffff",
-            "marginTop": 50,
-            "valueAxes": [{
-                "axisAlpha": 0,
-                "guides": [{
-                    "fillAlpha": 0.1,
-                    "fillColor": "#888888",
-                    "lineAlpha": 0,
-                    "toValue": 16,
-                    "value": 10
-                }],
-                "position": "left",
-                "tickLength": 0,
-                "title": "Reflectance"
+        "type": "serial",
+        "theme": "light",
+        "marginRight": 10,
+        "marginLeft": 10,
+        "backgroundColor": "#2F5597",
+        "backgroundAlpha": 1,
+        "autoMarginOffset": 20,
+        "mouseWheelZoomEnabled": true,
+        "dataProvider": combinedArray,
+        "fontSize": 14,
+        "color": "#ffffff",
+        "marginTop": 50,
+        "valueAxes": [{
+            "axisAlpha": 0,
+            "guides": [{
+                "fillAlpha": 0.1,
+                "fillColor": "#888888",
+                "lineAlpha": 0,
+                "toValue": 16,
+                "value": 10
             }],
-            "categoryAxis": {
-                "title": "Wavelength (µm)"
-            },
-            "graphs": chartsArray,
-            "chartCursor": {
-                "pan": true,
-                "valueLineEnabled": true,
-                "valueLineBalloonEnabled": false,
-                "cursorAlpha": 1,
-                "cursorColor": "#258cbb",
-                "limitToGraph": "g1",
-                "valueLineAlpha": 0.2,
-                "valueZoomable": true,
-                "valueBalloonsEnabled": true,
-                "categoryBalloonEnabled": true
-            },
-                "categoryField": "wavelength",
-                 "categoryAxis": {
-                    //"parseDates": true,
-                    "axisAlpha": 0,
-                    "gridAlpha": 0.1,
-                    "minorGridAlpha": 0.1,
-                    "minorGridEnabled": true,
-                    "title": "Wavelength (µm)"
-            },
-            "export": {
-                "enabled": true,
-                "fileName": "ps2_" + drawCoverageID + "_lat_" + drawLat + "_lon_" + drawLon
-            }
-        });
+            "position": "left",
+            "tickLength": 0,
+            "title": "Reflectance"
+        }],
+        "categoryAxis": {
+            "title": "Wavelength (µm)"
+        },
+        "graphs": chartsArray,
+        "chartCursor": {
+            "pan": true,
+            "valueLineEnabled": true,
+            "valueLineBalloonEnabled": false,
+            "cursorAlpha": 1,
+            "cursorColor": "#258cbb",
+            "limitToGraph": "g1",
+            "valueLineAlpha": 0.2,
+            "valueZoomable": true,
+            "valueBalloonsEnabled": true,
+            "categoryBalloonEnabled": true
+        },
+        "categoryField": "wavelength",
+        "categoryAxis": {
+            //"parseDates": true,
+            "axisAlpha": 0,
+            "gridAlpha": 0.1,
+            "minorGridAlpha": 0.1,
+            "minorGridEnabled": true,
+            "title": "Wavelength (µm)"
+        },
+        "export": {
+            "enabled": true,
+            "fileName": "ps2_" + drawCoverageID + "_lat_" + drawLat + "_lon_" + drawLon
+        }
+    });
 
     // it needs to resize the chart and write it when it is hidden
     //chart.invalidateSize();
@@ -517,113 +516,156 @@ function Chart_drawChart(combinedArray, chartDivID, dataProviderChartsArrayRef, 
 // This function will get the WCPS query value for all the bands of clicked coordinate
 function Chart_getQueryResponseAndSetChart(query) {
     if (currentOpenDock === "mainChartDock") {
-	    MainChart_getQueryResponseAndSetChart(query);
+        MainChart_getQueryResponseAndSetChart(query);
     } else if (currentOpenDock === "bandRatioDock") {
-	    RatioChart_getQueryResponseAndSetChart(query);
+        RatioChart_getQueryResponseAndSetChart(query);
     }
 }
 
-// Parse float from string of float values in CSV("0.2323,0.3425,0.3535")
-function Chart_parseFloatsWithComma(input) {
-    var floatsArray = [];
-    input = input.replace(/,/g, ' ');
-    floatsArray = input.split(" ");
+// Extract the text from the double quotes
+function extractText(str) {
+    var ret = "";
 
-    // convert string value to float
-    for (var i = 0; i < floatsArray.length; i++) {
-    	floatsArray[i] = parseFloat(floatsArray[i]);
-	if (floatsArray[i] === 65535 || floatsArray[i] < 0.00001) {
-            floatsArray[i] = null;
-        }
+    if (/"/.test(str)) {
+        ret = str.match(/"(.*?)"/)[1];
+    } else {
+        ret = str;
     }
 
-    //console.log("after filter null values:");
-    //console.log(floatsArray);
-    return floatsArray;
+    return ret;
 }
 
-// Parse float from string of float values in CSV ('{"0.2323 0.342 0.436"}') for spectral library reflectance values
-function Chart_parseFloats(input) {
-    var floatsArray = [];
-    input = input.match(/"([^"]+)"/)[1];
-    floatsArray = input.split(" ");
-
-    // convert string value to float
+// Convert array of string to array of float values
+function convertArrayStringToFloat(floatsArray) {
+     // convert string value to float
     for (var i = 0; i < floatsArray.length; i++) {
-	    floatsArray[i] = parseFloat(floatsArray[i]);
+        floatsArray[i] = parseFloat(floatsArray[i]);
         if (floatsArray[i] === 65535 || floatsArray[i] < 0.00001) {
             floatsArray[i] = null;
         }
     }
 
-    //console.log("after filter null values:");
-    //console.log(floatsArray);
     return floatsArray;
+}
+
+// Parse float from string of float values in CSV ('{"0.2323 0.342 0.436"}, {"0.3434 0.534534 0.4363463"}') for spectral library reflectance values
+function Chart_parseFloats(input) {
+    var matches = input.match(/\{(.*?)\}/g);
+
+    var resultArray = [];
+
+    if (matches) {
+        // All the arrays have same length;
+        var length = 0;
+        // Store all the floatArrays
+        var allArrays = [];
+        // each Y pixel is a new array
+        for (var i = 0; i < matches.length; i++) {
+            // all X pixels of a Y pixel is separated by "," and enquoted in brackets                        
+            var tmpArray = matches[i].split(",");            
+            for (var j = 0; j < tmpArray.length; j++) {                
+                var tmp = extractText(tmpArray[j]);           
+                // get all the values in string first
+                var floatsArray = tmp.split(" ");
+                floatsArray = convertArrayStringToFloat(floatsArray);
+                length = floatsArray.length;
+
+                allArrays.push(floatsArray);
+            }            
+        }
+
+        // Calculate the average for all arrays
+        for (var i = 0; i < length; i++) {
+            var totalValue = 0;
+            for (var j = 0; j < allArrays.length; j++) {
+                // If a pixel from one of array results is null, so it is null for all arrays
+                if (allArrays[j][i] == null) {
+                    totalValue = null;                    
+                    break;
+                } else {
+                    totalValue = totalValue + allArrays[j][i];
+                }
+            }
+
+            if (totalValue == null) {
+                resultArray.push(totalValue);
+            } else {
+                // Average values of all arrays
+                var average = (totalValue / allArrays.length).toFixed(5);
+                resultArray.push(average);
+            }
+        }
+    } else {
+        alert("Cannot get data from WCPS query!");
+    }    
+
+    return resultArray;
 }
 
 
 
-    // Draw 2 charts from clicked coordinate and product spectral library
-    /*var chart = AmCharts.makeChart("#" + chartDivID, {
-        "type": "xy",
-        "theme": "light",
-        "marginRight": 10,
-        "marginLeft": 10,
-        "backgroundColor": "#2F5597",
-        "backgroundAlpha": 1,
-        "autoMarginOffset": 20,
-      //  "mouseWheelZoomEnabled": true,
-        "dataProvider": spectraDataProviderChart,
-        "fontSize": 14,
-        "color": "#ffffff",
-        "marginTop": 50,
-        "valueAxes": [{
-            "position": "bottom",
-            "tickLength": 0,
-            "title": "Wavelength (µm)"
-        }, {
-            "position": "left",
-            "tickLength": 0,
-            "title": "Reflectance"
-        }],
-        "graphs": [{
-            "id": "g1",
-            "bullet": "round",
-            "maxBulletSize": 1,
-            "lineAlpha": 1,
-            "valueField": "value",
-            "xField": "wavelength",
-            "yField": "value",
-            "balloonText": "<span style='font-size:14px; color: #2E2EFE'> Wavelength: [[wavelength]]<br><b> Reflectance: [[value]]</span></b>",
-        }, {
-            "id": "g2",
-            "bullet": "diamond",
-            "maxBulletSize": 1,
-            "lineAlpha": 1,
-            "valueField": "wavelength1",
-            "xField": "wavelength1",
-            "yField": "wavelength1",
-            "balloonText": "<span style='font-size:14px; color: #CBA706'> Wavelength: [[wavelength1]]<br><b> Reflectance: [[wavelength1]]</span></b>",
-        }],
 
-        "chartCursor": {
-        //    "pan": true,
-            "valueLineEnabled": true,
-            "valueLineBalloonEnabled": false,
-            "cursorAlpha": 1,
-            "cursorColor": "#258cbb",
-            "limitToGraph": "g1",
-            "valueLineAlpha": 0.2,
-            "valueZoomable": true,
-            "valueBalloonsEnabled": true,
-            "categoryBalloonEnabled": true
-        },
-        "export": {
-            "enabled": true,
-            "fileName": "ps2_" + drawCoverageID + "_lat_" + drawLat + "_lon_" + drawLon
-        }
-    });
+// Draw 2 charts from clicked coordinate and product spectral library
+/*var chart = AmCharts.makeChart("#" + chartDivID, {
+    "type": "xy",
+    "theme": "light",
+    "marginRight": 10,
+    "marginLeft": 10,
+    "backgroundColor": "#2F5597",
+    "backgroundAlpha": 1,
+    "autoMarginOffset": 20,
+  //  "mouseWheelZoomEnabled": true,
+    "dataProvider": spectraDataProviderChart,
+    "fontSize": 14,
+    "color": "#ffffff",
+    "marginTop": 50,
+    "valueAxes": [{
+        "position": "bottom",
+        "tickLength": 0,
+        "title": "Wavelength (µm)"
+    }, {
+        "position": "left",
+        "tickLength": 0,
+        "title": "Reflectance"
+    }],
+    "graphs": [{
+        "id": "g1",
+        "bullet": "round",
+        "maxBulletSize": 1,
+        "lineAlpha": 1,
+        "valueField": "value",
+        "xField": "wavelength",
+        "yField": "value",
+        "balloonText": "<span style='font-size:14px; color: #2E2EFE'> Wavelength: [[wavelength]]<br><b> Reflectance: [[value]]</span></b>",
+    }, {
+        "id": "g2",
+        "bullet": "diamond",
+        "maxBulletSize": 1,
+        "lineAlpha": 1,
+        "valueField": "wavelength1",
+        "xField": "wavelength1",
+        "yField": "wavelength1",
+        "balloonText": "<span style='font-size:14px; color: #CBA706'> Wavelength: [[wavelength1]]<br><b> Reflectance: [[wavelength1]]</span></b>",
+    }],
 
-    // it needs to resize the chart and write it when it is hidden
-    chart.invalidateSize();
-    chart.write(chartDivID);*/
+    "chartCursor": {
+    //    "pan": true,
+        "valueLineEnabled": true,
+        "valueLineBalloonEnabled": false,
+        "cursorAlpha": 1,
+        "cursorColor": "#258cbb",
+        "limitToGraph": "g1",
+        "valueLineAlpha": 0.2,
+        "valueZoomable": true,
+        "valueBalloonsEnabled": true,
+        "categoryBalloonEnabled": true
+    },
+    "export": {
+        "enabled": true,
+        "fileName": "ps2_" + drawCoverageID + "_lat_" + drawLat + "_lon_" + drawLon
+    }
+});
+
+// it needs to resize the chart and write it when it is hidden
+chart.invalidateSize();
+chart.write(chartDivID);*/

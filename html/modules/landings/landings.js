@@ -560,7 +560,7 @@ requirejs(['../../libs/web-world-wind/WorldWind',
                             }
                         }
 
-                        queryBuilder(clickedLatitude, clickedLongitude, lastCovID, checkedFootPrintsArray[index].Easternmost_longitude, checkedFootPrintsArray[index].Westernmost_longitude, checkedFootPrintsArray[index].centroid_longitude);
+                        queryBuilder(clickedLatitude, clickedLongitude, lastCovID, checkedFootPrintsArray[index].easternmost_longitude, checkedFootPrintsArray[index].westernmost_longitude, checkedFootPrintsArray[index].centroid_longitude);
                     }
                 });
             }
@@ -655,24 +655,12 @@ requirejs(['../../libs/web-world-wind/WorldWind',
                     }
                 };
 
-                var maxlong;
-                var minlong;
+                
                 //  console.log("Checked Footprint: " + i + " ");
-                //  console.log("east lat1: " + checkedFootPrintsArray[i].Easternmost_longitude);
-                // console.log("west lat1: " + checkedFootPrintsArray[i].Westernmost_longitude);
-                maxlong = checkedFootPrintsArray[i].Easternmost_longitude; //assign maxlong from the checked footprint
-                minlong = checkedFootPrintsArray[i].Westernmost_longitude; //assign minlong from the checked footprint
-                if (checkedFootPrintsArray[i].Easternmost_longitude > 180) { //long in www spans from -180 to 180, if its bigger than 180 = -360
-                    maxlong = checkedFootPrintsArray[i].Easternmost_longitude - 360;
-                    //  console.log("max lon: " + maxlong);
-                }
-                if (checkedFootPrintsArray[i].Westernmost_longitude > 180) {
-                    minlong = checkedFootPrintsArray[i].Westernmost_longitude - 360;
-                    //  console.log("min lon: " + minlong);
-                } else {
-                    maxlong = checkedFootPrintsArray[i].Easternmost_longitude; //if long is in between -180/180 then assgin the original longs
-                    minlong = checkedFootPrintsArray[i].Westernmost_longitude;
-                }
+                //  console.log("east lat1: " + checkedFootPrintsArray[i].easternmost_longitude);
+                // console.log("west lat1: " + checkedFootPrintsArray[i].westernmost_longitude);
+                var maxlong = checkedFootPrintsArray[i].easternmost_longitude; //assign maxlong from the checked footprint
+                var minlong = checkedFootPrintsArray[i].westernmost_longitude; //assign minlong from the checked footprint    
 
                 checkedFootPrintsArray[i].isLoadedImage = true;
                 // Load default bands for all footprints
@@ -688,7 +676,7 @@ requirejs(['../../libs/web-world-wind/WorldWind',
                     }
 
 
-                    var surfaceImage = new WorldWind.SurfaceImage(new WorldWind.Sector(checkedFootPrintsArray[i].Minimum_latitude, checkedFootPrintsArray[i].Maximum_latitude, minlong, maxlong), WCPSLoadImage);
+                    var surfaceImage = new WorldWind.SurfaceImage(new WorldWind.Sector(checkedFootPrintsArray[i].minimum_latitude, checkedFootPrintsArray[i].maximum_latitude, minlong, maxlong), WCPSLoadImage);
 
 
                     console.log("Load default image on footprint: " + coverageID);
@@ -739,21 +727,10 @@ requirejs(['../../libs/web-world-wind/WorldWind',
                 var minlong;
                 // only load RGB Combinations to the selected footprint from selected comboBox
                 if (checkedFootPrintsArray[i].coverageID.toLowerCase() === coverageID) {
-                    maxlong = checkedFootPrintsArray[i].Easternmost_longitude; //assign maxlong from the checked footprint
-                    minlong = checkedFootPrintsArray[i].Westernmost_longitude; //assign minlong from the checked footprint
-                    if (checkedFootPrintsArray[i].Easternmost_longitude > 180) { //long in www spans from -180 to 180, if its bigger than 180 = -360
-                        maxlong = checkedFootPrintsArray[i].Easternmost_longitude - 360;
-                        //  console.log("max lon: " + maxlong);
-                    }
-                    if (checkedFootPrintsArray[i].Westernmost_longitude > 180) {
-                        minlong = checkedFootPrintsArray[i].Westernmost_longitude - 360;
-                        //  console.log("min lon: " + minlong);
-                    } else {
-                        maxlong = checkedFootPrintsArray[i].Easternmost_longitude; //if long is in between -180/180 then assgin the original longs
-                        minlong = checkedFootPrintsArray[i].Westernmost_longitude;
-                    }
+                    maxlong = checkedFootPrintsArray[i].easternmost_longitude; //assign maxlong from the checked footprint
+                    minlong = checkedFootPrintsArray[i].westernmost_longitude; //assign minlong from the checked footprint
 
-                    var rgbcombinationSurfaceImage = new WorldWind.SurfaceImage(new WorldWind.Sector(checkedFootPrintsArray[i].Minimum_latitude, checkedFootPrintsArray[i].Maximum_latitude, minlong, maxlong), WCPSLoadImage);
+                    var rgbcombinationSurfaceImage = new WorldWind.SurfaceImage(new WorldWind.Sector(checkedFootPrintsArray[i].minimum_latitude, checkedFootPrintsArray[i].maximum_latitude, minlong, maxlong), WCPSLoadImage);
 
                     // clear the old loaded image first
                     renderLayer[i].removeAllRenderables();
@@ -788,19 +765,8 @@ requirejs(['../../libs/web-world-wind/WorldWind',
             var maxlong;
             var minlong;
             // only load RGB Combinations to the selected footprint from selected comboBox
-            maxlong = checkedFootPrintsArray[index].Easternmost_longitude; //assign maxlong from the checked footprint
-            minlong = checkedFootPrintsArray[index].Westernmost_longitude; //assign minlong from the checked footprint
-            if (checkedFootPrintsArray[index].Easternmost_longitude > 180) { //long in www spans from -180 to 180, if its bigger than 180 = -360
-                maxlong = checkedFootPrintsArray[index].Easternmost_longitude - 360;
-                //  console.log("max lon: " + maxlong);
-            }
-            if (checkedFootPrintsArray[index].Westernmost_longitude > 180) {
-                minlong = checkedFootPrintsArray[index].Westernmost_longitude - 360;
-                //  console.log("min lon: " + minlong);
-            } else {
-                maxlong = checkedFootPrintsArray[index].Easternmost_longitude; //if long is in between -180/180 then assgin the original longs
-                minlong = checkedFootPrintsArray[index].Westernmost_longitude;
-            }
+            maxlong = checkedFootPrintsArray[index].easternmost_longitude; //assign maxlong from the checked footprint
+            minlong = checkedFootPrintsArray[index].westernmost_longitude; //assign minlong from the checked footprint
 
             var coverageID = checkedFootPrintsArray[index].coverageID;
 
@@ -848,25 +814,10 @@ requirejs(['../../libs/web-world-wind/WorldWind',
             // Need to fetch the max E, N from PS2server to calculate the partitions for N axis in WCPS queries
             var coverageID = checkedFootPrintsArray[index].coverageID;
 
-            var lowerCorner = "";
-            var upperCorner = "";
-
-            $.ajax({
-                url: ps2EndPoint + ':8080/rasdaman/ows?service=WCS&version=2.0.1&request=DescribeCoverage&coverageID=' + coverageID,
-                async: false,
-                dataType: "xml",
-                success: function(xml) {
-                    lowerCorner = $(xml).find("lowerCorner").text();
-                    upperCorner = $(xml).find("upperCorner").text();
-
-                }
-            });
-
-
-            var minE = parseFloat(lowerCorner.split(" ")[0]);
-            var minN = parseFloat(lowerCorner.split(" ")[1]) + 0.001;
-            var maxE = parseFloat(upperCorner.split(" ")[0]);
-            var maxN = parseFloat(upperCorner.split(" ")[1]) - 0.001;
+            var minE = parseFloat(checkedFootPrintsArray[index].minimum_east);
+            var minN = parseFloat(checkedFootPrintsArray[index].minimum_north);
+            var maxE = parseFloat(checkedFootPrintsArray[index].maximum_east);
+            var maxN = parseFloat(checkedFootPrintsArray[index].maximum_north);
 
             // need to convert meters to degrees
             var minLong = convertMeterToDegree(minE);
@@ -922,41 +873,31 @@ requirejs(['../../libs/web-world-wind/WorldWind',
 
             // Set the fileName when export to this value
             drawCoverageID = covID;
+            var coverageObj = getCoverageById(covID);            
             drawLat = latitude;
             drawLon = longitude;
 
-            var r = null;
-            if (clientName === MARS_CLIENT) {
-                r = 3396190;
+            // The number of pixels in a square to create intervals for E, N.
+            var kernel = 1;
+            if (currentOpenDock === "mainChartDock") {
+                kernel = $("#txtKernelMainChart").val();
             } else {
-                r = 1737400;
+                kernel = $("#txtKernelRatioChart").val();
             }
 
-            // convert from degrees (latitude, longitude) to meters (E, N)
-            var cosOf0 = 1;
-            var rho = (Math.PI / 180);
-            var N = latitude * r * rho;
-            var E = longitude * cosOf0 * r * rho;
-
-            if (latitude >= 65.0) { // coverages above 65° are stored in polar stereographic with the centerlongitude as the long0.
-
-                var lat0 = 90;
-                var lon0 = centroid_longitude;
-                var k = 2 / (1 + Math.sin(lat0 * rho) * Math.sin(latitude * rho) + Math.cos(lat0 * rho) * Math.cos(latitude * rho) * Math.cos(longitude * rho - lon0 * rho));
-                N = r * k * (Math.cos(lat0 * rho) * Math.sin(latitude * rho) - Math.sin(lat0 * rho) * Math.cos(latitude * rho) * Math.cos(longitude * rho - lon0 * rho));
-                E = r * k * Math.cos(latitude * rho) * Math.sin(longitude * rho - lon0 * rho);
-
-
-            }
-            if (latitude <= -65.0) { // coverages below -65° are stored in polar stereographic with the centerlongitude as the long0.
-
-                var lat0 = -90;
-                var lon0 = centroid_longitude;
-                var k = 2 / (1 + Math.sin(lat0 * rho) * Math.sin(latitude * rho) + Math.cos(lat0 * rho) * Math.cos(latitude * rho) * Math.cos(longitude * rho - lon0 * rho));
-                N = r * k * (Math.cos(lat0 * rho) * Math.sin(latitude * rho) - Math.sin(lat0 * rho) * Math.cos(latitude * rho) * Math.cos(longitude * rho - lon0 * rho));
-                E = r * k * Math.cos(latitude * rho) * Math.sin(longitude * rho - lon0 * rho);
+            // Validate kernel
+            if (!(parseFloat(kernel) === kernel >>> 0) || (parseFloat(kernel) === 0)) {
+                alert("Kernel (pixels) must be a positive integer."); 
+                return;               
             }
 
+            var translatedValues = calculateEastNorthSubsetsByKernel(kernel, coverageObj, latitude, longitude);            
+
+            var minE = translatedValues[0];
+            var minN = translatedValues[1];
+            var maxE = translatedValues[2];
+            var maxN = translatedValues[3];
+            
             // Get the selected Coverage ID RGB bands and query to get the values
             if (currentOpenDock === "mainChartDock") {
 
@@ -1042,15 +983,14 @@ requirejs(['../../libs/web-world-wind/WorldWind',
             }
 
             // Mars use the lower case footprint, Moon is the upper case
-            var query = "";
-            if (clientName === MARS_CLIENT) {
-                query = ps2WCPSEndPoint + "for%20c%20in%20(" + covID.toLowerCase() + ")%20return%20encode(c[%20N(" +
-                N + ":" + N + "),%20E(" + E + ":" + E + ")%20],%20%22csv%22)";
-            } else {
-                query = ps2WCPSEndPoint + "for%20c%20in%20(" + covID + ")%20return%20encode(c[%20N(" +
-                N + ":" + N + "),%20E(" + E + ":" + E + ")%20],%20%22csv%22)";
-            }
+            var queryTemplate = ps2WCPSEndPoint + "for%20c%20in%20(" + "COVERAGE_ID" + ")%20return%20encode(c[%20N(" +
+                minN + ":" + maxN + "),%20E(" + minE + ":" + maxE + ")%20],%20%22csv%22)";
 
+            var query = queryTemplate.replace("COVERAGE_ID", covID);
+
+            if (clientName === MARS_CLIENT) {
+                query = queryTemplate.replace("COVERAGE_ID", covID.toLowerCase());
+            }
 
             console.log("WCPS get bands value at clicked coordinate: " + query);
             Chart_getQueryResponseAndSetChart(query);
@@ -1144,8 +1084,8 @@ requirejs(['../../libs/web-world-wind/WorldWind',
         function moveToCoverageID(coverageID) {
             for (var i = 0; i < allFootPrintsArray.length; i++) {
                 if (qsParam.covID.toLowerCase() === allFootPrintsArray[i].coverageID.toLowerCase()) {
-                    var centerLatitude = (allFootPrintsArray[i].Maximum_latitude + allFootPrintsArray[i].Minimum_latitude) / 2;
-                    var centerLongitude = (allFootPrintsArray[i].Easternmost_longitude + allFootPrintsArray[i].Westernmost_longitude) / 2;
+                    var centerLatitude = (allFootPrintsArray[i].maximum_latitude + allFootPrintsArray[i].minimum_latitude) / 2;
+                    var centerLongitude = (allFootPrintsArray[i].easternmost_longitude + allFootPrintsArray[i].westernmost_longitude) / 2;
                     moveToLocation(centerLatitude, centerLongitude, qsParam.range);
                     return;
                 }
@@ -1384,4 +1324,113 @@ function convertMeterToDegree(meterCoordinate) {
     var rho = (Math.PI / 180);
     var degreeCoordinate = meterCoordinate / (r * rho);
     return degreeCoordinate;
+}
+
+// Convert the coordiante from degree to meter (for getting reflectances to draw chart on clicked point)
+function convertDegreeToMeter(latitude, longitude) {
+    var r = null;
+    if (clientName === MARS_CLIENT) {
+        r = 3396190;
+    } else {
+        r = 1737400;
+    }
+
+    // convert from degrees (latitude, longitude) to meters (E, N)
+    var cosOf0 = 1;
+    var rho = (Math.PI / 180);
+    var N = latitude * r * rho;
+    var E = longitude * cosOf0 * r * rho;
+
+    if (latitude >= 65.0) { // coverages above 65° are stored in polar stereographic with the centerlongitude as the long0.
+
+        var lat0 = 90;
+        var lon0 = centroid_longitude;
+        var k = 2 / (1 + Math.sin(lat0 * rho) * Math.sin(latitude * rho) + Math.cos(lat0 * rho) * Math.cos(latitude * rho) * Math.cos(longitude * rho - lon0 * rho));
+        N = r * k * (Math.cos(lat0 * rho) * Math.sin(latitude * rho) - Math.sin(lat0 * rho) * Math.cos(latitude * rho) * Math.cos(longitude * rho - lon0 * rho));
+        E = r * k * Math.cos(latitude * rho) * Math.sin(longitude * rho - lon0 * rho);
+
+
+    }
+    if (latitude <= -65.0) { // coverages below -65° are stored in polar stereographic with the centerlongitude as the long0.
+
+        var lat0 = -90;
+        var lon0 = centroid_longitude;
+        var k = 2 / (1 + Math.sin(lat0 * rho) * Math.sin(latitude * rho) + Math.cos(lat0 * rho) * Math.cos(latitude * rho) * Math.cos(longitude * rho - lon0 * rho));
+        N = r * k * (Math.cos(lat0 * rho) * Math.sin(latitude * rho) - Math.sin(lat0 * rho) * Math.cos(latitude * rho) * Math.cos(longitude * rho - lon0 * rho));
+        E = r * k * Math.cos(latitude * rho) * Math.sin(longitude * rho - lon0 * rho);
+    }
+
+    values = [];
+    values.push(E);
+    values.push(N);
+
+    return values;
+}
+
+
+// Get a coverage object from list of checked coverages by coverage id
+function getCoverageById(coverageID) {
+    for (var i = 0; i < checkedFootPrintsArray.length; i++) {
+        if (checkedFootPrintsArray[i].coverageID === coverageID) {
+            return checkedFootPrintsArray[i];
+        }
+    }
+
+    alert("Coverage ID: " + coverageID + " does not exist!");
+}
+
+// If kernel is 1 then just returns East, North values
+// If it is not then need to calculate the East, North subsets with kernel (e.g: 3 then the clicked coordinate is the center of kernel)
+function calculateEastNorthSubsetsByKernel(kernel, coverageObj, latitude, longitude) {
+    var values = [];
+    if (kernel === 1) {
+        var tmp = convertDegreeToMeter(latitude, longitude);
+        // Min and max of Easth, north is the same
+        values.push(tmp[0]);
+        values.push(tmp[1]);
+        values.push(tmp[0]);
+        values.push(tmp[1]);
+    } else {
+        // Calculate the clicked coordinate as grid pixel
+        var resolutionInDegree = (coverageObj.easternmost_longitude - coverageObj.westernmost_longitude) / coverageObj.width;   
+        // Original resolution from file
+        var resolutionInMeter = coverageObj.resolution;
+
+        var gridX = Math.floor((longitude - coverageObj.westernmost_longitude) / resolutionInDegree);
+        var gridY = Math.floor((latitude - coverageObj.minimum_latitude) / resolutionInDegree);        
+        
+        // calculate the minE, minN, maxE, maxN by kernel (3x3, then center - 1: center + 1, 5x5: then center - 2: center + 2)
+        var offset = (kernel - 1) / 2;
+        var minGridX = (gridX - offset);
+        var minGridY = (gridY - offset);        
+        var maxGridX = (gridX + offset);
+        var maxGridY = (gridY + offset);
+
+        var minE = coverageObj.minimum_east + minGridX * resolutionInMeter - resolutionInMeter * 0.5;
+        var minN = coverageObj.minimum_north + minGridY * resolutionInMeter - resolutionInMeter * 0.5;
+        var maxE = coverageObj.minimum_east + maxGridX * resolutionInMeter + resolutionInMeter * 0.51;
+        var maxN = coverageObj.minimum_north + maxGridY * resolutionInMeter + resolutionInMeter * 0.5;        
+
+
+        // No query outside of the coverage's bounding box
+        if (minE < coverageObj.minimum_east) {
+            minE = coverageObj.minimum_east;
+        }
+        if (minN < coverageObj.minimum_north) {
+            minN = coverageObj.minimum_north;
+        }
+        if (maxE > coverageObj.maximum_east) {
+            maxE = coverageObj.maximum_east;
+        }
+        if (maxN > coverageObj.maximum_north) {
+            maxN = coverageObj.maximum_north;
+        }
+
+        values.push(minE);
+        values.push(minN);
+        values.push(maxE);
+        values.push(maxN);
+    }
+
+    return values;
 }
