@@ -367,7 +367,11 @@ requirejs(['../../libs/web-world-wind/WorldWind',
 
 
         // Availabe layers (mars trdr, mars mrdr) dropdown changes
+        // For moon client, do nothing
         $("#availableLayersDropdown").find(" li").on("click", function(e) {
+            if (clientName === MOON_CLIENT) {
+                return;
+            }
             var index = -1;
             var selectedLayerName = $(this).children().html();
             
@@ -886,10 +890,10 @@ requirejs(['../../libs/web-world-wind/WorldWind',
             }
 
             // Validate kernel
-            if (!(parseFloat(kernel) === kernel >>> 0) || (parseFloat(kernel) === 0)) {
-                alert("Kernel (pixels) must be a positive integer."); 
+            if (!(parseFloat(kernel) === kernel >>> 0) || (parseFloat(kernel) === 0) || (parseFloat(kernel) % 2 == 0 || (parseFloat(kernel) > 7))) {
+                alert("Kernel (pixels) must be a positive even number and  less than or equal to 7."); 
                 return;               
-            }
+            } 
 
             var translatedValues = calculateEastNorthSubsetsByKernel(kernel, coverageObj, latitude, longitude);            
 

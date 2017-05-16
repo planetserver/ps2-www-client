@@ -24,7 +24,8 @@ if (url.indexOf("moon") > -1) {
 	baseMapNames = [
 	   "Moon",
    	   "LOLA color"
-	];
+	]; 
+        layerNames = [ "Moon M3" ];
 } else {
 	baseMapNames = [
 	   "Viking Mosaic",

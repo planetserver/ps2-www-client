@@ -32,6 +32,12 @@ $(document).ready(function() {
         async: true,
         success: function(data) {
             xAxisArray = data.split(",").map(Number);
+
+            // Change the default of set range wavelength from min to max instead of (1-4)
+            var minWavelength = parseFloat(xAxisArray[0]).toFixed(5);
+            var maxWavelength = parseFloat(xAxisArray[xAxisArray.length - 1]).toFixed(5);
+            $("#txtRangeChartsMainChart").val(minWavelength + "-" + maxWavelength);
+            $("#txtRangeChartsRatioChart").val(minWavelength + "-" + maxWavelength);
         }
     });
 });
@@ -100,9 +106,6 @@ function Chart_implementChart(isChangeSpectralLibrary, floatsArray, spectralFloa
     var spectralDataProviderChart = Chart_handleClickedChartValues(floatsArray);
     var minWavelength = Math.min.apply(null, xAxisArray).toFixed(5);
     var maxWavelength = Math.max.apply(null, xAxisArray).toFixed(5);
-
-    // Change the default of set range wavelength from min to max instead of (1-4)
-    $("#txtRangeCharts" + chartPostfix).val(minWavelength + "-" + maxWavelength);
 
     // Check if it is update current line chart or add new chart
     if ($("#radioBtnAddChart" + chartPostfix).is(':checked')) {
