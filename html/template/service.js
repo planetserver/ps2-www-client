@@ -29,6 +29,7 @@ $(function () {
             /*plot dock */
             var plotDock = $("<div>").plotDock().plotDock("instance");
             var ratioDock = $("<div>").ratioDock().ratioDock("instance");
+            var histogramDock = $("<div>").histogramDock().histogramDock("instance");
 
             /* gis toolbar (required) */
             // var gisToolbar = $("<div>").gisToolbar().gisToolbar("instance");

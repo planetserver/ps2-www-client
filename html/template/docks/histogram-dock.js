@@ -1,8 +1,8 @@
 $(function () {
-    $.widget("dock.plotDock", $.earthserver.dock, {
+    $.widget("dock.histogramDock", $.earthserver.dock, {
         options: {
             position: "right",
-            toggleIcon: "html/images/icons/spectrum(h100).png"
+            toggleIcon: "html/images/icons/diagram(h100).png"
         },
         _create: function () {
             var self = this;
@@ -14,7 +14,7 @@ $(function () {
                 htmlElement += "</div>";
                 htmlElement += "<div class='chartdiv' id='MainChartDiv' style='width:100%; height:440px; margin-top: 60px;'></div>";
 
-            this.element.addClass("plot-dock");
+            this.element.addClass("histogram-dock");
             this._super();
             /*this.element.append($("<span>", {class: "remove-plot"})
                 .append($("<span>", {class: "remove-plot-icon glyphicon glyphicon-remove"}))
