@@ -28,7 +28,7 @@ class PythonWebHandler(BaseHTTPRequestHandler):
     #Handler for the GET requests
     def do_GET(self):
         self.send_response(200)
-        self.send_header('Content-type','image/png')
+        #self.send_header('Content-type','image/png')
         self.send_header("Access-Control-Allow-Origin", "*")
         self.end_headers()
         # Get the result from WCPS query and return the stretched image to web
@@ -43,7 +43,7 @@ class PythonWebHandler(BaseHTTPRequestHandler):
 
     def do_POST(self):
         self.send_response(200)
-        self.send_header('Content-type','image/png')
+        #self.send_header('Content-type','image/png')
         self.send_header("Access-Control-Allow-Origin", "*")
         self.end_headers()
         # Get the result from WCPS query and return the stretched image to web
@@ -59,7 +59,7 @@ class PythonWebHandler(BaseHTTPRequestHandler):
             image = stretchHandler.parseURI(URI);
             self.wfile.write(image);
         except Exception as e:
-            print str(e)
+            print e
         return 
 
 try:
