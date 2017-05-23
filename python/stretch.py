@@ -10,12 +10,13 @@ from osgeo.gdalconst import *
 from osgeo import gdal
 from uuid import uuid4
 
-import memcache
+# Memcached in python cannot store image so using redis server and python client
+import redis
 import hashlib
 import math
 
 # check the wcpsQuery result tif is already cached
-memc = memcache.Client(['127.0.0.1:11211'])
+redis_cached = redis.Redis(host='localhost', port=6379)
 
 # Author: Bang Pham Huu, mailto: b.phamhuu@jacobs-university.de
 def histogram(fileName):
@@ -99,7 +100,7 @@ class StretchHandler:
 
             histogram_key = hashlib.sha256("histogram_" + self.wcpsQuery).hexdigest()            
             # cache histogram of the original PNG (without newMinMaxBands)
-            memc.set(histogram_key, hist_result)            
+            redis_cached.set(histogram_key, hist_result)            
             
 
     # Stretch image's bands with new range
@@ -176,11 +177,11 @@ class StretchHandler:
         else:
             wcpsQuery = tmp[1].split("&")[0]            
             if "histogram" in tmp[1]:
-                # Histogram never sent with the newMinMax bands (it only need the WCPS query to calculate the memcached)
-                # it must exist in memcached before
+                # Histogram never sent with the newMinMax bands (it only needs the WCPS query in tiff to calculate then stored to the redis)
+                # it must exist in redis
                 histogram_key = hashlib.sha256("histogram_" + wcpsQuery).hexdigest() 
-                hist_result = memc.get(histogram_key)                      
-                print "Get from memcached: " + hist_result
+                hist_result = redis_cached.get(histogram_key)                      
+                print "Get from redis: " + hist_result
                 return hist_result
             else:                
                 newMinMaxBands = tmp[1].split("&")[1]
@@ -192,7 +193,7 @@ class StretchHandler:
         mmap_name = "/vsimem/" + uuid4().get_hex()
 
   
-        cached = memc.get(tiff_key)
+        cached = redis_cached.get(tiff_key)
             
         if cached is None:                
             # always send by POST to petascope end point
@@ -203,11 +204,11 @@ class StretchHandler:
             # read file from urllib
             tifImage = response.read()            
             # cache the image
-            memc.set(tiff_key, tifImage)                    
+            redis_cached.set(tiff_key, tifImage)                    
             gdal.FileFromMemBuffer(mmap_name, tifImage)        
 
         else:
-            # read file from memcached
+            # read file from redis
             gdal.FileFromMemBuffer(mmap_name, cached)       
         
         self.dataSet = gdal.Open(mmap_name)
