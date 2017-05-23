@@ -26,6 +26,7 @@ shapesLayer = ""; // layer contains all footprints shapes
 
 imagesLayer = null; // layer contains all the surface image on footprints
 
+// array of clicked footprints to load default PNG images
 renderLayer = [];
 
 // add the tile footprints in moon client when load multi temporary footprints
@@ -64,6 +65,9 @@ placemark = null;
 drawCoverageID = "";
 drawLat = "";
 drawLon = "";
+
+// default wcpsQuery not stretched is png (stretched is tiff)
+PNG = "png";
 
 
 // the clicked coordinate
@@ -246,6 +250,7 @@ requirejs(['../../libs/web-world-wind/WorldWind',
         '../menu-context/menu-context',
         '../charts/main-chart',
         '../charts/ratio-chart',
+        '../charts/histogram-chart',
         '../goto/goto',
         '../landing-sites/landing-sites',
         '../gazetteer/gazetteer',
@@ -263,6 +268,7 @@ requirejs(['../../libs/web-world-wind/WorldWind',
         menu_context,
         main_chart,
         ratio_chart,
+        histogram_chart,
         go_to,
         landing_sites,
         gazetteer,
@@ -687,6 +693,7 @@ requirejs(['../../libs/web-world-wind/WorldWind',
                     console.log(WCPSLoadImage);
 
                     renderLayer[i] = new WorldWind.RenderableLayer("");
+                    renderLayer[i]._displayName = coverageID;
                     renderLayer[i].addRenderable(surfaceImage);
 
                     // Add the loaded image in images layer
@@ -902,6 +909,7 @@ requirejs(['../../libs/web-world-wind/WorldWind',
             var maxE = translatedValues[2];
             var maxN = translatedValues[3];
             
+            
             // Get the selected Coverage ID RGB bands and query to get the values
             if (currentOpenDock === "mainChartDock") {
 
@@ -984,6 +992,9 @@ requirejs(['../../libs/web-world-wind/WorldWind',
                     placeMarkersBandRatio[1].layer = layer;
                     console.log(layer);
                 }
+            } else if (currentOpenDock === "histogramDock") {
+                $("#service-container .right-dock.histogram-dock .panel-title").text("Coverage Name: " + covID);
+                $("#service-container .right-dock.histogram-dock .panel-title.panel-subtitle").text("Histogram of the stretched PNG image by WCPS query");
             }
 
             // Mars use the lower case footprint, Moon is the upper case
@@ -1140,6 +1151,7 @@ requirejs(['../../libs/web-world-wind/WorldWind',
         // Handle when click on charts dock (e.g: main chart, band-ratio chart)
         var mainChartID = "#ui-id-3";
         var bandRatioChartID = "#ui-id-4";
+        var histogramChartID = "#ui-id-5";
 
         $(mainChartID).click(function() {
             // If the dock is closed then click to open
@@ -1194,7 +1206,10 @@ requirejs(['../../libs/web-world-wind/WorldWind',
         });
 
 
-
+        $(histogramChartID).click(function() {
+            // Open the histogram dock
+            currentOpenDock = "histogramDock";
+        });
 
     });
 

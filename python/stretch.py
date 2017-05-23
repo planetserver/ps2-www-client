@@ -11,6 +11,7 @@ from osgeo import gdal
 from uuid import uuid4
 
 # Memcached in python cannot store image so using redis server and python client
+# To Start redis server as daemon service: redis-server --daemonize yes
 import redis
 import hashlib
 import math

@@ -45,6 +45,9 @@
     
     $server = $_GET["server"]; 
     $query = $_GET["wcps_query"];            
+    $histogram = $_GET["histogram"];
+    $newMinMaxBands = $_GET["newMinMaxBands"];
+    
 
     # get coverage id from the WCPS query, for data in (...)
     preg_match('#\((.*?)\)#', $query, $match);
@@ -84,8 +87,16 @@
         $redirect_url = $PYTHON_STRETCHING_DOMAIN_URL;
         // post this wcpsQuery=http://....?query=... to Python server
         $post = "wcpsQuery=" . $petascope_url . "?" . $post;               
+    }       
+
+    // If request with histogram or newMinMaxBands so it is fetched from cached stretching tiff coverage in python
+    if (!empty($histogram)) {
+      $post = $post . "&histogram";
+    } else if (!empty($newMinMaxBands)) {
+      $post = $post . "&" . $newMinMaxBands;
     }
-        
+
+    // echo $post;          	
     // hash the key to unique value and store in memcache
     $key = md5($post);
     $result = $mem->get($key);    
@@ -185,3 +196,4 @@ function get_web_page($url) {
 }
  
 ?>
+

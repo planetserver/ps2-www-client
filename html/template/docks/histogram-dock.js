@@ -6,13 +6,19 @@ $(function () {
         },
         _create: function () {
             var self = this;
-            var htmlElement = "<div id='dropDownMainChartDiv' style='margin-top: -30px;'>";
-	            htmlElement += "<div class='radio' style='color:white;'> <label class='radio-inline'> <input type='radio' name='radioCharts' id='radioBtnAddChartMainChart' >Add spectra</label> <label class='radio-inline'> <input type='radio' name='radioCharts' id='radioBtnUpdateChartMainChart' checked>Update spectra</label>   <label>Range Charts </label> <input id='txtRangeChartsMainChart' type='text' value='1-4' size='15' style='color:blue; margin-left: 5px;font-size: 12px;'> (µm)   <button type='button' id='btnClearChartsMainChart' style='font-size: 10px; float: right;' class='btn btn-success'>Clear all spectra</button> </div> <hr style='margin-bottom: 7px; margin-top: 15px;'>";
-                htmlElement += "<div class='dropdown'> <button class='btn btn-warning dropdown-toggle' style='float:left; font-size:12px;' type='button' data-toggle='dropdown'>Spectral Library Categories <span class='caret'></span></button> <ul class='dropdown-menu' id='dropDownCategorySpectralLibraryMainChart' style='max-width: 350px; max-height: 350px; overflow-y: auto;'> </ul> </div>";
-		htmlElement += '<span style="color:white; margin-left: 40px;"><label style="font-weight: normal">Kernel AxA(pixels): </label><input id="txtKernelMainChart" type="text" value="1" size="5" style="margin-left: 20px;color:blue;margin-left: 5px;font-size: 12px;"></span>';
-                htmlElement += "<div class='dropdown' style='float: right;'> <button class='btn btn-danger dropdown-toggle' id='btnProductSpectralLibraryMainChart' style='float:right; font-size:12px;' type='button' data-toggle='dropdown'>Spectral Library Products <span class='caret'></span></button> <ul class='dropdown-menu dropdown-menu-right' id='dropDownProductSpectralLibraryMainChart' style='min-width: 300px; max-width: 350px; max-height: 350px; overflow-y: auto;'> </ul> </div>";
-                htmlElement += "</div>";
-                htmlElement += "<div class='chartdiv' id='MainChartDiv' style='width:100%; height:440px; margin-top: 60px;'></div>";
+            var htmlElement = "<hr style='margin-bottom: 7px; margin-top: -15px;'>";
+
+            htmlElement += "<div style='margin-top: 10px; color: #f90909;'> Band 1 range: <p id='band1ValueRange' style='font-weight:bold; margin-left: 25px; display:inline;'> 0 - 255 </p> <div id='sliderBand1Histogram' style='margin-top: 5px; width: 65%; float: right;'></div> </div>";
+
+            htmlElement += "<div style='margin-top: 10px; color: #02e515;'> Band 2 range: <p id='band2ValueRange' style='font-weight:bold; margin-left: 25px; display:inline;'> 0 - 255 </p> <div id='sliderBand2Histogram' style='margin-top: 5px; width: 65%; float: right;'></div> </div>";
+
+            htmlElement += "<div style='margin-top: 10px; color: #6ebcff;'> Band 3 range: <p id='band3ValueRange' style='font-weight:bold; margin-left: 25px; display:inline;'>  0 - 255 </p> <div id='sliderBand3Histogram' style='margin-top: 5px; width: 65%; float: right;'></div> </div>";
+
+            htmlElement += "<button type='button' id='btnDownloadPNGImageHistogramChart' style='font-size: 12px; float: left; margin-top: 10px; width: 40%;' class='btn btn-success'>Download PNG Image Result</button> </div> ";
+
+            htmlElement += "<button type='button' id='btnNewMinMaxBandsHistogramChart' style='font-size: 12px; float: right; margin-top: 10px; width: 45%;' class='btn btn-danger'>Load new min, max for 3 bands</button> </div> ";
+
+	    htmlElement += "<div class='chartdiv' id='HistogramChartDiv' style='width:100%; height:440px; margin-top: 60px;'></div>";
 
             this.element.addClass("histogram-dock");
             this._super();

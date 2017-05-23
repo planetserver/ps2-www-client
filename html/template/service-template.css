@@ -322,6 +322,26 @@ body {
 }
 
 
+#service-container .right-dock.histogram-dock {
+    right: -35%;
+    width: 35%;
+}
+
+#service-container .right-dock .panel > .panel-heading > .panel-title {
+    font-size: 1.2em;
+    text-align: center;
+    margin-bottom:-20px;
+}
+
+#service-container .right-dock .panel-title.panel-subtitle {
+  font-size: 0.8em;
+     text-align: center;
+     color: #ffffff;
+     font-weight: normal;
+     margin-top: 25px;
+}
+
+
 #service-container .right-dock .right-dock-toggle {
     position: fixed;
     right: 0;

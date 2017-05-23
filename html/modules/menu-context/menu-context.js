@@ -293,7 +293,7 @@ $( document ).ready(function() {
         var downloadGeoTiffSubMenuItemTemplate = "<li><a class='downloadGeoTiff' href='" + ps2GetCoverage + "$COVERAGEID' target='_blank' download> <span class='glyphicon glyphicon-download-alt' style='color:red;'></span>Download Coverage in GeoTiff</a></href>";
 
         // download PNG
-        var downloadWcpsPngSubMenuItemTemplate = "<li><a class='downloadWcpsPng' href='$WCPS_QUERY_LINK' target='_blank' download> <span class='glyphicon glyphicon-download-alt' style='color:orange;'></span>Download WCPS resulut in PNG</a></href>";
+        var downloadWcpsPngSubMenuItemTemplate = "<li><a class='downloadWcpsPng' href='$WCPS_QUERY_LINK' target='_blank' download> <span class='glyphicon glyphicon-download-alt' style='color:orange;'></span>Download WCPS result in PNG</a></href>";
 
         var menuContextItems = "";
 

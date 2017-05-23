@@ -104,7 +104,7 @@ window.queryRGBValue = function(coverageID, longitude, latitude, rgbQueryArray) 
     }
 
     // Get value of band combinations
-    if (clientName === "mars") {
+    if (clientName === MARS_CLIENT) {
         coverageID = coverageID.toLowerCase();
     }
 
@@ -996,7 +996,7 @@ $("#btnSubmitRGBCombination").click(function(e) {
 
                         console.log("WCPS query: " + WCPS_TEMPLATE_QUERY);
 
-                        loadRGBCombinationsMars(WCPS_TEMPLATE_QUERY, selectedFootPrintsArray[i].coverageID.toLowerCase(), stretch);
+                        loadRGBCombinationsMars(WCPS_TEMPLATE_QUERY, selectedFootPrintsArray[i].coverageID.toLowerCase(), stretch)                      
                     } else {
                         // moon client, need to subset the WCPS query
                         var index = getIndexOfCoveragesArray(checkedFootPrintsArray, selectedFootPrintsArray[i].coverageID);

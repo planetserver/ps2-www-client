@@ -12,7 +12,7 @@ CLICKED_ICON_PATH = "html/images/icons/main-chart/";
 var spectralLibraryChartColors = ["#FAF508", "#7ED15A", "#9B89B8", "#54C9C9", "#48E9B2"];
 
 // color of clicked coordinate chart
-var chartColors = ["#7EF10A", "#9B59B6", "#5499C7", "#48C9B0", "#58D68D", "#F4D03F", "#DC7633", "#00FFFF", "#FF00FF", "#FF0000"];
+chartColors = ["#7EF10A", "#9B59B6", "#5499C7", "#48C9B0", "#58D68D", "#F4D03F", "#DC7633", "#00FFFF", "#FF00FF", "#FF0000"];
 
 $(document).ready(function() {
     // change here with "ps2EndPoint" later
@@ -508,8 +508,9 @@ function Chart_drawChart(combinedArray, chartDivID, dataProviderChartsArrayRef, 
     // it needs to resize the chart and write it when it is hidden
     //chart.invalidateSize();
     chart.write(chartDivID);
-
+   
     $(".plot-dock").css("background", "#2F5597");
+    $(".ratio-dock").css("background", "#2F5597");
 }
 
 
@@ -522,6 +523,9 @@ function Chart_getQueryResponseAndSetChart(query) {
         MainChart_getQueryResponseAndSetChart(query);
     } else if (currentOpenDock === "bandRatioDock") {
         RatioChart_getQueryResponseAndSetChart(query);
+    } else if (currentOpenDock === "histogramDock") {
+        // No load data from a clicked coordinate but load histogram for the stretched coverage
+        HistogramChart_getQueryResponseAndSetChart();
     }
 }
 
@@ -603,6 +607,13 @@ function Chart_parseFloats(input) {
     }    
 
     return resultArray;
+}
+
+
+// Use to parse the CSV spectral library
+function Chart_parseFloatsWithComma(spectral_values) {
+    // Convert string values to array of numeric values
+    return spectral_values.split(",").map(Number);
 }
 
 
