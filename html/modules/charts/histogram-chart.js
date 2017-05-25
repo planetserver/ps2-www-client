@@ -13,6 +13,9 @@ var currentWCPSQuery = "";
 // the full URL to download a PNG image from Python memcached
 var pngWCPSQueryURL = "";
 
+// Load the min, max Bands, histogram for 3 bands from cached original stretching PNG image
+var histogramData;
+
 $(document).ready(function() {
       // slider for red, green, blue bands to recalculte the newMin, newMax
     $( "#sliderBand1Histogram" ).slider({
@@ -117,6 +120,13 @@ $(document).ready(function() {
 
         // Just load the new image on the current footprint of coverage
         loadNewMinMaxBandsOnCurrentSurfaceImage(wcpsQuery);
+
+        // also reload the histogram charts with new vertical bars positions
+        var tmp = histogramData.substring(histogramData.indexOf("["));
+        histogramData = newMinMaxBands + "_" + tmp;
+
+        // Reload the histogram chart
+        createHistogramChart();
     });
 
 });
@@ -189,16 +199,18 @@ function HistogramChart_getQueryResponseAndSetChart() {
         
         wcpsQuery += "&histogram=true";
 
+        // Only when clicked on a new stretched footprint then it will load the new histogram data and redraw the histogram chart
+        histogramData = getHistogramData(wcpsQuery);
+
         // Create histogram chart
-        createHistogramChart(wcpsQuery);
+        createHistogramChart();
     }
 }
 
 
 // Only create chart histogram once when clicking one new stretched coverage
-function createHistogramChart(wcpsQuery) {
-    // Load the min, max Bands from cached original stretching PNG image
-    var histogramData = getHistogramData(wcpsQuery);
+function createHistogramChart() {
+
     // e.g: 20:30_50:70_12:34_[....]_[....]_[....]
     var tmp = histogramData.split("_");
 
@@ -239,6 +251,23 @@ function createHistogramChart(wcpsQuery) {
     band3Array[255] = null;
 
 
+    // Value for the highest histogram index from all 3 bands    
+    var maxHistogramIndex = 0;
+
+    for (var i = 0; i < 256; i++) {
+        // find the highest histogram index of 3 bands
+        if (maxHistogramIndex < band1Array[i]) {
+            maxHistogramIndex = band1Array[i];
+        }
+        if (maxHistogramIndex < band2Array[i]) {
+            maxHistogramIndex = band2Array[i];
+        }
+        if (maxHistogramIndex < band3Array[i]) {
+            maxHistogramIndex = band3Array[i];
+        }
+    }
+
+
     var chartDivID = "HistogramChartDiv";
 
 
@@ -247,39 +276,63 @@ function createHistogramChart(wcpsQuery) {
     for (var i = 0; i < 256; i++) {
         var obj = {};
         for (var j = 0; j < 3; j++) {            
-            var histogramIndex = "histogram" + j;
+            var histogramIndex = "histogram";                        
             if (j == 0) {
-                obj[histogramIndex] = band1Array[i];     
+                obj[histogramIndex + "0"] = band1Array[i];                   
+                if (i == newMinBand1 || i == newMaxBand1) {
+                    obj[histogramIndex + "1"] = maxHistogramIndex;
+                } else {
+                    obj[histogramIndex + "1"] = null;
+                }
             } else if (j == 1) {
-                obj[histogramIndex] = band2Array[i];     
+                obj[histogramIndex + "2"] = band2Array[i];                         
+                if (i == newMinBand2 || i == newMaxBand2) {
+                    obj[histogramIndex + "3"] = maxHistogramIndex;
+                } else {
+                    obj[histogramIndex + "3"] = null;
+                }
             } else if (j == 2) {
-                obj[histogramIndex] = band3Array[i];     
+                obj[histogramIndex + "4"] = band3Array[i];                         
+                if (i == newMinBand3 || i == newMaxBand3) {
+                    obj[histogramIndex + "5"] = maxHistogramIndex;
+                } else {
+                    obj[histogramIndex + "5"] = null;
+                }
             }
             
             obj["pixelValue"] = i;
         }
-
         combinedArray.push(obj);        
     }
+
+    // after that, create 3 empty charts with each chart contains 2 vertical bars for new min and new max
+
     
 
 
     //alert("Line charts: " + lineChartsCount);
 
     // graphs from clicked value charts
-    var rgbColors = ['#f90909', '#02e515', '#6ebcff'];
+    var rgbColors = ['#f90909', '#f90909', '#02e515', '#02e515', '#6ebcff', '#6ebcff'];
     // the configuration for all 3 line charts
     var chartsArray = [];
-    for (var i = 0; i < 3; i++) {
+    for (var i = 0; i < 6; i++) {
         var obj = {};
         obj["id"] = "g" + i;
         var histogramIndex = "histogram" + i;       
-        obj["balloonText"] = "<span style='font-size:12px;'>" + i + ". Histogram Index: [[" + histogramIndex + "]]" + "</span>";
+        if (i % 2 == 0) {
+            obj["balloonText"] = "<span style='font-size:12px;'>" + i + ". Histogram Index: [[" + histogramIndex + "]]" + "</span>";
+        }        
         obj["dashLength"] = 0;
         obj["lineThickness"] = 2;
         obj["valueField"] = histogramIndex;                
-        obj["connect"] = false;
+        obj["connect"] = true;
         obj["lineColor"] = rgbColors[i];
+
+        // draw vertical bars for min, max of RGB histogram chart
+        if (i % 2 == 1) {
+            obj["type"] = "column";
+        }
 
         // the chart lines
         chartsArray.push(obj);
