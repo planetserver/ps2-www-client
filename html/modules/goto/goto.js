@@ -172,7 +172,7 @@ $(document).ready(function() {
     /* Get the latitude, longitude of region/coverageID or manual latitude, longitude to goto */
     function makeLinkGoTo(coverageID, latitude, longitude) {
         // Generate a link to access to coverageID and/or Latitude and Longitude
-        var link = ps2EndPoint + "index.html?";
+        var link = ps2EndPoint + "/index.html?";
         if (coverageID != "") {
             link = link + "covName=" + coverageID;
         }
@@ -220,8 +220,8 @@ $(document).ready(function() {
     function moveToCoverageID(coverageID) {
         for (var i = 0; i < allFootPrintsArray.length; i++) {
             if (coverageID.toLowerCase() === allFootPrintsArray[i].coverageID.toLowerCase()) {
-                var centerLatitude = (allFootPrintsArray[i].Maximum_latitude + allFootPrintsArray[i].Minimum_latitude) / 2;
-                var centerLongitude = (allFootPrintsArray[i].Easternmost_longitude + allFootPrintsArray[i].Westernmost_longitude) / 2;
+                var centerLatitude = (allFootPrintsArray[i].maximum_latitude + allFootPrintsArray[i].minimum_latitude) / 2;
+                var centerLongitude = (allFootPrintsArray[i].easternmost_longitude + allFootPrintsArray[i].westernmost_longitude) / 2;
                 moveToFootPrint(centerLatitude, centerLongitude);
                 return;
             }
