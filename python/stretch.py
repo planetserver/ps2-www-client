@@ -197,8 +197,8 @@ class StretchHandler:
         cached = redis_cached.get(tiff_key)
             
         if cached is None:                
-            # always send by POST to petascope end point
-            data = urllib.urlencode({'query' : urllib.quote(wcpsQuery)})
+            # always send by POST to petascope end point, don't quote the query, encode is enough
+            data = urllib.urlencode({'query' : wcpsQuery})
             request = urllib2.Request(petascopeEndPoint, data, headers={"Accept-Encoding": "gzip"})
             response = urllib2.urlopen(request, timeout=30)
 

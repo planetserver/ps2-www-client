@@ -62,7 +62,10 @@
     }, $query);
     
     # encode query as curl cannot handle spaces in URL
-    $query = str_replace (' ', '%20', $query);       
+    $query = str_replace(' ', '%20', $query);       
+
+    # need to encode "+" to "%2B"
+    $query = str_replace('+', '%2B', $query);
           
     # make query with url for Petascope from domain (mars/moon)
     $PETASCOPE_DOMAIN_URL = "";
