@@ -165,8 +165,8 @@ $(function() {
     }
 
     // Used only to get value at point on the footprint, load image from PHP Memcached
-    ps2GetCoverage = ps2EndPoint + ":8080/rasdaman/ows?service=WCS&version=2.0.1&request=GetCoverage&format=image/tiff&coverageId=";
-    ps2WCPSEndPoint = ps2EndPoint + ":8080/rasdaman/ows?service=WCS&version=2.0.1&request=ProcessCoverages&query=";       
+    ps2GetCoverage = ps2EndPoint + "/rasdaman/ows?service=WCS&version=2.0.1&request=GetCoverage&format=image/tiff&coverageId=";
+    ps2WCPSEndPoint = ps2EndPoint + "/rasdaman/ows?service=WCS&version=2.0.1&request=ProcessCoverages&query=";       
 
 });
 

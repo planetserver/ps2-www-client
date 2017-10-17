@@ -95,7 +95,7 @@ function getAllFootprintsFromDatabase() {
 
         $.ajax({
             type: "get",
-            url: ps2EndPoint + ":8080/ps2/" + "dataset",
+            url: ps2EndPoint + "/ps2/" + "dataset",
             data: getAllCoverageDataByType,
             dataType: 'json',
             cache: false,
@@ -135,7 +135,7 @@ function getFootPrintsContainingPointLeftClick(shapesArray, attributesObj, check
     var getCoveragesContainingPointData = "request=getCoveragesContainingPoint&type=" + dataType + "&latPoint=" + latitude + "&longPoint=" + longitude;
     $.ajax({
         type: "get",
-        url: ps2EndPoint + ":8080/ps2/" + "dataset",
+        url: ps2EndPoint + "/ps2/" + "dataset",
         data: getCoveragesContainingPointData,
         dataType: 'json',
         cache: false,
@@ -245,7 +245,7 @@ function getFootPrintsContainingPointRightClick(shapesArray, attributesObj, chec
     var getCoveragesContainingPointData = "request=getCoveragesContainingPoint&type=" + dataType + "&latPoint=" + latitude + "&longPoint=" + longitude
     $.ajax({
         type: "get",
-        url: ps2EndPoint + ":8080/ps2/" + "dataset",
+        url: ps2EndPoint + "/ps2/" + "dataset",
         data: getCoveragesContainingPointData,
         dataType: 'json',
         cache: false,
