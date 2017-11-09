@@ -24,8 +24,8 @@ define([
          * @param {String} imagerySet The name of the imagery set to display.
          * @param {String} bingMapsKey The Bing Maps key to use for the image requests. If null or undefined, the key at
          * [WorldWind.BingMapsKey]{@link WorldWind#BingMapsKey} is used. If that is null or undefined, the default
-         * World Wind Bing Maps key is used,
-         * but this fallback is provided only for non-production use. If you are using Web World Wind in an app or a
+         * WorldWind Bing Maps key is used,
+         * but this fallback is provided only for non-production use. If you are using Web WorldWind in an app or a
          * web page, you must obtain your own key from the
          * [Bing Maps Portal]{@link https://www.microsoft.com/maps/choose-your-bing-maps-API.aspx}
          * and either pass it as a parameter to this constructor or specify it as the property
@@ -34,17 +34,22 @@ define([
         var BingImageryUrlBuilder = function (imagerySet, bingMapsKey) {
             var wwBingMapsKey = "AkttWCS8p6qzxvx5RH3qUcCPgwG9nRJ7IwlpFGb14B0rBorB5DvmXr2Y_eCUNIxH";
 
-            if (!bingMapsKey) {
+            // Use key specified for this layer
+            this.bingMapsKey = bingMapsKey;
+
+            // If none, fallback to key specified globally
+            if (!this.bingMapsKey) {
                 this.bingMapsKey = WorldWind.BingMapsKey;
+            }
 
-                if (!bingMapsKey) {
-                    this.bingMapsKey = wwBingMapsKey;
-                }
-
-                if (bingMapsKey === wwBingMapsKey) {
-                    this.bingMapsKey = wwBingMapsKey;
-                    BingImageryUrlBuilder.showBingMapsKeyWarning();
-                }
+            // If none, fallback to default demo key
+            if (!this.bingMapsKey) {
+                this.bingMapsKey = wwBingMapsKey;
+            }
+            
+            // If using WorldWind Bing Maps demo key, show warning
+            if (this.bingMapsKey === wwBingMapsKey) {
+                BingImageryUrlBuilder.showBingMapsKeyWarning();
             }
 
             this.imagerySet = imagerySet;
@@ -58,7 +63,7 @@ define([
                 Logger.log(Logger.LEVEL_WARNING, "WARNING: You are using a limited use, non-production Bing Maps key.\n" +
                 "If you are developing an app or a web page this violates the Bing Terms of Use.\n" +
                 "Please visit https://www.microsoft.com/maps/choose-your-bing-maps-API.aspx to obtain your own key for your application.\n" +
-                "Specify that key to World Wind by setting the WorldWind.BingMapsKey property to your key " +
+                "Specify that key to WorldWind by setting the WorldWind.BingMapsKey property to your key " +
                 "prior to creating any Bing Maps layers.\n");
             }
         };
@@ -69,7 +74,7 @@ define([
             if (!this.metadataRetrievalInProcess) {
                 this.metadataRetrievalInProcess = true;
 
-                var url = "http://dev.virtualearth.net/REST/V1/Imagery/Metadata/" + this.imagerySet + "/0,0?zl=1&key="
+                var url = "https://dev.virtualearth.net/REST/V1/Imagery/Metadata/" + this.imagerySet + "/0,0?zl=1&uriScheme=https&key="
                     + this.bingMapsKey;
 
                 // Use JSONP to request the metadata. Can't use XmlHTTPRequest because the virtual earth server doesn't

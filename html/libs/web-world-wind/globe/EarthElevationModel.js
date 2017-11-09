@@ -31,8 +31,8 @@ define([
 
                 if (url.indexOf("moon") > -1) {
                   this.displayName = "Moon Elevation Model";
-                  this.minElevation = -9115; // Depth of Marianas Trench, in meters
-                  this.maxElevation = 10786; // Height of Mt. Everest
+                  this.minElevation = -9115; // moon deepest point in meters
+                  this.maxElevation = 10786; // moon higher point in meters
                   this.pixelIsPoint = false; // World Wind WMS elevation layers return pixel-as-area images
 
                   /*this.urlBuilder = new WmsUrlBuilder("http://worldwind26.arc.nasa.gov/elev1",
@@ -45,8 +45,8 @@ define([
 
                 } else {
                   this.displayName = "Mars Elevation Model";
-                  this.minElevation = -8201; // Depth of Marianas Trench, in meters
-                  this.maxElevation = 21241; // Height of Mt. Everest
+                  this.minElevation = -8201; // mars deepest point in meters
+                  this.maxElevation = 21241; // mars deepest point in meters
                   this.pixelIsPoint = false; // World Wind WMS elevation layers return pixel-as-area images
 
                   /*this.urlBuilder = new WmsUrlBuilder("http://worldwind26.arc.nasa.gov/elev1",

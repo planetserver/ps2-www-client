@@ -582,15 +582,19 @@ define([
             }
 
             var hasLighting = (buffers.normals != null && buffers.normals.length > 0);
-            if (hasLighting) {
+            if (hasLighting && !dc.pickingMode) {
                 this.applyLighting(dc, buffers);
             }
 
             this.applyMatrix(dc, hasLighting, hasTexture , nodeWorldMatrix, nodeNormalMatrix);
 
-            this.applyIndices(dc, buffers);
-
-            gl.drawElements(gl.TRIANGLES, buffers.indices.length, gl.UNSIGNED_SHORT, 0);
+            if (buffers.indexedRendering) {
+                this.applyIndices(dc, buffers);
+                gl.drawElements(gl.TRIANGLES, buffers.indices.length, gl.UNSIGNED_SHORT, 0);
+            }
+            else {
+                gl.drawArrays(gl.TRIANGLES, 0, Math.floor(buffers.vertices.length / 3));
+            }
 
             this.resetDraw(dc, hasLighting, hasTexture);
 
@@ -753,7 +757,7 @@ define([
                 mvpMatrix.multiplyMatrix(nodeWorldMatrix);
             }
 
-            if (hasLighting) {
+            if (hasLighting && !dc.pickingMode) {
 
                 var normalMatrix = Matrix.fromIdentity();
 
@@ -809,7 +813,7 @@ define([
             var gl = dc.currentGlContext,
                 program = dc.currentProgram;
 
-            if (hasLighting) {
+            if (hasLighting && !dc.pickingMode) {
                 program.loadApplyLighting(gl, false);
                 gl.disableVertexAttribArray(program.normalVectorLocation);
             }
