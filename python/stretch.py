@@ -80,9 +80,6 @@ class StretchHandler:
         self.output = image.read()
         image.close()
 
-        # Remove the PNG file after reading the content
-        #os.remove(self.outputPNGFileName)
-
         if self.createHistogram:
             hist = histogram(self.outputPNGFileName)
             bandNumber = 1;
@@ -102,7 +99,9 @@ class StretchHandler:
             histogram_key = hashlib.sha256("histogram_" + self.wcpsQuery).hexdigest()            
             # cache histogram of the original PNG (without newMinMaxBands)
             redis_cached.set(histogram_key, hist_result)            
-            
+
+        # Remove the PNG file after reading the content
+        os.remove(self.outputPNGFileName)            
 
     # Stretch image's bands with new range
     def stretchImage(self):
