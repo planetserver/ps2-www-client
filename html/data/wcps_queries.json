@@ -21,7 +21,7 @@
         {
           "name": "BD1500_2",
           "description": "WCPS description",
-          "query": "((float)((int)( 255 / ( max(1 - (data.band_81 / ((0.642179772222) * data.band_57 + (0.357820227778) * data.band_124))) - min(1 - (data.band_81 / ((0.642179772222) * data.band_57 + (0.357820227778) * data.band_124))) )) * ( (1 - (data.band_81 / ((0.642179772222) * data.band_57 + (0.357820227778) * data.band_124))) - min(1 - (data.band_81 / ((0.642179772222) * data.band_57 + (0.357820227778) * data.band_124))) ));"
+          "query": "(float)((int)( 255 / ( max(1 - (data.band_81 / ((0.642179772222) * data.band_57 + (0.357820227778) * data.band_124))) - min(1 - (data.band_81 / ((0.642179772222) * data.band_57 + (0.357820227778) * data.band_124))) )) * ( (1 - (data.band_81 / ((0.642179772222) * data.band_57 + (0.357820227778) * data.band_124))) - min(1 - (data.band_81 / ((0.642179772222) * data.band_57 + (0.357820227778) * data.band_124))) ));"
         },
         {
           "name": "BD1750_2",
