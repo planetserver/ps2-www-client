@@ -133,8 +133,8 @@ function post_web_page($url, $post) {
         CURLOPT_ENCODING       => "",     // handle compressed
         CURLOPT_USERAGENT      => "test", // name of client
         CURLOPT_AUTOREFERER    => true,   // set referrer on redirect
-        CURLOPT_CONNECTTIMEOUT => 20,    // time-out on connect
-        CURLOPT_TIMEOUT        => 20,    // time-out on response
+        CURLOPT_CONNECTTIMEOUT => 120,    // time-out on connect
+        CURLOPT_TIMEOUT        => 120,    // time-out on response
         CURLOPT_FAILONERROR    => true,  // returns error from curl
     ); 
 

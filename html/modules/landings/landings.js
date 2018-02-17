@@ -872,6 +872,11 @@ requirejs(['../../libs/web-world-wind/WorldWind',
                 minN = newN;
                 newN = minN + stepN;
 
+                // cannot greater then N bounding box
+                if (newN > maxN) {
+                    newN = maxN;
+                }
+
                 /// degrees
                 minLat = newLat;
                 newLat = minLat + stepLat;
