@@ -825,10 +825,11 @@ requirejs(['../../libs/web-world-wind/WorldWind',
             // Need to fetch the max E, N from PS2server to calculate the partitions for N axis in WCPS queries
             var coverageID = checkedFootPrintsArray[index].coverageID;
 
+            var resolution = parseFloat(checkedFootPrintsArray[index].resolution);
             var minE = parseFloat(checkedFootPrintsArray[index].minimum_east);
-            var minN = parseFloat(checkedFootPrintsArray[index].minimum_north);
+            var minN = parseFloat(checkedFootPrintsArray[index].minimum_north) + resolution * 0.1;
             var maxE = parseFloat(checkedFootPrintsArray[index].maximum_east);
-            var maxN = parseFloat(checkedFootPrintsArray[index].maximum_north);
+            var maxN = parseFloat(checkedFootPrintsArray[index].maximum_north) - resolution * 0.1;            
 
             // need to convert meters to degrees
             var minLong = convertMeterToDegree(minE);
