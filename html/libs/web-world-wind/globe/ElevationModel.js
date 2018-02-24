@@ -597,12 +597,17 @@ define([
                         elevationModel.removeFromCurrentRetrievals(tile.imagePath);
 
                         var contentType = xhr.getResponseHeader("content-type");
+                        // NOTE: for geoserver, contentType returns as image/bil, must set it like this or WebWorldWind cannot parse the result bil and display elevation models
+                        if (contentType === "image/bil") {
+                            contentType = "application/bil16";    
+                        }                        
 
                         if (xhr.status === 200) {
                             if (contentType === elevationModel.retrievalImageFormat
                                 || contentType === "text/plain"
                                 || contentType === "application/octet-stream") {
                                 Logger.log(Logger.LEVEL_INFO, "Elevations retrieval succeeded: " + url);
+                                console.log("Elevations retrieval succeeded: " + url);
                                 elevationModel.loadElevationImage(tile, xhr);
                                 elevationModel.absentResourceList.unmarkResourceAbsent(tile.imagePath);
 

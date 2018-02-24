@@ -27,7 +27,9 @@ define([
          */
         var EarthElevationModel = function () {
             ElevationModel.call(this,
-                Sector.FULL_SPHERE, new Location(45, 45), 12, "image/bil", "tiles_test", 256, 256);
+                Sector.FULL_SPHERE, new Location(45, 45), 12, "application/bil16", "tiles_test", 256, 256);
+                // NOTE: If bil file from geoserver, the content type is image/bil and not application/bil16 then WebWorldWind cannot parse it to display
+                // it must need to add in ElevationModel.js a check and set contentType back to application/bil16 in this case.
 
                 if (url.indexOf("moon") > -1) {
                   this.displayName = "Moon Elevation Model";
@@ -55,7 +57,8 @@ define([
                   //var layer = "WWW_DEM_10km_1file:tiles_test";
                   var testEndPoint = "http://mars.planetserver.eu:8083/geoserver/global_dem/wms";
                   var layer = "global_dem:tiles_cut";
-                  this.urlBuilder = new WmsUrlBuilder(testEndPoint, layer, "", "1.1.0");
+                  this.urlBuilder = new WmsUrlBuilder(testEndPoint, layer, "", "1.3.0");
+                  //this.urlBuilder = new WmsUrlBuilder("https://worldwind26.arc.nasa.gov/elev", "GEBCO,aster_v2,USGS-NED", "", "1.3.0");
                 }
 
         };
