@@ -1,2 +1,90 @@
 Pseudo-terminal will not be allocated because stdin is not a terminal.
 Pseudo-terminal will not be allocated because stdin is not a terminal.
+212.201.45.13 - - [07/Jan/2018 15:53:24] "GET / HTTP/1.0" 200 -
+212.201.45.13 - - [08/Jan/2018 00:47:11] "GET / HTTP/1.1" 200 -
+212.201.45.13 - - [08/Jan/2018 11:09:37] "GET / HTTP/1.1" 200 -
+212.201.45.13 - - [09/Jan/2018 03:38:20] "GET /status?full=true HTTP/1.1" 200 -
+212.201.45.13 - - [09/Jan/2018 03:38:20] "GET / HTTP/1.1" 200 -
+212.201.45.13 - - [09/Jan/2018 03:38:21] "GET /script HTTP/1.1" 200 -
+212.201.45.13 - - [09/Jan/2018 03:38:21] "GET /jenkins/script HTTP/1.1" 200 -
+212.201.45.13 - - [09/Jan/2018 03:38:21] "GET /login HTTP/1.1" 200 -
+212.201.45.13 - - [09/Jan/2018 03:38:21] "GET /jmx-console HTTP/1.1" 200 -
+212.201.45.13 - - [09/Jan/2018 03:38:21] "GET / HTTP/1.1" 200 -
+212.201.45.13 - - [09/Jan/2018 03:38:21] "GET / HTTP/1.1" 200 -
+212.201.45.13 - - [09/Jan/2018 03:38:21] "GET /manager/html HTTP/1.1" 200 -
+212.201.45.13 - - [09/Jan/2018 03:38:21] "GET / HTTP/1.1" 200 -
+212.201.45.13 - - [09/Jan/2018 03:38:21] "GET / HTTP/1.1" 200 -
+212.201.45.13 - - [09/Jan/2018 03:38:21] "GET / HTTP/1.1" 200 -
+212.201.45.13 - - [09/Jan/2018 03:38:21] "GET //administrator HTTP/1.1" 200 -
+212.201.45.13 - - [09/Jan/2018 03:38:21] "GET /joomla/administrator HTTP/1.1" 200 -
+212.201.45.13 - - [09/Jan/2018 03:38:21] "GET /cms/administrator HTTP/1.1" 200 -
+212.201.45.13 - - [09/Jan/2018 03:38:22] "GET /Joomla/administrator HTTP/1.1" 200 -
+212.201.45.13 - - [09/Jan/2018 03:38:22] "GET /msd HTTP/1.1" 200 -
+212.201.45.13 - - [09/Jan/2018 03:38:22] "GET /mySqlDumper HTTP/1.1" 200 -
+212.201.45.13 - - [09/Jan/2018 03:38:22] "GET /msd1.24stable HTTP/1.1" 200 -
+212.201.45.13 - - [09/Jan/2018 03:38:22] "GET /msd1.24.4 HTTP/1.1" 200 -
+212.201.45.13 - - [09/Jan/2018 03:38:22] "GET /mysqldumper HTTP/1.1" 200 -
+212.201.45.13 - - [09/Jan/2018 03:38:22] "GET /MySQLDumper HTTP/1.1" 200 -
+212.201.45.13 - - [09/Jan/2018 03:38:22] "GET /mysql HTTP/1.1" 200 -
+212.201.45.13 - - [09/Jan/2018 03:38:22] "GET /sql HTTP/1.1" 200 -
+212.201.45.13 - - [09/Jan/2018 03:38:22] "GET /cgi-bin/php HTTP/1.1" 200 -
+212.201.45.13 - - [09/Jan/2018 03:38:22] "GET /cgi-bin/php5 HTTP/1.1" 200 -
+212.201.45.13 - - [09/Jan/2018 03:38:23] "GET /phpmyadmin HTTP/1.1" 200 -
+212.201.45.13 - - [09/Jan/2018 03:38:23] "GET /phpMyAdmin HTTP/1.1" 200 -
+212.201.45.13 - - [09/Jan/2018 03:38:23] "GET /mysql HTTP/1.1" 200 -
+212.201.45.13 - - [09/Jan/2018 03:38:23] "GET /sql HTTP/1.1" 200 -
+212.201.45.13 - - [09/Jan/2018 03:38:23] "GET /myadmin HTTP/1.1" 200 -
+212.201.45.13 - - [09/Jan/2018 03:38:23] "GET /phpMyAdmin-4.2.1-all-languages HTTP/1.1" 200 -
+212.201.45.13 - - [09/Jan/2018 03:38:23] "GET /phpMyAdmin-4.2.1-english HTTP/1.1" 200 -
+212.201.45.13 - - [09/Jan/2018 03:38:23] "GET /xampp/phpmyadmin HTTP/1.1" 200 -
+212.201.45.13 - - [09/Jan/2018 03:38:23] "GET /typo3/phpmyadmin HTTP/1.1" 200 -
+212.201.45.13 - - [09/Jan/2018 03:38:23] "GET /webadmin HTTP/1.1" 200 -
+212.201.45.13 - - [09/Jan/2018 03:38:23] "GET / HTTP/1.1" 200 -
+212.201.45.13 - - [09/Jan/2018 03:38:23] "GET /sqlite/main.php HTTP/1.1" 200 -
+212.201.45.13 - - [09/Jan/2018 03:38:24] "GET /SQLite/SQLiteManager-1.2.4/main.php HTTP/1.1" 200 -
+212.201.45.13 - - [09/Jan/2018 03:38:24] "GET /SQLiteManager-1.2.4/main.php HTTP/1.1" 200 -
+212.201.45.13 - - [09/Jan/2018 03:38:24] "GET /sqlitemanager/main.php HTTP/1.1" 200 -
+212.201.45.13 - - [09/Jan/2018 03:38:24] "GET /SQlite/main.php HTTP/1.1" 200 -
+212.201.45.13 - - [09/Jan/2018 03:38:24] "GET /SQLiteManager/main.php HTTP/1.1" 200 -
+212.201.45.13 - - [09/Jan/2018 03:38:24] "GET /webdav HTTP/1.1" 200 -
+212.201.45.13 - - [09/Jan/2018 03:38:24] "GET / HTTP/1.1" 200 -
+212.201.45.13 - - [09/Jan/2018 03:38:24] "GET / HTTP/1.1" 200 -
+212.201.45.13 - - [09/Jan/2018 03:38:24] "GET / HTTP/1.1" 200 -
+212.201.45.13 - - [09/Jan/2018 03:38:24] "GET //wp-login.php HTTP/1.1" 200 -
+212.201.45.13 - - [09/Jan/2018 03:38:25] "GET /wordpress/wp-login.php HTTP/1.1" 200 -
+212.201.45.13 - - [09/Jan/2018 03:38:25] "GET /wp/wp-login.php HTTP/1.1" 200 -
+212.201.45.13 - - [09/Jan/2018 03:38:25] "GET /blog/wp-login.php HTTP/1.1" 200 -
+212.201.45.13 - - [09/Jan/2018 03:38:25] "GET /Wordpress/wp-login.php HTTP/1.1" 200 -
+212.201.45.13 - - [09/Jan/2018 03:38:25] "GET /Blog/wp-login.php HTTP/1.1" 200 -
+212.201.45.13 - - [09/Jan/2018 08:13:21] "GET / HTTP/1.1" 200 -
+8090/tcp:            22031
+Kill process on port 8090
+Start simpleHTTPServer for stretching WCPS query. Use Ctrl + C to stop server.
+Traceback (most recent call last):
+  File "start.py", line 68, in <module>
+    server = HTTPServer(('', PORT_NUMBER), PythonWebHandler)
+  File "/usr/lib64/python2.7/SocketServer.py", line 419, in __init__
+    self.server_bind()
+  File "/usr/lib64/python2.7/BaseHTTPServer.py", line 108, in server_bind
+    SocketServer.TCPServer.server_bind(self)
+  File "/usr/lib64/python2.7/SocketServer.py", line 430, in server_bind
+    self.socket.bind(self.server_address)
+  File "/usr/lib64/python2.7/socket.py", line 224, in meth
+    return getattr(self._sock,name)(*args)
+socket.error: [Errno 98] Address already in use
+212.201.45.13 - - [09/Jan/2018 18:37:40] "GET / HTTP/1.1" 200 -
+8090/tcp:            15089
+Kill process on port 8090
+Start simpleHTTPServer for stretching WCPS query. Use Ctrl + C to stop server.
+Traceback (most recent call last):
+  File "start.py", line 68, in <module>
+    server = HTTPServer(('', PORT_NUMBER), PythonWebHandler)
+  File "/usr/lib64/python2.7/SocketServer.py", line 419, in __init__
+    self.server_bind()
+  File "/usr/lib64/python2.7/BaseHTTPServer.py", line 108, in server_bind
+    SocketServer.TCPServer.server_bind(self)
+  File "/usr/lib64/python2.7/SocketServer.py", line 430, in server_bind
+    self.socket.bind(self.server_address)
+  File "/usr/lib64/python2.7/socket.py", line 224, in meth
+    return getattr(self._sock,name)(*args)
+socket.error: [Errno 98] Address already in use
