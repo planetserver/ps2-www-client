@@ -19,7 +19,7 @@ $(function () {
             .addTab("tour", "tour", "Tour", "", "<p>In the tour you will be guided through the functionalities of PlanetServer-2.<a class=btn btn-large btn-success; href=javascript:void(0); onclick=javascript:startTour();> Show me how!</a></p>")
             .addTab("credits", "credits", "credits", "", "<p>CRISM data provided by <a href=http://pds-geosciences.wustl.edu/missions/mro/crism.htm target=_blank>PDS</a></p> <p>MOLA Base Map provided by <a href=http://worldwind25.arc.nasa.gov/wms?service=WMS&request=GetCapabilities target=_blank>USGS</a></p> <p>Spectral Library provided by <a href=https://speclab.cr.usgs.gov/spectral.lib06/ds231/datatable.html target=_blank>USGS</a></p>")
             .addTab("report", "report", "Report", "", "<p>For error notifications or suggestions, follow this <a href=https://github.com/planetserver/ps2-www-client/issues target=_blank>link</a></p>")
-            .addTab("privacy", "privacy", "Privacy", "", "<p>Privacy statement can be found <a href=static/doc/privpol.shtml>here</a>.</p>");
+            .addTab("privacy", "privacy", "Privacy", "", "<p>Privacy statement can be found <a href=/html/privacy/privacy.html>here</a>.</p>");
             /* main dock (required) */
             var leftDock = $("<div>").mainDock().mainDock("instance");
             leftDock.addAvailableLayersPanel();
