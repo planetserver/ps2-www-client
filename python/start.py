@@ -17,8 +17,8 @@ from BaseHTTPServer import BaseHTTPRequestHandler,HTTPServer
 PORT_NUMBER = 8090
 
 # Kill old webserver before starting new server
-print "Kill process on port {0}".format(PORT_NUMBER)
-subprocess.call("fuser -k {0}/tcp".format(PORT_NUMBER), shell=True)
+#print "Kill process on port {0}".format(PORT_NUMBER)
+#subprocess.call("fuser -k {0}/tcp".format(PORT_NUMBER), shell=True)
 print "Start simpleHTTPServer for stretching WCPS query. Use Ctrl + C to stop server."
 
 #This class will handles any incoming request from
