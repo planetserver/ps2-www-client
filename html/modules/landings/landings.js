@@ -763,12 +763,20 @@ requirejs(['../../libs/web-world-wind/WorldWind',
         // load the RGB combinations result with subsetting
         // moon client
         window.loadRGBCombinationsMoon = function(selectedFootPrintObj, index, stretch) {
-
+            
             var WCPS_TEMPLATE = 'for data in ( $COVERAGE_ID ) return encode( ' +
                                 '{'
                                 // insert bands here
                                 + "$RGB_BANDS"
                                 + '  alpha: (float)((data.band_85 > 0) * 255)[N( $minN$newN )] }, "png", "nodata=65535")';
+            if(isAllBandsCustomWCPSQueries === 3) {
+                WCPS_TEMPLATE = 'for data in ( $COVERAGE_ID ) return encode( ' +
+                                '{'
+                                // insert bands here
+                                + "$RGB_BANDS"
+                                + '  alpha: (float)((data.band_85 > 0) * 255)[N( $minN$newN )] }, "tiff", "nodata=65535")';
+            }
+            
             var redBand = selectedFootPrintObj.redBand;
             var greenBand = selectedFootPrintObj.greenBand;
             var blueBand = selectedFootPrintObj.blueBand;
