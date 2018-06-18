@@ -345,7 +345,7 @@ if (dataType != "moon"){
 
     $.ajax({
 	type: "GET",
-        url: ps2EndPoint + "/html/data/M3queries.json",
+        url: ps2EndPoint + "/html/data/M3queriesSmall.json",
         data: "{dataset: 'M3'}", // it will query later on database with dataset
         cache: false,
         async: false,
