@@ -328,8 +328,10 @@ function loadWCPSQueriesJSON() {
         return;
     }
 
+if (dataType != "moon"){
+
     $.ajax({
-        type: "GET",
+	type: "GET",
         url: ps2EndPoint + "/html/data/wcps_queries.json",
         data: "{dataset: 'CRISM'}", // it will query later on database with dataset
         cache: false,
@@ -338,6 +340,21 @@ function loadWCPSQueriesJSON() {
             wcpsQueriesJSON = data;
         }
     });
+
+}else{
+
+    $.ajax({
+	type: "GET",
+        url: ps2EndPoint + "/html/data/M3queries.json",
+        data: "{dataset: 'M3'}", // it will query later on database with dataset
+        cache: false,
+        async: false,
+        success: function(data) {
+            wcpsQueriesJSON = data;
+        }
+    });
+
+}
 
 
     // And this function will load WCPSQueries for each menuItems to availableWCPSQueries for text suggestion
