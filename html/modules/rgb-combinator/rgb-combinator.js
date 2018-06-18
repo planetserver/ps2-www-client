@@ -1197,6 +1197,7 @@ $(document).ready(function() {
 
         // add or remove selected footprints from selectedFootPrintsArray
         if(checkBox.prop("checked")) {
+            var id = checkBox.attr('id').split('_').slice(-1)[0]; // MIKHAIL
             // Not add 'all' value to selected footprints array
             if(id !== "0") {
                 // chosen coverageID to selectedFootPrintsArray
