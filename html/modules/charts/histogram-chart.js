@@ -407,7 +407,7 @@ function createHistogramChart() {
 function validateClickedCoverage() {
     var coverageObj = getCoverageById(drawCoverageID);
     if (coverageObj.wcpsQuery.indexOf(PNG) !== -1) {
-        alert("This coverage is not stretched (i.e: 3 bands must come from 'WCPS Custome Queries') , please choose RGB combinator to stretch bands on this coverage first.");
+        alert("This coverage is not stretched (i.e: 3 bands must come from 'WCPS Custom Queries') , please choose RGB combinator to stretch bands on this coverage first.");
         return false;        
     }
 
